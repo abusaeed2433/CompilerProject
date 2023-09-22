@@ -27,3 +27,23 @@ import stdio.h;
 
 // /*a comment /* with ament  and ext */ */ 
 
+
+
+static void main(){
+
+//int
+/** asjs */
+
+// kldsklsd
+/** asjs 
+/*
+//asjkjd
+*/
+*/
+int wxyzz;
+int a;
+int xy;
+float aa = 243, b=11;
+int c = 2343, d,e;
+
+}
