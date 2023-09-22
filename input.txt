@@ -1,0 +1,26 @@
+
+// This is a single-line comment
+int x = 5;
+
+int x = 5; // Assign 5 to x
+
+
+/* This is a 
+   multi-line comment */
+int x = 5;
+
+int x = /* Assign 5 to x */ 5;
+
+
+/* This is a comment 
+/* with another comment inside it */ 
+end of the first comment */
+int x = 5;
+
+// This is a single-line comment
+int x = 5; /* This is a multi-line comment
+             that spans multiple lines */
+int y = 10; // Another single-line comment
+
+
+/*a comment /* with ament  and ext */ */ 
