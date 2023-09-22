@@ -31,19 +31,23 @@ import stdio.h;
 
 static void main(){
 
-//int
-/** asjs */
+   //int
+   /** asjs */
 
-// kldsklsd
-/** asjs 
-/*
-//asjkjd
-*/
-*/
-int wxyzz;
-int a;
-int xy;
-float aa = 243, b=11;
-int c = 2343, d,e;
+   // kldsklsd
+   /** asjs 
+   /*
+   //asjkjd
+   */
+   */
+   int wxyzz;
+   int a;
+   int xy;
+   float aa = 243, b=11;
+   int c = 2343, d,e;
+
+   b = 100;
+
+   c = 1055;
 
 }

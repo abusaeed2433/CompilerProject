@@ -38,6 +38,13 @@
         exit(1);
     }
 
+    bool doesVariableExists(char *name){
+        for(int i=0; i<varSize; i++){
+            if( strcmp(name,vars[i].name) == 0 ) return true;
+        }
+        return false;
+    }
+
     char* removeRedundant(char *source){
         int len = strlen(source);
 
@@ -201,6 +208,23 @@
         declareVariable(name,value);
     }
 
+    void updateValue(char *nameVal){
+        char *name;
+        double val;
+        extractNameValue(nameVal,name,&val);
+
+        if( !doesVariableExists(name) ){
+            char message[50];
+            strcpy(message, "Variable doesn't exists: ");
+            strcat(message,name);
+
+            stopProgram(message);
+            return;
+        }
+
+        assignValue(name,val);
+    }
+
 %}
 
 
@@ -252,6 +276,7 @@ NEW_LINE_AND_TAB [\n\t]*
 
 {MAIN_START} { initMain(); BEGIN(MAIN); }
 <MAIN>{DATA_TYPE} { initVarSec(yytext); isCommingFromMain = true; BEGIN(VAR_SEC); }
+<MAIN>{VARIABLE_VALUE}; { updateValue(yytext); }
 
 
 <MAIN>{NEW_LINE_AND_TAB} {}
@@ -259,7 +284,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>{SINGLE_LINE_COMMENT} { initSingleComment(); }
 <MAIN>"/*" {initMultiComment(); isCommingFromMain = true; BEGIN(COMMENT); }
 
-{NEW_LINE_AND_TAB} { }
+{NEW_LINE_AND_TAB}* { }
 
 %%
 
