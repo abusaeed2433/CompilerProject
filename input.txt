@@ -1,4 +1,7 @@
 
+import stdio.h;
+import stdio.h;
+
 // This is a single-line comment
 // int x = 5;
 
@@ -23,3 +26,4 @@
 // int y = 10; // Another single-line comment
 
 // /*a comment /* with ament  and ext */ */ 
+

@@ -8,8 +8,35 @@
     int commentCounter = 0;
     int comment_depth = 0;
     char *comment_buffer = NULL;
+    int canDeclareHeader = 1;
 
     size_t buffer_length = 0;
+
+
+    void runHeader(int check){
+        if(!check){
+            printf("Invalid header format\n");
+            exit(1);
+        }
+
+        if(!canDeclareHeader){
+            printf("Header must be at top of proram\n");
+            return;
+        }
+        else{
+            printf("Imported %s\n",yytext);
+        }
+
+    }
+
+    void exceptHeader(){
+        canDeclareHeader = 0;
+    }
+
+    void initSingleComment(){
+        exceptHeader();
+        commentCounter++;
+    }
 
     void resetBuffer(){
         free(comment_buffer);
@@ -48,8 +75,8 @@
         buffer_length += sprintf(comment_buffer + buffer_length, ch);
     }
 
-
-    void startComment(){
+    void initMultiComment(){
+        exceptHeader();
         comment_depth = 1; 
         buffer_length = 2;
         comment_buffer = (char*) malloc(3);
@@ -61,7 +88,12 @@
 
 %}
 
+%x HEADER
 %x COMMENT
+HEADER_START "import "
+HEADER_END [a-zA-Z.]+";"
+
+
 SINGLE_LINE_COMMENT ("//").*(\n)?
 
 
@@ -71,12 +103,17 @@ NEW_LINE_AND_TAB [\n\t]*
 
 %%
 
-{SINGLE_LINE_COMMENT} { commentCounter++; }
+{HEADER_START} { BEGIN(HEADER); }
 
-"/*" { startComment(); BEGIN(COMMENT); }
+<HEADER>{HEADER_END} { runHeader(1); BEGIN(INITIAL); }
+<HEADER>. { runHeader(0); BEGIN(INITIAL); }
+
+
+{SINGLE_LINE_COMMENT} { initSingleComment(); }
+
+"/*" { initMultiComment(); BEGIN(COMMENT); }
 
 <COMMENT>"/*" { appendTextToBuffer("/*"); }
-
 <COMMENT>"*/" { appendTextToBuffer("*/"); checkForEnd(); }
 
 <COMMENT>. { appendToBuffer(yytext[0]); }

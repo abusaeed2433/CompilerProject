@@ -282,12 +282,14 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 8
-#define YY_END_OF_BUFFER 9
-static yyconst short int yy_accept[21] =
+#define YY_NUM_RULES 11
+#define YY_END_OF_BUFFER 12
+static yyconst short int yy_accept[34] =
     {   0,
-        7,    7,    0,    0,    9,    8,    7,    8,    5,    6,
-        5,    5,    7,    2,    1,    4,    3,    1,    1,    0
+       10,   10,    0,    0,    0,    0,   12,   11,   10,   11,
+       11,    3,    3,    8,    9,    8,    8,   10,    5,    4,
+        0,    0,    2,    7,    6,    4,    4,    0,    0,    0,
+        0,    1,    0
     } ;
 
 static yyconst int yy_ec[256] =
@@ -295,17 +297,17 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    4,    1,    1,    1,    1,    5,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    4,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    5,    1,    1,    1,    6,    7,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    8,    1,
+        1,    1,    1,    1,    6,    6,    6,    6,    6,    6,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        6,    6,    6,    6,    6,    6,    6,    6,    6,    6,
+        1,    1,    1,    1,    1,    1,    6,    6,    6,    6,
 
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        6,    6,    6,    6,    9,    6,    6,    6,   10,    6,
+       11,   12,    6,   13,    6,   14,    6,    6,    6,    6,
+        6,    6,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -322,37 +324,48 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst int yy_meta[6] =
+static yyconst int yy_meta[15] =
     {   0,
-        1,    2,    2,    3,    4
+        1,    1,    1,    1,    1,    2,    1,    2,    2,    2,
+        2,    2,    2,    2
     } ;
 
-static yyconst short int yy_base[25] =
+static yyconst short int yy_base[38] =
     {   0,
-        0,    0,    5,    0,   22,   23,    0,    7,   23,   23,
-        0,    0,    0,   23,   18,   23,   23,   17,   23,   23,
-       17,   14,   14,   12
+        0,    8,   17,    0,   29,   34,   55,   56,    2,    1,
+       44,   56,   45,   56,   56,   45,   46,   10,   56,   47,
+       37,   40,   56,   56,   56,   37,   56,   27,   22,   19,
+       12,   56,   56,   41,   43,   12,   45
     } ;
 
-static yyconst short int yy_def[25] =
+static yyconst short int yy_def[38] =
     {   0,
-       20,    1,   20,    3,   20,   20,   21,   20,   20,   20,
-       22,   23,   21,   20,   24,   20,   20,   24,   20,    0,
-       20,   20,   20,   20
+       34,   34,   33,    3,   35,   35,   33,   33,   33,   33,
+       33,   33,   36,   33,   33,   33,   33,   33,   33,   37,
+       33,   36,   33,   33,   33,   37,   33,   33,   33,   33,
+       33,   33,    0,   33,   33,   33,   33
     } ;
 
-static yyconst short int yy_nxt[29] =
+static yyconst short int yy_nxt[71] =
     {   0,
-        6,    7,    7,    6,    8,    9,    9,   10,   11,   12,
-       14,   15,   18,   18,   18,   18,   17,   16,   13,   19,
-       19,   20,    5,   20,   20,   20,   20,   20
+       33,    9,    9,   18,   18,   19,   10,   20,   11,    9,
+        9,   18,   18,   22,   10,   32,   11,   12,   12,    8,
+       12,   12,   13,   12,   12,   13,   13,   13,   13,   13,
+       13,   15,   31,   16,   30,   17,   15,   29,   16,   27,
+       17,    8,    8,   14,   14,   26,   26,   23,   28,   27,
+       25,   24,   23,   21,   33,    7,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33,   33,   33,   33
     } ;
 
-static yyconst short int yy_chk[29] =
+static yyconst short int yy_chk[71] =
     {   0,
-        1,    1,    1,    1,    1,    3,    3,    3,    3,    3,
-        8,    8,   24,   24,   24,   24,   23,   22,   21,   18,
-       15,    5,   20,   20,   20,   20,   20,   20
+        0,    1,    1,    9,    9,   10,    1,   10,    1,    2,
+        2,   18,   18,   36,    2,   31,    2,    3,    3,    3,
+        3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
+        3,    5,   30,    5,   29,    5,    6,   28,    6,   26,
+        6,   34,   34,   35,   35,   37,   37,   22,   21,   20,
+       17,   16,   13,   11,    7,   33,   33,   33,   33,   33,
+       33,   33,   33,   33,   33,   33,   33,   33,   33,   33
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -378,8 +391,35 @@ char *yytext;
     int commentCounter = 0;
     int comment_depth = 0;
     char *comment_buffer = NULL;
+    int canDeclareHeader = 1;
 
     size_t buffer_length = 0;
+
+
+    void runHeader(int check){
+        if(!check){
+            printf("Invalid header format\n");
+            exit(1);
+        }
+
+        if(!canDeclareHeader){
+            printf("Header must be at top of proram\n");
+            return;
+        }
+        else{
+            printf("Imported %s\n",yytext);
+        }
+
+    }
+
+    void exceptHeader(){
+        canDeclareHeader = 0;
+    }
+
+    void initSingleComment(){
+        exceptHeader();
+        commentCounter++;
+    }
 
     void resetBuffer(){
         free(comment_buffer);
@@ -418,8 +458,8 @@ char *yytext;
         buffer_length += sprintf(comment_buffer + buffer_length, ch);
     }
 
-
-    void startComment(){
+    void initMultiComment(){
+        exceptHeader();
         comment_depth = 1; 
         buffer_length = 2;
         comment_buffer = (char*) malloc(3);
@@ -429,9 +469,11 @@ char *yytext;
         strcat(comment_buffer, "/*");
     }
 
-#define COMMENT 1
+#define HEADER 1
 
-#line 435 "lex.yy.c"
+#define COMMENT 2
+
+#line 477 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -582,10 +624,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 72 "code.l"
+#line 104 "code.l"
 
 
-#line 589 "lex.yy.c"
+#line 631 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -636,13 +678,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 21 )
+				if ( yy_current_state >= 34 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 23 );
+		while ( yy_base[yy_current_state] != 56 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -670,46 +712,62 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 74 "code.l"
-{ commentCounter++; }
+#line 106 "code.l"
+{ BEGIN(HEADER); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 76 "code.l"
-{ startComment(); BEGIN(COMMENT); }
+#line 108 "code.l"
+{ runHeader(1); BEGIN(INITIAL); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 78 "code.l"
-{ appendTextToBuffer("/*"); }
+#line 109 "code.l"
+{ runHeader(0); BEGIN(INITIAL); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 80 "code.l"
-{ appendTextToBuffer("*/"); checkForEnd(); }
+#line 112 "code.l"
+{ initSingleComment(); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 82 "code.l"
-{ appendToBuffer(yytext[0]); }
+#line 114 "code.l"
+{ initMultiComment(); BEGIN(COMMENT); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 83 "code.l"
-{ appendTextToBuffer("\n"); }
+#line 116 "code.l"
+{ appendTextToBuffer("/*"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 85 "code.l"
-{}
+#line 117 "code.l"
+{ appendTextToBuffer("*/"); checkForEnd(); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 87 "code.l"
+#line 119 "code.l"
+{ appendToBuffer(yytext[0]); }
+	YY_BREAK
+case 9:
+YY_RULE_SETUP
+#line 120 "code.l"
+{ appendTextToBuffer("\n"); }
+	YY_BREAK
+case 10:
+YY_RULE_SETUP
+#line 122 "code.l"
+{ }
+	YY_BREAK
+case 11:
+YY_RULE_SETUP
+#line 124 "code.l"
 ECHO;
 	YY_BREAK
-#line 712 "lex.yy.c"
+#line 769 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(HEADER):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
 
@@ -1001,7 +1059,7 @@ static yy_state_type yy_get_previous_state()
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 21 )
+			if ( yy_current_state >= 34 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1036,11 +1094,11 @@ yy_state_type yy_current_state;
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 21 )
+		if ( yy_current_state >= 34 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 20);
+	yy_is_jam = (yy_current_state == 33);
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -1595,7 +1653,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 87 "code.l"
+#line 124 "code.l"
 
 
 int yywrap(){
