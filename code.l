@@ -246,7 +246,7 @@ VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)?
 VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)?
 VARIABLE_STATEMENT_END [ ]*;
 
-DATA_TYPE ("int "|"float "|"double "|"string ")
+DATA_TYPE ("int "|"float "|"double ")
 NEW_LINE_AND_TAB [\n\t]*
 
 %%
