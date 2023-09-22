@@ -82,6 +82,8 @@ NEW_LINE_AND_TAB [\n\t]*
 <COMMENT>. { appendToBuffer(yytext[0]); }
 <COMMENT>\n { appendTextToBuffer("\n"); }
 
+{NEW_LINE_AND_TAB} { }
+
 %%
 
 int yywrap(){
