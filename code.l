@@ -88,6 +88,7 @@
 
 %}
 
+
 %x HEADER
 %x COMMENT
 HEADER_START "import "
@@ -106,7 +107,7 @@ NEW_LINE_AND_TAB [\n\t]*
 {HEADER_START} { BEGIN(HEADER); }
 
 <HEADER>{HEADER_END} { runHeader(1); BEGIN(INITIAL); }
-<HEADER>. { runHeader(0); BEGIN(INITIAL); }
+<HEADER>.* { runHeader(0); BEGIN(INITIAL); }
 
 
 {SINGLE_LINE_COMMENT} { initSingleComment(); }
