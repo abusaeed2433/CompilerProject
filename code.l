@@ -3,6 +3,7 @@
     #include<string.h>
     #include <stdlib.h>
     #include <stdbool.h>
+    #include <ctype.h>
 
     int stack[100];
     int stackSize = 0;
@@ -18,6 +19,7 @@
     bool isMainBlockFound = false;
     bool isCommingFromMain = false;
     bool isCommingFromVar = false;
+    bool isLastIfValid = false;
 
     size_t buffer_length = 0;
 
@@ -30,6 +32,15 @@
     int popState(){
         if(stackSize > 0) stackSize--;
         return stack[stackSize];
+    }
+
+    bool isLastOneIf(int ifs){
+        if(stackSize > 1){
+            if( stack[stackSize-1] == ifs){
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -46,6 +57,14 @@
 
     int varSize = 0;
     const int MAXIMUM_VAR_SIZE = 10;
+
+
+    struct VAR* getVariable(char* name){
+        for(int i=0; i<varSize; i++){
+            if( strcmp(name,vars[i].name) == 0 ) return &vars[i];
+        }
+        return NULL;
+    }
     
     void stopProgram(char *error){
         printf("%s\n",error);
@@ -241,17 +260,80 @@
         assignValue(name,val);
     }
 
-    void processIfBody(char *body){
-        // int len = strlen(body);
-        // int i = len-1;
-        // while(i>=0 && (body[i] == ' ' || body[i] == ')') ){
-        //     body[i] = '\0';
-        //     i--;
-        // }
+    bool isNumber(char* num){
+        bool count = 0;
+        for(int i=0; i<strlen(num); i++){
+            if( num[i] == '.' && count == 0 ) { count=1; continue; }
+            if( !isdigit(num[i]) ) return false;
+        }
+        return true;
+    }
 
-        char leftVar[50], operator[10], rightVal[50];
-        sscanf(body, "( %49s %9s %49s )", leftVar, operator, rightVal);
-        printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
+    bool isCondOpValid(char* op){
+        char arr[6][5] = { "lt","gt","eq","neq","le","ge" };
+        for(int i=0; i<6; i++){
+            if(strcmp(arr[i],op) == 0) return true;
+        }
+        return false;
+    }
+
+    bool isConditionValid(double left, char* op, double right){
+        if( strncmp(op,"lt",2) == 0) return (left < right);
+        if( strncmp(op,"gt",2) == 0) return (left > right);
+        if( strncmp(op,"eq",2) == 0) return (left == right);
+
+        if( strncmp(op,"le",2) == 0) return (left <= right);
+        if( strncmp(op,"ge",2) == 0) return (left >= right);
+        if( strncmp(op,"neq",2) == 0) return (left != right); // 2 fine also
+    }
+
+    void processIfBody(char *body){
+        //processed body
+        char pBody[strlen(body)];
+
+        int i=0;
+        while(body[i] != '(')i++;
+        i++;
+
+        int j=0;
+        while(body[i] != ')'){ pBody[j] = body[i]; i++; j++; }
+        pBody[j] = '\0';
+
+        char leftVal[50], operator[10], rightVal[50];
+        sscanf(pBody, "%49s %9s %49s", leftVal, operator, rightVal);
+
+        double left = 0, right = 0;
+
+        if( isNumber(leftVal) ) left = strtod(leftVal,NULL);
+        else{
+            struct VAR *val = getVariable(leftVal);
+            if(val == NULL) {
+                printf("%s\n",leftVal);
+                stopProgram("Invalid variable in if");
+            }
+            else left = (*val).value;
+        }
+
+        if( isNumber(rightVal) ) right = strtod(rightVal,NULL);
+        else{
+            struct VAR *val = getVariable(rightVal);
+            if(val == NULL) {
+                printf("%s\n",rightVal);
+                stopProgram("Invalid variable in if");
+            }
+            else right = (*val).value;
+        }
+
+        if( !isCondOpValid(operator) ){
+            stopProgram("Invalid operator in if");
+            return;
+        }
+
+        isLastIfValid = isConditionValid(left,operator,right);
+
+        printf("body of if is: %d\n",isLastIfValid);
+
+        //printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
     }
 
 %}
@@ -262,6 +344,7 @@
 %x MAIN
 %x VAR_SEC
 %x IF_SEC
+%x IGNORE_SEC
 
 NUMBER [0-9.]+
 VARIABLE [a-zA-z][a-zA-Z0-9]*
@@ -290,7 +373,11 @@ DATA_TYPE ("int "|"float "|"double ")
 
 IF "if"[ ]*
 IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
+IF_BODY_START [ ]*"{"
+IF_BODY_END [ ]*"}"
 IF_SPACE [ ]*
+
+IGNORE_TILL_BRACE "}"
 
 NEW_LINE_AND_TAB [\n\t]*
 
@@ -338,24 +425,48 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>{IF} { BEGIN( pushState(IF_SEC) ); }
 
 <IF_SEC>{IF_COND} { processIfBody(yytext); }
+<IF_SEC>{IF_BODY_START} { 
+    if(isLastIfValid){
+        BEGIN(pushState(MAIN));
+    }
+    else{
+        BEGIN( pushState(IGNORE_SEC) );
+    }
+}
+
 <IF_SEC>. {}
 
+<IGNORE_SEC>{IGNORE_TILL_BRACE} { 
+    int state = popState();
+    BEGIN( popState() );
+}
+<IGNORE_SEC>[^}] {}
 
-{MAIN_START} { initMain(); BEGIN( pushState(MAIN) ); }
+{MAIN_START} { 
+    //printf("main start %s\n",yytext); 
+    initMain(); 
+    BEGIN( pushState(MAIN) ); 
+}
 <MAIN>{DATA_TYPE} {
+    //printf("main data type %s\n",yytext);
     initVarSec(yytext); 
     BEGIN( pushState(VAR_SEC) );
 }
-<MAIN>{VARIABLE_VALUE_ASSIGN} { updateValue(yytext); }
-
-
-<MAIN>{NEW_LINE_AND_TAB} {}
-<MAIN>{MAIN_END} {stopMain(); BEGIN( popState() ); }
-<MAIN>{SINGLE_LINE_COMMENT} { initSingleComment(); }
+<MAIN>{VARIABLE_VALUE_ASSIGN} { 
+    //printf("main assign %s\n",yytext);
+    updateValue(yytext);
+}
+<MAIN>{MAIN_END} { stopMain(); BEGIN( popState() ); }
+<MAIN>{SINGLE_LINE_COMMENT} {
+    //printf("main comment %s\n",yytext);
+    initSingleComment();
+}
 <MAIN>"/*" {
+    //printf("main multi %s\n",yytext);
     initMultiComment(); 
     BEGIN( pushState(COMMENT) );
 }
+<MAIN>{NEW_LINE_AND_TAB}* { }
 
 {NEW_LINE_AND_TAB}* { }
 
