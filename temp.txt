@@ -1,0 +1,1 @@
+<VAR_SEC>{VARIABLE_STATEMENT_END} { isCommingFromMain = false; BEGIN(MAIN); }

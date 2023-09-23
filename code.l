@@ -55,7 +55,7 @@
         char temp[len+1];
         int j = 0;
         for(int i=0; i<len; i++){
-            if(source[i] == ' ' || source[i] == ',') continue;
+            if(source[i] == ' ' || source[i] == ',' || source[i] == ';') continue;
             temp[j] = source[i];
             j++;
         }
@@ -246,9 +246,14 @@ MAIN_END "}"
 
 SINGLE_LINE_COMMENT ("//").*(\n)?
 
-VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)?[ ]*
-VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)?[ ]*
-VARIABLE_STATEMENT_END [ ]*;
+VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)
+VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)
+VARIABLE_VALUE_ASSIGN [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+;
+
+VARIABLE_ONLY_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(;)
+VARIABLE_VALUE_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(;)
+
+VAR_SPACE [ ]*
 
 DATA_TYPE ("int "|"float "|"double ")
 NEW_LINE_AND_TAB [\n\t]*
@@ -283,14 +288,25 @@ NEW_LINE_AND_TAB [\n\t]*
 <COMMENT>\n { appendTextToBuffer("\n"); }
 
 <VAR_SEC>{VARIABLE_ONLY} { declareVariable(yytext,0); }
+<VAR_SEC>{VARIABLE_ONLY_LAST} {
+    declareVariable(yytext,0);
+    isCommingFromMain = false;
+    BEGIN(MAIN);
+}
+
 <VAR_SEC>{VARIABLE_VALUE} { processVariable(yytext); }
-<VAR_SEC>{VARIABLE_STATEMENT_END} { isCommingFromMain = true; BEGIN(MAIN); }
-<VAR_SEC>. {stopProgram("Invalid character found");}
+<VAR_SEC>{VARIABLE_VALUE_LAST} {
+    processVariable(yytext);
+    isCommingFromMain = false;
+    BEGIN(MAIN);
+}
+<VAR_SEC>{VAR_SPACE} {}
+<VAR_SEC>. { stopProgram("Invalid character found");}
 <VAR_SEC>"/*" { initMultiComment(); BEGIN(COMMENT); isCommingFromVar = true; }
 
 {MAIN_START} { initMain(); BEGIN(MAIN); }
 <MAIN>{DATA_TYPE} { initVarSec(yytext); isCommingFromMain = true; BEGIN(VAR_SEC); }
-<MAIN>{VARIABLE_VALUE}; { updateValue(yytext); }
+<MAIN>{VARIABLE_VALUE_ASSIGN} { updateValue(yytext); }
 
 
 <MAIN>{NEW_LINE_AND_TAB} {}

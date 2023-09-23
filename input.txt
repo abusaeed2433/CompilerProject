@@ -46,7 +46,7 @@ static void main(){
    float aa = 243, /* aa */ b=11;//
    int c = 2343, d,e;
 
-   b = 100;
+   //b = 100;
 
    c = 1055;
 
