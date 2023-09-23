@@ -4,6 +4,9 @@
     #include <stdlib.h>
     #include <stdbool.h>
 
+    int strack[20];
+    int stackSize = 0;
+
     char error[200];
     char lastDataType[10];
 
@@ -14,6 +17,7 @@
     bool canDeclareHeader = true;
     bool isMainBlockFound = false;
     bool isCommingFromMain = false;
+    bool isCommingFromVar = false;
 
     size_t buffer_length = 0;
 
@@ -242,8 +246,8 @@ MAIN_END "}"
 
 SINGLE_LINE_COMMENT ("//").*(\n)?
 
-VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)?
-VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)?
+VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)?[ ]*
+VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)?[ ]*
 VARIABLE_STATEMENT_END [ ]*;
 
 DATA_TYPE ("int "|"float "|"double ")
@@ -263,7 +267,16 @@ NEW_LINE_AND_TAB [\n\t]*
 <COMMENT>"/*" { appendTextToBuffer("/*"); }
 <COMMENT>"*/" { 
     appendTextToBuffer("*/"); checkForEnd(); 
-    if(comment_depth == 0 && isCommingFromMain){ BEGIN(MAIN); isCommingFromMain = false; } 
+    if(comment_depth == 0){
+        if(isCommingFromVar){
+            isCommingFromVar = false;
+            BEGIN(VAR_SEC);
+        }
+        else if(isCommingFromMain){
+            isCommingFromMain = false;
+            BEGIN(MAIN);
+        }
+    } 
 }
 
 <COMMENT>. { appendToBuffer(yytext[0]); }
@@ -273,6 +286,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <VAR_SEC>{VARIABLE_VALUE} { processVariable(yytext); }
 <VAR_SEC>{VARIABLE_STATEMENT_END} { isCommingFromMain = true; BEGIN(MAIN); }
 <VAR_SEC>. {stopProgram("Invalid character found");}
+<VAR_SEC>"/*" { initMultiComment(); BEGIN(COMMENT); isCommingFromVar = true; }
 
 {MAIN_START} { initMain(); BEGIN(MAIN); }
 <MAIN>{DATA_TYPE} { initVarSec(yytext); isCommingFromMain = true; BEGIN(VAR_SEC); }

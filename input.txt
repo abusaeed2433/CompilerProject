@@ -43,7 +43,7 @@ static void main(){
    int wxyzz;
    int a;
    int xy;
-   float aa = 243, b=11;
+   float aa = 243, /* aa */ b=11;//
    int c = 2343, d,e;
 
    b = 100;
