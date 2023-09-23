@@ -29,3 +29,19 @@
     - Error if duplicate variable is declared,
     - Error if assign value to undeclared variable
 
+- Conditional operators
+    - less than `lt`,
+    - greater than `gt`,
+    - equal `eq`,
+    - not equals `neq`
+    - less equal `le`,
+    - greater equal `ge`
+
+- `if` structure
+    - vc = variable or constant
+    ```
+    if(vc @ vc){
+
+    }
+    ```
+    - no else statment

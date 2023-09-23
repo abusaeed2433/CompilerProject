@@ -4,7 +4,7 @@
     #include <stdlib.h>
     #include <stdbool.h>
 
-    int strack[20];
+    int stack[100];
     int stackSize = 0;
 
     char error[200];
@@ -20,6 +20,18 @@
     bool isCommingFromVar = false;
 
     size_t buffer_length = 0;
+
+    int pushState(int id){
+        stackSize++;
+        stack[stackSize] = id;
+        return id;
+    }
+
+    int popState(){
+        if(stackSize > 0) stackSize--;
+        return stack[stackSize];
+    }
+
 
     // variable
     const int MAXIMUM_VARIABLE_LENGTH = 200;
@@ -229,6 +241,19 @@
         assignValue(name,val);
     }
 
+    void processIfBody(char *body){
+        // int len = strlen(body);
+        // int i = len-1;
+        // while(i>=0 && (body[i] == ' ' || body[i] == ')') ){
+        //     body[i] = '\0';
+        //     i--;
+        // }
+
+        char leftVar[50], operator[10], rightVal[50];
+        sscanf(body, "( %49s %9s %49s )", leftVar, operator, rightVal);
+        printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
+    }
+
 %}
 
 
@@ -236,6 +261,12 @@
 %x COMMENT
 %x MAIN
 %x VAR_SEC
+%x IF_SEC
+
+NUMBER [0-9.]+
+VARIABLE [a-zA-z][a-zA-Z0-9]*
+VAR_NUM ({NUMBER}|{VARIABLE})
+COND_OP ("lt"|"gt"|"eq"|"neq"|"le"|"ge")
 
 HEADER_START "import "
 HEADER_END [a-zA-Z.]+";"
@@ -256,31 +287,29 @@ VARIABLE_VALUE_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(;)
 VAR_SPACE [ ]*
 
 DATA_TYPE ("int "|"float "|"double ")
+
+IF "if"[ ]*
+IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
+IF_SPACE [ ]*
+
 NEW_LINE_AND_TAB [\n\t]*
 
 %%
+{HEADER_START} { BEGIN(pushState(HEADER)); }
 
-{HEADER_START} { BEGIN(HEADER); }
+<HEADER>{HEADER_END} { runHeader(1); BEGIN( popState() ); }
 
-<HEADER>{HEADER_END} { runHeader(1); BEGIN(INITIAL); }
-<HEADER>.* { runHeader(0); BEGIN(INITIAL); }
+<HEADER>. { runHeader(0); BEGIN(popState()); }
 
 {SINGLE_LINE_COMMENT} { initSingleComment(); }
 
-"/*" { initMultiComment(); BEGIN(COMMENT); }
+"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 
 <COMMENT>"/*" { appendTextToBuffer("/*"); }
 <COMMENT>"*/" { 
     appendTextToBuffer("*/"); checkForEnd(); 
     if(comment_depth == 0){
-        if(isCommingFromVar){
-            isCommingFromVar = false;
-            BEGIN(VAR_SEC);
-        }
-        else if(isCommingFromMain){
-            isCommingFromMain = false;
-            BEGIN(MAIN);
-        }
+        BEGIN( popState() );
     } 
 }
 
@@ -290,29 +319,43 @@ NEW_LINE_AND_TAB [\n\t]*
 <VAR_SEC>{VARIABLE_ONLY} { declareVariable(yytext,0); }
 <VAR_SEC>{VARIABLE_ONLY_LAST} {
     declareVariable(yytext,0);
-    isCommingFromMain = false;
-    BEGIN(MAIN);
+    BEGIN( popState() );
 }
 
 <VAR_SEC>{VARIABLE_VALUE} { processVariable(yytext); }
 <VAR_SEC>{VARIABLE_VALUE_LAST} {
     processVariable(yytext);
-    isCommingFromMain = false;
-    BEGIN(MAIN);
+    BEGIN( popState() );
 }
 <VAR_SEC>{VAR_SPACE} {}
 <VAR_SEC>. { stopProgram("Invalid character found");}
-<VAR_SEC>"/*" { initMultiComment(); BEGIN(COMMENT); isCommingFromVar = true; }
+<VAR_SEC>"/*" { 
+    initMultiComment();
+    BEGIN( pushState(COMMENT) );    
+}
 
-{MAIN_START} { initMain(); BEGIN(MAIN); }
-<MAIN>{DATA_TYPE} { initVarSec(yytext); isCommingFromMain = true; BEGIN(VAR_SEC); }
+
+<MAIN>{IF} { BEGIN( pushState(IF_SEC) ); }
+
+<IF_SEC>{IF_COND} { processIfBody(yytext); }
+<IF_SEC>. {}
+
+
+{MAIN_START} { initMain(); BEGIN( pushState(MAIN) ); }
+<MAIN>{DATA_TYPE} {
+    initVarSec(yytext); 
+    BEGIN( pushState(VAR_SEC) );
+}
 <MAIN>{VARIABLE_VALUE_ASSIGN} { updateValue(yytext); }
 
 
 <MAIN>{NEW_LINE_AND_TAB} {}
-<MAIN>{MAIN_END} {stopMain(); BEGIN(INITIAL); }
+<MAIN>{MAIN_END} {stopMain(); BEGIN( popState() ); }
 <MAIN>{SINGLE_LINE_COMMENT} { initSingleComment(); }
-<MAIN>"/*" {initMultiComment(); isCommingFromMain = true; BEGIN(COMMENT); }
+<MAIN>"/*" {
+    initMultiComment(); 
+    BEGIN( pushState(COMMENT) );
+}
 
 {NEW_LINE_AND_TAB}* { }
 

@@ -50,4 +50,10 @@ static void main(){
 
    c = 1055;
 
+   if ( a lt 100.55 ) { 
+      print("Hello");
+   }
+
+   
+
 }
