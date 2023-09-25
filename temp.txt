@@ -46,3 +46,8 @@ static void main(){
    //b = 100;
 
    c = 1055;
+
+
+   y= 6556;
+      int ds = 453, daa;
+      c = 54054;

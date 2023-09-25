@@ -656,7 +656,15 @@ char *yytext;
         char temp[len+1];
         int j = 0;
         for(int i=0; i<len; i++){
-            if(source[i] == ' ' || source[i] == ',' || source[i] == ';') continue;
+            //printf("%d, ", source[i]);
+            if( source[i] == ' ' || 
+                source[i] == ',' ||
+                source[i] == ';' ||
+                source[i] == '\t' ||
+                source[i] == '\n' ||
+                source[i] == 32
+            )continue;
+
             temp[j] = source[i];
             j++;
         }
@@ -665,13 +673,17 @@ char *yytext;
         char *dest;
         dest = malloc(j*sizeof(char));
         strcpy(dest,temp);
+        //printf("\n%s\n",dest);
         return dest;
     }
 
     void extractNameValue(char *nameVal, char *name, double* val){
         char *temp;
+        //printf("Extract name value: %s\n",nameVal);
         temp = removeRedundant(nameVal);
+        //printf("-%s-\n",temp);
         sscanf(temp, "%[^=]=%lf", name, val);
+        free(temp);
     }
 
     bool addVariable(char* name){
@@ -814,9 +826,11 @@ char *yytext;
     }
 
     void updateValue(char *nameVal){
-        char *name;
+        //printf("Passed %s\n",nameVal);
+        char name[20];
         double val;
         extractNameValue(nameVal,name,&val);
+        //printf("Extracted %s %ld\n",name,val);
 
         if( !doesVariableExists(name) ){
             char message[50];
@@ -826,8 +840,9 @@ char *yytext;
             stopProgram(message);
             return;
         }
-
+        //printf("Value not assigned\n");
         assignValue(name,val);
+        //printf("Value assigned\n");
     }
 
     bool isNumber(char* num){
@@ -901,7 +916,7 @@ char *yytext;
 
         isLastIfValid = isConditionValid(left,operator,right);
 
-        printf("body of if is: %d\n",isLastIfValid);
+        //printf("body of if is: %d\n",isLastIfValid);
 
         //printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
     }
@@ -918,7 +933,7 @@ char *yytext;
 
 #define IGNORE_SEC 6
 
-#line 922 "lex.yy.c"
+#line 937 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1069,9 +1084,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 384 "code.l"
+#line 399 "code.l"
 
-#line 1075 "lex.yy.c"
+#line 1090 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -1156,37 +1171,37 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 385 "code.l"
+#line 400 "code.l"
 { BEGIN(pushState(HEADER)); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 387 "code.l"
+#line 402 "code.l"
 { runHeader(1); BEGIN( popState() ); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 389 "code.l"
+#line 404 "code.l"
 { runHeader(0); BEGIN(popState()); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 391 "code.l"
+#line 406 "code.l"
 { initSingleComment(); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 393 "code.l"
+#line 408 "code.l"
 { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 395 "code.l"
+#line 410 "code.l"
 { appendTextToBuffer("/*"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 396 "code.l"
+#line 411 "code.l"
 { 
     appendTextToBuffer("*/"); checkForEnd(); 
     if(comment_depth == 0){
@@ -1196,22 +1211,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 403 "code.l"
+#line 418 "code.l"
 { appendToBuffer(yytext[0]); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 404 "code.l"
+#line 419 "code.l"
 { appendTextToBuffer("\n"); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 406 "code.l"
+#line 421 "code.l"
 { declareVariable(yytext,0); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 407 "code.l"
+#line 422 "code.l"
 {
     declareVariable(yytext,0);
     BEGIN( popState() );
@@ -1219,12 +1234,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 412 "code.l"
+#line 427 "code.l"
 { processVariable(yytext); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 413 "code.l"
+#line 428 "code.l"
 {
     processVariable(yytext);
     BEGIN( popState() );
@@ -1232,17 +1247,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 417 "code.l"
+#line 432 "code.l"
 {}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 418 "code.l"
+#line 433 "code.l"
 { stopProgram("Invalid character found");}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 419 "code.l"
+#line 434 "code.l"
 { 
     initMultiComment();
     BEGIN( pushState(COMMENT) );    
@@ -1250,17 +1265,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 425 "code.l"
+#line 440 "code.l"
 { BEGIN( pushState(IF_SEC) ); }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 427 "code.l"
+#line 442 "code.l"
 { processIfBody(yytext); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 428 "code.l"
+#line 443 "code.l"
 { 
     if(isLastIfValid){
         BEGIN(pushState(MAIN));
@@ -1272,12 +1287,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 437 "code.l"
+#line 452 "code.l"
 {}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 439 "code.l"
+#line 454 "code.l"
 { 
     int state = popState();
     BEGIN( popState() );
@@ -1285,12 +1300,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 443 "code.l"
+#line 458 "code.l"
 {}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 445 "code.l"
+#line 460 "code.l"
 { 
     //printf("main start %s\n",yytext); 
     initMain(); 
@@ -1299,7 +1314,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 450 "code.l"
+#line 465 "code.l"
 {
     //printf("main data type %s\n",yytext);
     initVarSec(yytext); 
@@ -1308,20 +1323,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 455 "code.l"
+#line 470 "code.l"
 { 
-    //printf("main assign %s\n",yytext);
+    printf("main assign %s\n",yytext);
     updateValue(yytext);
 }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 459 "code.l"
+#line 474 "code.l"
 { stopMain(); BEGIN( popState() ); }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 460 "code.l"
+#line 475 "code.l"
 {
     //printf("main comment %s\n",yytext);
     initSingleComment();
@@ -1329,7 +1344,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 464 "code.l"
+#line 479 "code.l"
 {
     //printf("main multi %s\n",yytext);
     initMultiComment(); 
@@ -1338,20 +1353,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 469 "code.l"
+#line 484 "code.l"
 { }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 471 "code.l"
+#line 486 "code.l"
 { }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 473 "code.l"
+#line 488 "code.l"
 ECHO;
 	YY_BREAK
-#line 1355 "lex.yy.c"
+#line 1370 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(HEADER):
 case YY_STATE_EOF(COMMENT):
@@ -2243,7 +2258,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 473 "code.l"
+#line 488 "code.l"
 
 
 int yywrap(){
@@ -2252,6 +2267,12 @@ int yywrap(){
 
 
 int main(){
+
+    // char name[20];
+    // double value;
+    // extractNameValue("y = 5333",name,&value);
+    // printf("%s %lf\n",name,value);
+    // return 0;
 
     // while(1){
     //     char arr[10];

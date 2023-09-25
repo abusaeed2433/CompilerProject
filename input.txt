@@ -2,12 +2,10 @@
 import stdio.h;
 
 static void main(){
-   int c = 200;
-   int val = 2344;
-   if ( c gt 100.55) { 
-      int y = 454;
-      y= 6556;
-      int ds = 453, daa;
-      c = 54054;
+   int y = 66666;
+   y = 5333;
+   if ( 150 gt 100.55) { 
+      y = 454;
+      y = 44346;
    }
 }

@@ -86,7 +86,15 @@
         char temp[len+1];
         int j = 0;
         for(int i=0; i<len; i++){
-            if(source[i] == ' ' || source[i] == ',' || source[i] == ';') continue;
+            //printf("%d, ", source[i]);
+            if( source[i] == ' ' || 
+                source[i] == ',' ||
+                source[i] == ';' ||
+                source[i] == '\t' ||
+                source[i] == '\n' ||
+                source[i] == 32
+            )continue;
+
             temp[j] = source[i];
             j++;
         }
@@ -95,13 +103,17 @@
         char *dest;
         dest = malloc(j*sizeof(char));
         strcpy(dest,temp);
+        //printf("\n%s\n",dest);
         return dest;
     }
 
     void extractNameValue(char *nameVal, char *name, double* val){
         char *temp;
+        //printf("Extract name value: %s\n",nameVal);
         temp = removeRedundant(nameVal);
+        //printf("-%s-\n",temp);
         sscanf(temp, "%[^=]=%lf", name, val);
+        free(temp);
     }
 
     bool addVariable(char* name){
@@ -244,9 +256,11 @@
     }
 
     void updateValue(char *nameVal){
-        char *name;
+        //printf("Passed %s\n",nameVal);
+        char name[20];
         double val;
         extractNameValue(nameVal,name,&val);
+        //printf("Extracted %s %ld\n",name,val);
 
         if( !doesVariableExists(name) ){
             char message[50];
@@ -256,8 +270,9 @@
             stopProgram(message);
             return;
         }
-
+        //printf("Value not assigned\n");
         assignValue(name,val);
+        //printf("Value assigned\n");
     }
 
     bool isNumber(char* num){
@@ -331,7 +346,7 @@
 
         isLastIfValid = isConditionValid(left,operator,right);
 
-        printf("body of if is: %d\n",isLastIfValid);
+        //printf("body of if is: %d\n",isLastIfValid);
 
         //printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
     }
@@ -478,6 +493,12 @@ int yywrap(){
 
 
 int main(){
+
+    // char name[20];
+    // double value;
+    // extractNameValue("y = 5333",name,&value);
+    // printf("%s %lf\n",name,value);
+    // return 0;
 
     // while(1){
     //     char arr[10];
