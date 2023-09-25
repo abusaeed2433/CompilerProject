@@ -1325,7 +1325,7 @@ case 25:
 YY_RULE_SETUP
 #line 470 "code.l"
 { 
-    printf("main assign %s\n",yytext);
+    //printf("main assign %s\n",yytext);
     updateValue(yytext);
 }
 	YY_BREAK

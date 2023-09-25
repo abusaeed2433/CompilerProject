@@ -24,30 +24,3 @@
 
 // /*a comment /* with ament  and ext */ */ 
 
-
-
-static void main(){
-
-   //int
-   /** asjs */
-
-   // kldsklsd
-   /** asjs 
-   /*
-   //asjkjd
-   */
-   */
-   int wxyzz;
-   int a;
-   int xy;
-   float aa = 243, /* aa */ b=11;//
-   int c = 2343, d,e;
-
-   //b = 100;
-
-   c = 1055;
-
-
-   y= 6556;
-      int ds = 453, daa;
-      c = 54054;
