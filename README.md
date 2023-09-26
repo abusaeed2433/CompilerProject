@@ -28,6 +28,8 @@
     - Initialized to `0` by default,
     - Error if duplicate variable is declared,
     - Error if assign value to undeclared variable
+    - All variables are stored until discarded explicitly
+    - No scope
 
 - Conditional operators
     - less than `lt`,

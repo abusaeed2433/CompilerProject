@@ -1,4 +1,7 @@
 
+import stdio.h;
+
+
 // This is a single-line comment
 // int x = 5;
 
@@ -24,3 +27,38 @@
 
 // /*a comment /* with ament  and ext */ */ 
 
+
+static void main(){
+   //int
+   /** asjs */
+
+   // kldsklsd
+   /** asjs 
+   /*
+   //asjkjd
+   */
+   */
+   int wxyzz;
+   int a;
+   int xy;
+   float aa = 243, /* aa */ b=11;//
+   int c = 2343, d,e;
+
+   //b = 100;
+
+   c = 1055;
+
+   if ( 150 gt 100.55) { 
+      int y = 6556;
+      int ds = 453, daa;
+      c = 54054;
+   }
+}
+
+
+<IF_SEC>{IF_BODY_END} {
+    printf("if end: %s\n",yytext);
+    int val = popState();
+    printf(" popped %d %d\n",val,MAIN);
+    BEGIN( val );
+}

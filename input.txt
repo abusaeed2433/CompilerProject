@@ -1,56 +1,20 @@
 
 import stdio.h;
 
-
-// This is a single-line comment
-// int x = 5;
-
-// int x = 5; // Assign 5 to x
-
-
-// /* This is a 
-   // multi-line comment */
-// int x = 5;
-
-// int x = /* Assign 5 to x */ 5;
-
-
-// /* This is a comment 
-// /* with another comment inside it */ 
-// end of the first comment */
-// int x = 5;
-
-// // This is a single-line comment
-// int x = 5; /* This is a multi-line comment
-             // that spans multiple lines */
-// int y = 10; // Another single-line comment
-
-// /*a comment /* with ament  and ext */ */ 
-
-
 static void main(){
-   //int
-   /** asjs */
+   int c = 1055;
 
-   // kldsklsd
-   /** asjs 
-   /*
-   //asjkjd
-   */
-   */
-   int wxyzz;
-   int a;
-   int xy;
-   float aa = 243, /* aa */ b=11;//
-   int c = 2343, d,e;
+   //c = 1220;
 
-   //b = 100;
-
-   c = 1055;
-
-   if ( 150 gt 100.55) { 
-      int y = 6556;
-      int ds = 453, daa;
-      c = 54054;
+   if( 100 lt 200){
+      c = 433;
+      int d = 343;
    }
+
+   // aa
+
+   c = 4333;
+
+   discard d,e;
+
 }

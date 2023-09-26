@@ -8,6 +8,12 @@
     int stack[100];
     int stackSize = 0;
 
+    // variable
+    struct VAR *vars = 0;
+
+    int varSize = 0;
+    const int MAXIMUM_VAR_SIZE = 10;
+
     char error[200];
     char lastDataType[10];
 
@@ -52,12 +58,7 @@
         double value;
     };
     
-    // variable
-    struct VAR *vars = 0;
-
-    int varSize = 0;
-    const int MAXIMUM_VAR_SIZE = 10;
-
+    void insertIntoLL(char *name, double val){}
 
     struct VAR* getVariable(char* name){
         for(int i=0; i<varSize; i++){
@@ -74,6 +75,7 @@
     }
 
     bool doesVariableExists(char *name){
+        //printf("Variable size: %d\n",varSize);
         for(int i=0; i<varSize; i++){
             if( strcmp(name,vars[i].name) == 0 ) return true;
         }
@@ -232,6 +234,20 @@
         }
     }
 
+    void removeVariable(char *name){
+        name = removeRedundant(name);
+
+        if( !doesVariableExists(name) ) return;
+        
+        for(int i=0; i<varSize; i++){
+            if( strcmp(vars[i].name,name) == 0){
+
+                //vars[i].value = val;
+                break;
+            }
+        }
+    }
+
     void declareVariable(char *name, double val){
         name = removeRedundant(name);
 
@@ -360,6 +376,7 @@
 %x VAR_SEC
 %x IF_SEC
 %x IGNORE_SEC
+%x DISCARD_SEC
 
 NUMBER [0-9.]+
 VARIABLE [a-zA-z][a-zA-Z0-9]*
@@ -378,6 +395,7 @@ SINGLE_LINE_COMMENT ("//").*(\n)?
 VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)
 VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)
 VARIABLE_VALUE_ASSIGN [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+;
+DISCARD_START "discard "
 
 VARIABLE_ONLY_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(;)
 VARIABLE_VALUE_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(;)
@@ -415,6 +433,8 @@ NEW_LINE_AND_TAB [\n\t]*
     } 
 }
 
+
+
 <COMMENT>. { appendToBuffer(yytext[0]); }
 <COMMENT>\n { appendTextToBuffer("\n"); }
 
@@ -441,6 +461,7 @@ NEW_LINE_AND_TAB [\n\t]*
 
 <IF_SEC>{IF_COND} { processIfBody(yytext); }
 <IF_SEC>{IF_BODY_START} { 
+    popState(); // main section arki
     if(isLastIfValid){
         BEGIN(pushState(MAIN));
     }
@@ -471,7 +492,12 @@ NEW_LINE_AND_TAB [\n\t]*
     //printf("main assign %s\n",yytext);
     updateValue(yytext);
 }
-<MAIN>{MAIN_END} { stopMain(); BEGIN( popState() ); }
+<MAIN>{MAIN_END} {
+    //stopMain();
+    //int val = popState();
+    //printf(" main end popped %s %d %d\n",yytext,val,MAIN);
+    BEGIN( popState() );
+}
 <MAIN>{SINGLE_LINE_COMMENT} {
     //printf("main comment %s\n",yytext);
     initSingleComment();
@@ -482,6 +508,19 @@ NEW_LINE_AND_TAB [\n\t]*
     BEGIN( pushState(COMMENT) );
 }
 <MAIN>{NEW_LINE_AND_TAB}* { }
+
+<MAIN>{DISCARD_START} {
+    //printf("Discard section\n");
+    BEGIN( pushState(DISCARD_SEC) );
+}
+
+<DISCARD_SEC>{VARIABLE_ONLY} {
+    printf("Discard variable %s\n",yytext);
+}
+<DISCARD_SEC>{VARIABLE_ONLY_LAST} {
+    printf("discard Variable only last %s\n",yytext);
+    BEGIN( popState() );
+}
 
 {NEW_LINE_AND_TAB}* { }
 
@@ -510,9 +549,9 @@ int main(){
     yyin = fopen("input.txt","r");
     yylex();
 
-    if(!isMainBlockFound){
-        stopProgram("Incomplete main block");
-    }
+    // if(!isMainBlockFound){
+    //     stopProgram("Incomplete main block");
+    // }
 
     for(int i=0; i<varSize; i++){
         printf("%s : %3lf\n",vars[i].name,vars[i].value);
