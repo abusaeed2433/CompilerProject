@@ -4,14 +4,12 @@
     #include <stdlib.h>
     #include <stdbool.h>
     #include <ctype.h>
+    #include "var_list.h"
+
 
     int stack[100];
     int stackSize = 0;
 
-    // variable
-    struct VAR *vars = 0;
-
-    int varSize = 0;
     const int MAXIMUM_VAR_SIZE = 10;
 
     char error[200];
@@ -52,34 +50,12 @@
 
     // variable
     const int MAXIMUM_VARIABLE_LENGTH = 200;
-    
-    struct VAR{
-        char name[200];
-        double value;
-    };
-    
-    void insertIntoLL(char *name, double val){}
 
-    struct VAR* getVariable(char* name){
-        for(int i=0; i<varSize; i++){
-            if( strcmp(name,vars[i].name) == 0 ) return &vars[i];
-        }
-        return NULL;
-    }
     
     void stopProgram(char *error){
         printf("%s\n",error);
-        free(vars);
         free(comment_buffer);
         exit(1);
-    }
-
-    bool doesVariableExists(char *name){
-        //printf("Variable size: %d\n",varSize);
-        for(int i=0; i<varSize; i++){
-            if( strcmp(name,vars[i].name) == 0 ) return true;
-        }
-        return false;
     }
 
     char* removeRedundant(char *source){
@@ -119,25 +95,14 @@
     }
 
     bool addVariable(char* name){
-        int size = varSize;
 
-        for(int i=0; i<size; i++){
-            if( strcmp(name,vars[i].name) == 0 ){
-                stopProgram("Variable is already defined");
-                return false;
-            }
+        if( doesVariableExists(name) ){
+            stopProgram("Variable is already defined");
+            return false;
         }
-
-        vars = (struct VAR *) realloc(vars,(size+2)*MAXIMUM_VAR_SIZE*sizeof(struct VAR));
-        if(vars == NULL){
-            printf("Why null\n");
-        }
-        strcpy(vars[size].name, name);
-        varSize = size+1;
-        
+        insertVariable(name,0);
         return true;
     }
-
 
     void runHeader(int check){
         if(!check){
@@ -226,26 +191,12 @@
     }
 
     void assignValue(char *name, double val){
-        for(int i=0; i<varSize; i++){
-            if( strcmp(vars[i].name,name) == 0){
-                vars[i].value = val;
-                break;
-            }
-        }
+        updateVariable(name,val);
     }
 
     void removeVariable(char *name){
         name = removeRedundant(name);
-
-        if( !doesVariableExists(name) ) return;
-        
-        for(int i=0; i<varSize; i++){
-            if( strcmp(vars[i].name,name) == 0){
-
-                //vars[i].value = val;
-                break;
-            }
-        }
+        deleteVariable(name);
     }
 
     void declareVariable(char *name, double val){
@@ -258,7 +209,6 @@
             stopProgram(message);
             return;
         }
-
         assignValue(name,val);
     }
 
@@ -337,7 +287,7 @@
 
         if( isNumber(leftVal) ) left = strtod(leftVal,NULL);
         else{
-            struct VAR *val = getVariable(leftVal);
+            struct VARIABLE *val = getVariable(leftVal);
             if(val == NULL) {
                 printf("%s\n",leftVal);
                 stopProgram("Invalid variable in if");
@@ -347,7 +297,7 @@
 
         if( isNumber(rightVal) ) right = strtod(rightVal,NULL);
         else{
-            struct VAR *val = getVariable(rightVal);
+            struct VARIABLE *val = getVariable(rightVal);
             if(val == NULL) {
                 printf("%s\n",rightVal);
                 stopProgram("Invalid variable in if");
@@ -521,7 +471,7 @@ NEW_LINE_AND_TAB [\n\t]*
     printf("discard Variable only last %s\n",yytext);
     BEGIN( popState() );
 }
-
+. { stopProgram("Invalid char outside block"); }
 {NEW_LINE_AND_TAB}* { }
 
 %%
@@ -553,9 +503,10 @@ int main(){
     //     stopProgram("Incomplete main block");
     // }
 
-    for(int i=0; i<varSize; i++){
-        printf("%s : %3lf\n",vars[i].name,vars[i].value);
-    }
+    printAll();
+    // for(int i=0; i<varSize; i++){
+    //     printf("%s : %3lf\n",vars[i].name,vars[i].value);
+    // }
     stopProgram("");
 
     if( strlen(error) == 0 ){

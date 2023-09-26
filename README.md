@@ -47,3 +47,10 @@
     }
     ```
     - no else statment
+
+
+## Run using
+```
+    flex code.l
+    gcc lex.yy.c var_list.c -o app -lfl
+```

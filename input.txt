@@ -1,14 +1,20 @@
 
 import stdio.h;
 
+// my comment
+
+//int var;
+
 static void main(){
    int c = 1055;
 
-   //c = 1220;
+   int d = 3443;
 
-   if( 100 lt 200){
+   c = 1220;
+
+   if( 100 lt d){
       c = 433;
-      int d = 343;
+      int dd = 343;
    }
 
    // aa

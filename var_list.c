@@ -3,13 +3,9 @@
 #include<string.h>
 #include<stdlib.h>
 #include "var_list.h"
+#include <stdbool.h>
 
-struct VARIABLE{
-    char name[200];
-    double value;
-    struct VARIABLE *prev;
-    struct VARIABLE *next;
-};
+
 
 struct VARIABLE *head = NULL;
 struct VARIABLE *tail = NULL;
@@ -78,6 +74,29 @@ void deleteVariable(char *name){
     }
 }
 
+bool doesVariableExists(char *name){
+    struct VARIABLE *ptr = head;
+
+    while (ptr != NULL)
+    {
+        if( strcmp(name,ptr->name) == 0 ) return true;
+        ptr = ptr->next;
+    }
+    return false;
+}
+
+struct VARIABLE* getVariable(char* name){
+    struct VARIABLE *ptr = head;
+    while (ptr != NULL)
+    {
+        if( strcmp(name,ptr->name) == 0 ){
+            return ptr;
+        }
+        ptr = ptr->next;
+    }
+    return NULL;
+}
+
 void printAll(){
     if(head == NULL) return;
 
@@ -88,33 +107,4 @@ void printAll(){
         ptr = ptr->next;
     }
     printf("\n");
-}
-
-void printAll2(){
-    if(head == NULL) return;
-
-    struct VARIABLE *ptr;
-    ptr = tail;
-    while(ptr != NULL){
-        printf("%s %lf -> ",ptr->name,ptr->value);
-        ptr = ptr->prev;
-    }
-    printf("\n");
-}
-
-int main(){
-    
-    insertVariable("a",1);
-//    insertVariable("b",2);
-    //insertVariable("c",3);
-
-    printAll();
-    printAll2();
-
-    deleteVariable("a");
-    printAll();
-    printAll2();
-
-
-
 }
