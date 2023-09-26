@@ -12,9 +12,11 @@ static void main(){
 
    c = 1220;
 
-   if( 100 lt d){
-      c = 433;
-      int dd = 343;
+   if( 920 lt d){
+      if(100 lt 200){
+         c = 433;
+         int dd = 343;
+      }
    }
 
    // aa

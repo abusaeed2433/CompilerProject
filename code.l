@@ -27,6 +27,8 @@
 
     size_t buffer_length = 0;
 
+    int bracketCounter=0;
+
     int pushState(int id){
         stackSize++;
         stack[stackSize] = id;
@@ -370,7 +372,8 @@ IF_BODY_START [ ]*"{"
 IF_BODY_END [ ]*"}"
 IF_SPACE [ ]*
 
-IGNORE_TILL_BRACE "}"
+IGNORE_LEFT_BRACE "{"
+IGNORE_RIGHT_BRACE "}"
 
 NEW_LINE_AND_TAB [\n\t]*
 
@@ -426,15 +429,18 @@ NEW_LINE_AND_TAB [\n\t]*
         BEGIN(pushState(MAIN));
     }
     else{
+        bracketCounter=1;
         BEGIN( pushState(IGNORE_SEC) );
     }
 }
 
 <IF_SEC>. {}
-
-<IGNORE_SEC>{IGNORE_TILL_BRACE} { 
-    int state = popState();
-    BEGIN( popState() );
+<IGNORE_SEC>{IGNORE_LEFT_BRACE} { bracketCounter++; }
+<IGNORE_SEC>{IGNORE_RIGHT_BRACE} { 
+    bracketCounter--;
+    if(bracketCounter == 0){
+        BEGIN( popState() );
+    }
 }
 <IGNORE_SEC>[^}] {}
 
