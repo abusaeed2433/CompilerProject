@@ -21,6 +21,6 @@ static void main(){
 
    c = 4333;
 
-   discard d,e;
+   discard d;
 
 }

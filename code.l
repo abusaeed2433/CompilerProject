@@ -241,6 +241,15 @@
         //printf("Value assigned\n");
     }
 
+    void discardVariable(char *name){
+        name = removeRedundant(name);
+        if( !doesVariableExists(name) ){
+            printf("\nCan't discard %s since not found. Ignoring...\n",name);
+            return;
+        }
+        deleteVariable(name);
+    }
+
     bool isNumber(char* num){
         bool count = 0;
         for(int i=0; i<strlen(num); i++){
@@ -316,6 +325,7 @@
 
         //printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
     }
+
 
 %}
 
@@ -465,12 +475,13 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 
 <DISCARD_SEC>{VARIABLE_ONLY} {
-    printf("Discard variable %s\n",yytext);
+    discardVariable(yytext);
 }
 <DISCARD_SEC>{VARIABLE_ONLY_LAST} {
-    printf("discard Variable only last %s\n",yytext);
+    discardVariable(yytext);
     BEGIN( popState() );
 }
+<DISCARD_SEC>. { stopProgram("\nInvalid character while discarding\n"); }
 . { stopProgram("Invalid char outside block"); }
 {NEW_LINE_AND_TAB}* { }
 
@@ -502,7 +513,7 @@ int main(){
     // if(!isMainBlockFound){
     //     stopProgram("Incomplete main block");
     // }
-
+    printf("\n");
     printAll();
     // for(int i=0; i<varSize; i++){
     //     printf("%s : %3lf\n",vars[i].name,vars[i].value);
