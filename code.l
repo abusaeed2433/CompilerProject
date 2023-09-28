@@ -245,10 +245,15 @@
         declareVariable(name,value);
     }
 
-    void continueVariableCalc(char *stmt){
+    void continueVariableCalc(char *stmt, bool addVar){
+
         //updateValue(yytext);
         char leftVar[30], varBefOp[30], op[10], varAftOp[30];
         processStatement(stmt, leftVar, varBefOp, op, varAftOp);
+
+        if(addVar){
+            declareVariable(leftVar,0);
+        }
 
         double temp;
         if( sscanf(leftVar, "%lf", &temp) == 1){
@@ -405,7 +410,8 @@ VARIABLE_ONLY [ ]*{VARIABLE}*[ ]*(,)
 VARIABLE_VALUE [ ]*{VARIABLE}*[ ]*("=")[ ]*[0-9]+(,)
 VARIABLE_VALUE_ASSIGN_CONST [ ]*{VARIABLE}[ ]*("=")[ ]*[0-9]+;
 VARIABLE_VALUE_ASSIGN_VAR [ ]*{VARIABLE}[ ]*("=")[ ]*{VARIABLE};
-VARIABLE_VALUE_ASSIGN_CALC [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_OP}[ ]*{VAR_NUM}[ ]*;
+VARIABLE_VALUE_ASSIGN_CALC [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_OP}[ ]*{VAR_NUM}[ ]*,
+VARIABLE_VALUE_ASSIGN_CALC_LAST [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_OP}[ ]*{VAR_NUM}[ ]*;
 
 DISCARD_START "discard "
 
@@ -460,7 +466,15 @@ NEW_LINE_AND_TAB [\n\t]*
     declareVariable(yytext,0);
     BEGIN( popState() );
 }
-
+<VAR_SEC>{VARIABLE_VALUE_ASSIGN_CALC} {
+    //printf("\nassign from calc: %s\n",yytext);
+    continueVariableCalc(yytext,true);
+}
+<VAR_SEC>{VARIABLE_VALUE_ASSIGN_CALC_LAST} {
+    //printf("\nassign from calc: %s\n",yytext);
+    continueVariableCalc(yytext,true);
+    BEGIN( popState() );
+}
 <VAR_SEC>{VARIABLE_VALUE} { processVariable(yytext); }
 <VAR_SEC>{VARIABLE_VALUE_LAST} {
     processVariable(yytext);
@@ -513,13 +527,13 @@ NEW_LINE_AND_TAB [\n\t]*
     updateValue(yytext);
 }
 <MAIN>{VARIABLE_VALUE_ASSIGN_VAR} { 
-    printf("\nassign from var: %s\n",yytext);
+    //printf("\nassign from var: %s\n",yytext);
     updateValue(yytext);
 }
 
-<MAIN>{VARIABLE_VALUE_ASSIGN_CALC} {
-    printf("\nassign from calc: %s\n",yytext);
-    continueVariableCalc(yytext);
+<MAIN>{VARIABLE_VALUE_ASSIGN_CALC_LAST} {
+    //printf("\nassign from calc: %s\n",yytext);
+    continueVariableCalc(yytext,false);
 }
 
 

@@ -6,9 +6,19 @@ import stdio.h;
 //int var;
 
 static void entryPoint(){
-   int c = 1055;
-   int d = 444;
-   d = c add 34;
+   
+   
+   int a = 100, b = 10;
+
+   int c = a mul b, d = a div b, f = 220;
+
+   c = d dif c;
+
+   if( a gt b){
+      int x = a dif b;
+      discard a;
+   }
+
    //c= d sub 32;
    //d=c mul d; 
 /*
