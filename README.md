@@ -2,35 +2,89 @@
 
 ## Structure
 
-- Import section
-    Using `import name;`
-
-- Comment
-    - single line comment
-        - using `//`
-    - multiline comment
-        - Using `/* - */`
-        - Supports `nested comment`
-
-- Starting point of execution
+### Header
+- Using import,
+- Ex:
     ```
-    static void main(){ }
+    import stdio.h;
     ```
 
-- Variable
-    - Data type: `int`, `float`, `double`[ now int only],
-    - Supports `declaration` & `initialization`
-        - `int a=10;`
-        - `int a,b, cd = 344;`
-    - Supports `assignment`
-        - `a = 234;`
-        - `b = 40;`
-    - Initialized to `0` by default,
-    - Error if duplicate variable is declared,
-    - Error if assign value to undeclared variable
-    - All variables are stored until `discarded` explicitly
-    - No scope
+### Comment
+- #### Single line comment
+    - Using `//`,
     - Ex:
+        ```
+        int a = 25;
+        // this is single line comment
+
+        int b = 123; // also valid here
+        ```
+- #### Multi-line comment
+    - Using `/*  */`,
+    - Support nested also,
+    - Ex:
+        ```
+            int y = x sub 999; 
+            /*multi line comment
+                possible to have
+                /* nested also */
+            */
+        ```
+
+
+### Starting point of execution
+- Defined as:
+- Ex:
+    ```
+    static void entry(){
+        // starts from here
+    }
+    ```
+
+
+### Variable
+- #### Supporeted Data type
+    - `int`, `float`, `double`,
+- #### Declaration:
+    - Using:
+        ```
+        data_type var1, var2;
+        ```
+    - Ex:
+        ```
+        int a;
+        int b;
+        
+        int c,d,e;
+        ```
+- #### Initialization
+    - Using:
+        ```
+        data_type var1 = const_value, var2 = calc_value;
+        ```
+    - Ex:
+        ```
+        int m = 102, n = m add 10;
+        // m = 102, n = 112
+        ```
+- #### Assignment
+    - Using
+        ```
+        var = const_value or calc_value;
+        ```
+    - Ex:
+        ```
+            int z;
+            z = 100; // constant
+            z = 10 add 20; // calculated value
+        ```
+- ### Extra:
+    - Initialized to `0` by default,
+    - Error if `duplicate variable` is declared,
+    - Error if assign value to `undeclared variable`,
+    - All variables are become globaal once declared,
+    - Variable remains gloabl until `discarded` explicitly,
+- #### Ex:
     ```
     static void main(){
         // [] <---------------------------------
@@ -57,26 +111,161 @@
     }
     ```
 
-- Conditional operators
+- ### Conditional operators
     - less than `lt`,
     - greater than `gt`,
     - equal `eq`,
     - not equals `neq`
     - less equal `le`,
     - greater equal `ge`
+    - Ex:
+        ```
+        if( 100 lt d){
+            c = 433;
+            int dd = 343;
+        }
+        ```
 
-- `if` structure
+- ### `justInCase` structure:
+    - Equivalent to `if`,
+    - Structure:
+        ```
+        justInCase(vc @ vc){
+            // body
+        }
+        ```
+        `vc` = variable or constant, `@` = conditional operator
+    - Ex:
+        ```
+        if( 100 lt d){
+            c = 433;
+            int dd = 343;
+        }
+        ```
     - vc = variable or constant
-    ```
-    if(vc @ vc){
-
-    }
-    ```
     - no else statment
+- ### Looping
+    - Structure:
+        ```
+        till(vc @ vc){
+            //body
+        }
+        ```
+    - Ex:
+        ```
+        int i=10;
+        till(i lt 100){
+            //body
+        }
+        ```
 
+- ### Output to console
+    - Using `println()`,
+    - Structure:
+        ```
+        println(vc1, vc2, ... vcn);
+        ```
+    - Comma(``,`) and space(`' '`) both are valid as separator,
+    - Ex:
+        ```
+        float f1 = 243, f2=11;
+
+        println(f1,f2);
+
+        double height = 25;
+        println("My height is: ",height "km");
+        ```
+    - Output is like
+        ```
+        243.000 11.000  < - - - - - - - - - -
+
+        My height is: 25.000 km < - - - - - - - - - -
+        ```
+- ### Overall example:
+```
+import stdio.h;
+
+//starting point of program
+static void entryPoint(){
+
+
+   double height = 25;
+   println("My height is: ",height "km");
+   
+   //variable declaration
+   int a = 34;
+
+   println(a);
+
+   a = 255;
+
+   println(a);
+
+   discard a;
+   
+   double b = 102.44, c= 123;
+
+   println(b, c);
+
+   b = b sub 2.44;
+   println(b);
+
+   justInCase ( b gt 100){
+      println(b," is larger than 100");
+   }
+
+   justInCase( b lt 100){
+      println(b " is lees than 100")
+   }
+
+   justInCase(b eq 100){
+      println(b, " is exactly 100");
+   }
+
+   //single line comment
+
+   int x = 1000; // initializing
+
+   int y = x sub 999; 
+   /*
+   multi line comment
+   possible to have
+   /*
+   nested also
+   */
+   */
+
+   println(y);
+
+   float f1 = 243, /* also valid here */ f2=11;
+
+   println(f1,f2);
+
+   int sum = f1 add f2;
+
+   discard b,x,y,c,f1,f2;
+   println(sum);
+
+   int i=10;
+   till(i lt 100){
+      //body
+   }
+
+
+   int m = 102, n = m add 10;
+   println(m,n);
+
+   int z;
+   z = 100;
+   z = 10 add 20;
+   println(z);
+
+}
+```
 
 ## Run using
 ```
-    flex code.l
-    gcc lex.yy.c var_list.c -o app
+flex code.l
+gcc lex.yy.c constant.c var_list.c -o app
+app
 ```

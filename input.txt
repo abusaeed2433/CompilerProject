@@ -4,6 +4,10 @@ import stdio.h;
 
 //starting point of program
 static void entryPoint(){
+
+
+   double height = 25;
+   println("My height is: ",height "km");
    
    //variable declaration
    int a = 34;
@@ -23,15 +27,15 @@ static void entryPoint(){
    b = b sub 2.44;
    println(b);
 
-   if ( b gt 100){
+   justInCase ( b gt 100){
       println(b," is larger than 100");
    }
 
-   if( b lt 100){
+   justInCase( b lt 100){
       println(b " is lees than 100")
    }
 
-   if(b eq 100){
+   justInCase(b eq 100){
       println(b, " is exactly 100");
    }
 
@@ -63,5 +67,14 @@ static void entryPoint(){
    till(i lt 100){
       //body
    }
+
+
+   int m = 102, n = m add 10;
+   println(m,n);
+
+   int z;
+   z = 100;
+   z = 10 add 20;
+   println(z);
 
 }

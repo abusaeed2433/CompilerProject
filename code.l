@@ -482,7 +482,7 @@ VAR_SPACE [ ]*
 
 DATA_TYPE ("int"|"float"|"double")[ ]
 
-IF "if"[ ]*
+IF "justInCase"[ ]*
 IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
 IF_BODY_START [ ]*"{"
 IF_BODY_END [ ]*"}"
@@ -543,7 +543,7 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 <VAR_SEC>{VAR_SPACE} {}
 <VAR_SEC>. { 
-    //printf("\nInvalid %s\n",yytext);
+    printf("\nInvalid %s\n",yytext);
     stopProgram("Invalid character found");
 }
 <VAR_SEC>"/*" { 
