@@ -1,52 +1,13 @@
 
+
 import stdio.h;
 
-// my comment
-
-//int var;
-
+//starting point of program
 static void entryPoint(){
    
-   
-   int a = 100, b = 10;
+   //variable declaration
+   int a = 34;
 
-   int c = a mul b, d = a div b, f = 220;
+   println("Value of a = ",a, "fine na?",a);
 
-   c = d dif c;
-
-   if( a gt b){
-      int x = a dif b;
-      discard a;
-   }
-
-   //c= d sub 32;
-   //d=c mul d; 
-/*
-   int d = 3443;
-   d = 44;
-   c = d;
-
-   c = d add 43;
-
-   if( 920 lt d){
-      if(100 lt 200){
-         c = 433;
-         int dd = 343;
-      }
-   }
-
-   c = 199;
-   
-   till( c lt 200){
-      c = 100;
-      int dex = 3222;
-      //comment single
-   }
-
-   // aa
-
-   c = 4333;
-
-   discard d;
-   */
 }

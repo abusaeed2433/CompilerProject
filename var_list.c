@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 
+
 struct VARIABLE *head = NULL;
 struct VARIABLE *tail = NULL;
 
@@ -110,8 +111,11 @@ struct VARIABLE* getVariable(char* name){
 }
 
 void printAll(){
-    printf("\n--------------");
+    printf("\n");
     if(head == NULL) return;
+
+
+    printf("----------Printing all variables----------\n");
 
     struct VARIABLE *ptr;
     ptr = head;
@@ -124,5 +128,5 @@ void printAll(){
         }
         ptr = ptr->next;
     }
-    printf("\n");
+    printf("\n\n");
 }

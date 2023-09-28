@@ -2,7 +2,9 @@
 #include "constant.h"
 #include<stdbool.h>
 #include<string.h>
-#include <stdio.h>
+#include<stdio.h>
+#include <stddef.h>
+#include<stdlib.h>
 #include <ctype.h>
 
 int COND_OPERATORS_SIZE = 6;
@@ -43,7 +45,10 @@ bool isConditionValid(double left, char* op, double right){
 
 double getValue(double left, double right, char *op){
     // "add", "sub"
-    if( strncmp(op,ARITHMATIC_OPERATORS[0],3) == 0 ) return left+right;
+    if( strncmp(op,ARITHMATIC_OPERATORS[0],3) == 0 ) {
+        printf("\nadd %lf %lf\n",left,right);
+        return left+right;
+    }
     if( strncmp(op,ARITHMATIC_OPERATORS[1],3) == 0 ) return left-right;
 
     // "mul", "div"
@@ -54,6 +59,22 @@ double getValue(double left, double right, char *op){
     if( strncmp(op,ARITHMATIC_OPERATORS[4],3) == 0 ) return left>=right ? left-right : right-left;
     if( strncmp(op,ARITHMATIC_OPERATORS[5],3) == 0 ) return ((int)left) % ((int)right);
 
+}
+
+char* trim(char *s) {
+    // Trim trailing whitespace
+    char *end = s + strlen(s) - 1;
+    while(end > s && isspace((unsigned char)*end)) {
+        end--;
+    }
+    *(end + 1) = '\0';
+
+    // Trim leading whitespace
+    while(*s && isspace((unsigned char)*s)) {
+        s++;
+    }
+
+    return s;
 }
 
 void processStatement(const char *stmt, char *leftVar, char *varBeforeOp, char *operator, char *varAfterOp) {
@@ -96,7 +117,7 @@ void processStatement(const char *stmt, char *leftVar, char *varBeforeOp, char *
             continue;
         }
 
-        if (isalnum(ch)) {
+        if (isalnum(ch) || ch == '.') {
             buffer[bufPos++] = ch;
         }
     }
@@ -109,22 +130,5 @@ void processStatement(const char *stmt, char *leftVar, char *varBeforeOp, char *
         }
     }
 
-    //printf("leftVar:-%s-, varBeforeOp: -%s-, operator:-%s-, varAfterOp: -%s-\n", leftVar, varBeforeOp, operator, varAfterOp);
+    printf("leftVar:-%s-, varBeforeOp: -%s-, operator:-%s-, varAfterOp: -%s-\n", leftVar, varBeforeOp, operator, varAfterOp);
 }
-
-// int main(){
-//     const char *stmt1 = "dda =c add 34;";
-//     const char *stmt2 = "c=d sub 32;";
-//     const char *stmt3 = "d = c mul d; a";
-
-//     char leftVar[100], varBeforeOp[100], operator[100], varAfterOp[100];
-
-//     processStatement(stmt1, leftVar, varBeforeOp, operator, varAfterOp);
-
-//     processStatement(stmt2, leftVar, varBeforeOp, operator, varAfterOp);
-
-//     processStatement(stmt3, leftVar, varBeforeOp, operator, varAfterOp);
-//     // printf("leftVar:-%s-, varBeforeOp: -%s-, operator:-%s-, varAfterOp: -%s-\n", leftVar, varBeforeOp, operator, varAfterOp);
-
-//     return 0;
-// }

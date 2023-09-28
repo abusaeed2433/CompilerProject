@@ -7,7 +7,7 @@
     #include "constant.h"
     #include "var_list.h"
 
-
+    int blockBalancer = 0;
     int stack[100];
     int stackSize = 0;
 
@@ -19,6 +19,10 @@
     int commentCounter = 0;
     int comment_depth = 0;
     char *comment_buffer = NULL;
+    
+    char *outBuffer = NULL;
+    int outBufferSize = 0;
+
 
     bool canDeclareHeader = true;
     bool isMainBlockFound = false;
@@ -88,6 +92,52 @@
         return dest;
     }
 
+    void initOutBuffer(){
+        outBuffer = (char*) malloc(1);
+        memset(outBuffer, 0, 1);
+        outBufferSize = 1;
+    }
+
+    void printAndClearOutBuffer(){
+        printf("\n%s < - - - - - - - - - -\n",outBuffer);
+        free(outBuffer);
+        outBufferSize = 0;
+    }
+    
+    void continueOutBuffer(char *vc){
+        int i=0, len = strlen(vc) - 1;
+        while( i <= len && vc[i] == ' ') i++; // leading space
+        while( len>=0 && vc[len] == ' ') len--; // trailing space after "
+        while( len>=0 && vc[len] == ',' || vc[len]=='\"') len--; // space
+
+        char *res;
+
+        if(vc[i] == '\"'){ // constant
+            i++; // trailing quotaion bad dilam
+
+            int size = len-i+1;
+            res = (char *)malloc(size+1);
+            strncpy(res, vc + i, size);
+            res[size] = '\0';
+        }
+        else{ // variable
+            double val = 0;
+            vc = removeRedundant(vc);
+            struct VARIABLE *var = getVariable(vc);
+            if(var == NULL) {
+                stopProgram("Undeclared variable inside println");
+            }
+            
+            val = var->value;
+            res = (char *) malloc(20);
+            sprintf(res, "%.3f", val);
+        }
+        outBufferSize += strlen(res);
+        outBuffer = (char *)realloc(outBuffer,outBufferSize);
+
+        strcat(outBuffer,res);
+    }
+
     void extractNameValue(char *nameVal, char *name, double* val){
         char *temp;
         //printf("Extract name value: %s\n",nameVal);
@@ -118,13 +168,12 @@
         free(temp);
     }
 
-    bool addVariable(char* name){
-
+    bool addVariable(char* name,char *type){
         if( doesVariableExists(name) ){
             stopProgram("Variable is already defined");
             return false;
         }
-        insertVariable(name,0);
+        insertVariable(name,type,0);
         return true;
     }
 
@@ -226,14 +275,18 @@
     void declareVariable(char *name, double val){
         name = removeRedundant(name);
 
-        if( !addVariable(name) ){
+        //printf("\n declaring..................\n");
+        //printAll();
+        if( !addVariable(name, removeRedundant(lastDataType) ) ){
             char message[50];
             strcpy(message,"Duplicate variable found ");
             strcat(message,name);
             stopProgram(message);
             return;
         }
+        //printf("\nBefore assign -%s- -%lf-\n",name,val);
         assignValue(name,val);
+        //printAll();
     }
 
     void processVariable(char *nameVal){
@@ -242,6 +295,7 @@
         char name[20];
         double value;
         extractNameValue(nameVal,name,&value);
+        //printf("\nname -%s- -%lf-\n",name,value);
         declareVariable(name,value);
     }
 
@@ -389,9 +443,10 @@
 %x IGNORE_SEC
 %x DISCARD_SEC
 %x LOOP_SEC
+%x OUT_SEC
 
-
-NUMBER [0-9.]+
+DQ \"
+NUMBER ([0-9]+(".")[0-9]+)|([0-9]+)|("."[0-9]+)
 VARIABLE [a-zA-Z][a-zA-Z0-9]*
 VAR_NUM ({NUMBER}|{VARIABLE})
 COND_OP ("lt"|"gt"|"eq"|"neq"|"le"|"ge")
@@ -400,15 +455,19 @@ ARITH_OP ("add"|"sub"|"mul"|"div"|"dif"|"rem")
 HEADER_START "import "
 HEADER_END [a-zA-Z.]+";"
 
+OUT_START "println("[ ]*
+OUT_BODY_CONST [ ]*{DQ}[^\"]*{DQ}(,)?[ ]*
+OUT_BODY_VAR [ ]*{VAR_NUM}[ ]*(,)?
+OUT_END [ ]*")"[ ]*;[ ]*
 
-MAIN_START "static void entryPoint(){"
+MAIN_START "static void entryPoint"[ ]*"("[ ]*")"[ ]*"{"[ ]*
 MAIN_END "}"
 
 SINGLE_LINE_COMMENT ("//").*(\n)?
 
 VARIABLE_ONLY [ ]*{VARIABLE}*[ ]*(,)
-VARIABLE_VALUE [ ]*{VARIABLE}*[ ]*("=")[ ]*[0-9]+(,)
-VARIABLE_VALUE_ASSIGN_CONST [ ]*{VARIABLE}[ ]*("=")[ ]*[0-9]+;
+VARIABLE_VALUE [ ]*{VARIABLE}[ ]*("=")[ ]*{NUMBER}(,)
+VARIABLE_VALUE_ASSIGN_CONST [ ]*{VARIABLE}[ ]*("=")[ ]*{NUMBER};
 VARIABLE_VALUE_ASSIGN_VAR [ ]*{VARIABLE}[ ]*("=")[ ]*{VARIABLE};
 VARIABLE_VALUE_ASSIGN_CALC [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_OP}[ ]*{VAR_NUM}[ ]*,
 VARIABLE_VALUE_ASSIGN_CALC_LAST [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_OP}[ ]*{VAR_NUM}[ ]*;
@@ -416,11 +475,11 @@ VARIABLE_VALUE_ASSIGN_CALC_LAST [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_O
 DISCARD_START "discard "
 
 VARIABLE_ONLY_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(;)
-VARIABLE_VALUE_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(;)
+VARIABLE_VALUE_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*{NUMBER}(;)
 
 VAR_SPACE [ ]*
 
-DATA_TYPE ("int "|"float "|"double ")
+DATA_TYPE ("int"|"float"|"double")[ ]
 
 IF "if"[ ]*
 IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
@@ -477,11 +536,15 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 <VAR_SEC>{VARIABLE_VALUE} { processVariable(yytext); }
 <VAR_SEC>{VARIABLE_VALUE_LAST} {
+    //printf("\nvariable value last-%s-\n",yytext);
     processVariable(yytext);
     BEGIN( popState() );
 }
 <VAR_SEC>{VAR_SPACE} {}
-<VAR_SEC>. { stopProgram("Invalid character found");}
+<VAR_SEC>. { 
+    //printf("\nInvalid %s\n",yytext);
+    stopProgram("Invalid character found");
+}
 <VAR_SEC>"/*" { 
     initMultiComment();
     BEGIN( pushState(COMMENT) );    
@@ -492,7 +555,8 @@ NEW_LINE_AND_TAB [\n\t]*
 
 <IF_SEC>{IF_COND} { processIfBody(yytext); }
 <IF_SEC>{IF_BODY_START} { 
-    popState(); // main section arki
+    blockBalancer++;
+    popState(); // popping if section and taking to main section arki
     if(isLastIfValid){
         BEGIN(pushState(MAIN));
     }
@@ -503,8 +567,9 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 
 <IF_SEC>. {}
-<IGNORE_SEC>{IGNORE_LEFT_BRACE} { bracketCounter++; }
+<IGNORE_SEC>{IGNORE_LEFT_BRACE} { blockBalancer++; bracketCounter++; }
 <IGNORE_SEC>{IGNORE_RIGHT_BRACE} { 
+    blockBalancer--;
     bracketCounter--;
     if(bracketCounter == 0){
         BEGIN( popState() );
@@ -513,6 +578,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <IGNORE_SEC>[^}] {}
 
 {MAIN_START} { 
+    blockBalancer++;
     //printf("main start %s\n",yytext); 
     initMain(); 
     BEGIN( pushState(MAIN) ); 
@@ -523,7 +589,7 @@ NEW_LINE_AND_TAB [\n\t]*
     BEGIN( pushState(VAR_SEC) );
 }
 <MAIN>{VARIABLE_VALUE_ASSIGN_CONST} { 
-    printf("main assign %s\n",yytext);
+    //printf("main assign %s\n",yytext);
     updateValue(yytext);
 }
 <MAIN>{VARIABLE_VALUE_ASSIGN_VAR} { 
@@ -536,8 +602,14 @@ NEW_LINE_AND_TAB [\n\t]*
     continueVariableCalc(yytext,false);
 }
 
+<MAIN>{OUT_START} { initOutBuffer(); BEGIN( pushState(OUT_SEC) ); }
+
+<OUT_SEC>{OUT_BODY_CONST} { continueOutBuffer(yytext); }
+<OUT_SEC>{OUT_BODY_VAR} { continueOutBuffer(yytext); }
+<OUT_SEC>{OUT_END} { BEGIN( popState() ); printAndClearOutBuffer(); }
 
 <MAIN>{MAIN_END} {
+    blockBalancer--;
     //stopMain();
     //int val = popState();
     //printf(" main end popped %s %d %d\n",yytext,val,MAIN);
@@ -560,13 +632,18 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 
 <MAIN>{LOOP_START} {
+    blockBalancer++;
     printf("\nloop start %s\n",yytext);
     BEGIN( pushState(LOOP_SEC) );
 }
 
+
+
+
 <LOOP_SEC>{LOOP_COND} { printf("\nloop cond: %s\n",yytext); }
 <LOOP_SEC>{LOOP_START_BRACE} { printf("\nloop start {: %s\n",yytext); }
 <LOOP_SEC>{LOOP_END} {
+    blockBalancer--;
     printf("\nloop end: %s\n",yytext);
     BEGIN( popState() );
 }
@@ -574,14 +651,22 @@ NEW_LINE_AND_TAB [\n\t]*
 <LOOP_SEC>{LOOP_OTHERS} { printf("\nloop others: %s\n",yytext); }
 
 <DISCARD_SEC>{VARIABLE_ONLY} {
+    //printf("\nFrom discard only:-%s-\n",yytext);
     discardVariable(yytext);
 }
 <DISCARD_SEC>{VARIABLE_ONLY_LAST} {
+    //printf("\nFrom discard last:-%s-\n",yytext);
     discardVariable(yytext);
-    BEGIN( popState() );
+    int state = popState();
+    //printf("\nState %d %d\n",MAIN,state);
+    BEGIN( state );
 }
+
 <DISCARD_SEC>. { stopProgram("\nInvalid character while discarding\n"); }
-. { stopProgram("Invalid char outside block"); }
+. { 
+    printf("invalid -%s-\n",yytext);
+    stopProgram("Invalid char outside block");
+}
 {NEW_LINE_AND_TAB}* { }
 
 %%
@@ -596,9 +681,11 @@ int main(){
     yyin = fopen("input.txt","r");
     yylex();
 
-    printf("\n");
+    if(blockBalancer != 0){
+        stopProgram("\nBlock not completed");
+    }
+
     printAll();
-    stopProgram("");
 
     if( strlen(error) == 0 ){
         printf("Total comment: %d\n",commentCounter);
