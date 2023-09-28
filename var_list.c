@@ -86,10 +86,14 @@ bool doesVariableExists(char *name){
 }
 
 struct VARIABLE* getVariable(char* name){
+    //printf("printing from inner\n");
+    //printAll();
     struct VARIABLE *ptr = head;
     while (ptr != NULL)
     {
+        //printf("(%s %ld),",ptr->name,ptr->value);
         if( strcmp(name,ptr->name) == 0 ){
+            //printf("\n value returning %s %lf\n",ptr->name,ptr->value);
             return ptr;
         }
         ptr = ptr->next;

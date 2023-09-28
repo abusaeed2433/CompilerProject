@@ -4,6 +4,7 @@
     #include <stdlib.h>
     #include <stdbool.h>
     #include <ctype.h>
+    #include "constant.h"
     #include "var_list.h"
 
 
@@ -91,8 +92,29 @@
         char *temp;
         //printf("Extract name value: %s\n",nameVal);
         temp = removeRedundant(nameVal);
-        //printf("-%s-\n",temp);
-        sscanf(temp, "%[^=]=%lf", name, val);
+        //printf("--- %s ---\n",temp);
+        if( sscanf(temp, "%[^=]=%lf", name, val) == 2){
+            free(temp);
+            return;
+        }
+
+        //printAll();
+
+        char rightVal[20];
+        sscanf(temp, "%[^=]=%s", name, rightVal);
+
+        //printf("Right values: -%s-\n",rightVal);
+
+        struct VARIABLE *var = getVariable(rightVal);
+        if(var == NULL) {
+            printf("%s\n",rightVal);
+            stopProgram("Invalid variable in assignment");
+        }
+        else *val = var->value;
+
+        //printf("values -%s- -%lf-\n",var->name,var->value);
+
+        //printf("Right %s %lf\n",name,*val);
         free(temp);
     }
 
@@ -223,12 +245,51 @@
         declareVariable(name,value);
     }
 
+    void continueVariableCalc(char *stmt){
+        //updateValue(yytext);
+        char leftVar[30], varBefOp[30], op[10], varAftOp[30];
+        processStatement(stmt, leftVar, varBefOp, op, varAftOp);
+
+        double temp;
+        if( sscanf(leftVar, "%lf", &temp) == 1){
+            stopProgram("\nCan't assign value to constant.");
+        }
+
+        if( !doesVariableExists(leftVar) ){
+            stopProgram("\nVariable not declared before");
+        }
+
+        double befVal;
+        if( sscanf(varBefOp, "%lf", &befVal) != 1){
+            struct VARIABLE *val = getVariable(varBefOp);
+            if(val == NULL) {
+                stopProgram("\nInvalid variable found.");
+            }
+            else befVal = (*val).value;
+        }
+
+        double aftVal;
+        if( sscanf(varAftOp, "%lf", &aftVal) != 1){
+            struct VARIABLE *val = getVariable(varAftOp);
+            if(val == NULL) {
+                stopProgram("\nInvalid variable found.");
+            }
+            else aftVal = (*val).value;
+        }
+
+        //printf("\nbefore %lf, after %lf\n",befVal,aftVal);
+
+        //printf("\ncalc val: %lf",getValue(befVal,aftVal,op) );
+
+        assignValue( leftVar, getValue(befVal,aftVal,op) );
+    }
+
     void updateValue(char *nameVal){
         //printf("Passed %s\n",nameVal);
         char name[20];
         double val;
         extractNameValue(nameVal,name,&val);
-        //printf("Extracted %s %ld\n",name,val);
+        //printf("Extracted %s %lf\n",name,val);
 
         if( !doesVariableExists(name) ){
             char message[50];
@@ -259,24 +320,6 @@
             if( !isdigit(num[i]) ) return false;
         }
         return true;
-    }
-
-    bool isCondOpValid(char* op){
-        char arr[6][5] = { "lt","gt","eq","neq","le","ge" };
-        for(int i=0; i<6; i++){
-            if(strcmp(arr[i],op) == 0) return true;
-        }
-        return false;
-    }
-
-    bool isConditionValid(double left, char* op, double right){
-        if( strncmp(op,"lt",2) == 0) return (left < right);
-        if( strncmp(op,"gt",2) == 0) return (left > right);
-        if( strncmp(op,"eq",2) == 0) return (left == right);
-
-        if( strncmp(op,"le",2) == 0) return (left <= right);
-        if( strncmp(op,"ge",2) == 0) return (left >= right);
-        if( strncmp(op,"neq",2) == 0) return (left != right); // 2 fine also
     }
 
     void processIfBody(char *body){
@@ -336,27 +379,34 @@
 %x COMMENT
 %x MAIN
 %x VAR_SEC
+%x VAR_CALC_SEC
 %x IF_SEC
 %x IGNORE_SEC
 %x DISCARD_SEC
+%x LOOP_SEC
+
 
 NUMBER [0-9.]+
-VARIABLE [a-zA-z][a-zA-Z0-9]*
+VARIABLE [a-zA-Z][a-zA-Z0-9]*
 VAR_NUM ({NUMBER}|{VARIABLE})
 COND_OP ("lt"|"gt"|"eq"|"neq"|"le"|"ge")
+ARITH_OP ("add"|"sub"|"mul"|"div"|"dif"|"rem")
 
 HEADER_START "import "
 HEADER_END [a-zA-Z.]+";"
 
 
-MAIN_START "static void main(){"
+MAIN_START "static void entryPoint(){"
 MAIN_END "}"
 
 SINGLE_LINE_COMMENT ("//").*(\n)?
 
-VARIABLE_ONLY [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(,)
-VARIABLE_VALUE [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+(,)
-VARIABLE_VALUE_ASSIGN [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*[0-9]+;
+VARIABLE_ONLY [ ]*{VARIABLE}*[ ]*(,)
+VARIABLE_VALUE [ ]*{VARIABLE}*[ ]*("=")[ ]*[0-9]+(,)
+VARIABLE_VALUE_ASSIGN_CONST [ ]*{VARIABLE}[ ]*("=")[ ]*[0-9]+;
+VARIABLE_VALUE_ASSIGN_VAR [ ]*{VARIABLE}[ ]*("=")[ ]*{VARIABLE};
+VARIABLE_VALUE_ASSIGN_CALC [ ]*{VARIABLE}[ ]*("=")[ ]*{VAR_NUM}[ ]*{ARITH_OP}[ ]*{VAR_NUM}[ ]*;
+
 DISCARD_START "discard "
 
 VARIABLE_ONLY_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*(;)
@@ -374,6 +424,12 @@ IF_SPACE [ ]*
 
 IGNORE_LEFT_BRACE "{"
 IGNORE_RIGHT_BRACE "}"
+
+LOOP_START "till"
+LOOP_START_BRACE "{"
+LOOP_COND {IF_COND}
+LOOP_OTHERS [^{}\n]*\n
+LOOP_END {IF_BODY_END}
 
 NEW_LINE_AND_TAB [\n\t]*
 
@@ -395,8 +451,6 @@ NEW_LINE_AND_TAB [\n\t]*
         BEGIN( popState() );
     } 
 }
-
-
 
 <COMMENT>. { appendToBuffer(yytext[0]); }
 <COMMENT>\n { appendTextToBuffer("\n"); }
@@ -454,10 +508,21 @@ NEW_LINE_AND_TAB [\n\t]*
     initVarSec(yytext); 
     BEGIN( pushState(VAR_SEC) );
 }
-<MAIN>{VARIABLE_VALUE_ASSIGN} { 
-    //printf("main assign %s\n",yytext);
+<MAIN>{VARIABLE_VALUE_ASSIGN_CONST} { 
+    printf("main assign %s\n",yytext);
     updateValue(yytext);
 }
+<MAIN>{VARIABLE_VALUE_ASSIGN_VAR} { 
+    printf("\nassign from var: %s\n",yytext);
+    updateValue(yytext);
+}
+
+<MAIN>{VARIABLE_VALUE_ASSIGN_CALC} {
+    printf("\nassign from calc: %s\n",yytext);
+    continueVariableCalc(yytext);
+}
+
+
 <MAIN>{MAIN_END} {
     //stopMain();
     //int val = popState();
@@ -480,6 +545,20 @@ NEW_LINE_AND_TAB [\n\t]*
     BEGIN( pushState(DISCARD_SEC) );
 }
 
+<MAIN>{LOOP_START} {
+    printf("\nloop start %s\n",yytext);
+    BEGIN( pushState(LOOP_SEC) );
+}
+
+<LOOP_SEC>{LOOP_COND} { printf("\nloop cond: %s\n",yytext); }
+<LOOP_SEC>{LOOP_START_BRACE} { printf("\nloop start {: %s\n",yytext); }
+<LOOP_SEC>{LOOP_END} {
+    printf("\nloop end: %s\n",yytext);
+    BEGIN( popState() );
+}
+<LOOP_SEC>{NEW_LINE_AND_TAB} {}
+<LOOP_SEC>{LOOP_OTHERS} { printf("\nloop others: %s\n",yytext); }
+
 <DISCARD_SEC>{VARIABLE_ONLY} {
     discardVariable(yytext);
 }
@@ -500,30 +579,11 @@ int yywrap(){
 
 int main(){
 
-    // char name[20];
-    // double value;
-    // extractNameValue("y = 5333",name,&value);
-    // printf("%s %lf\n",name,value);
-    // return 0;
-
-    // while(1){
-    //     char arr[10];
-    //     scanf("%s",&arr);
-    //     if(strncmp(arr,"-1",2) == 0) break;
-    //     addVariable(arr);
-    // }
-
     yyin = fopen("input.txt","r");
     yylex();
 
-    // if(!isMainBlockFound){
-    //     stopProgram("Incomplete main block");
-    // }
     printf("\n");
     printAll();
-    // for(int i=0; i<varSize; i++){
-    //     printf("%s : %3lf\n",vars[i].name,vars[i].value);
-    // }
     stopProgram("");
 
     if( strlen(error) == 0 ){

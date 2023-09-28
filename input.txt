@@ -5,12 +5,18 @@ import stdio.h;
 
 //int var;
 
-static void main(){
+static void entryPoint(){
    int c = 1055;
-
+   int d = 444;
+   d = c add 34;
+   //c= d sub 32;
+   //d=c mul d; 
+/*
    int d = 3443;
+   d = 44;
+   c = d;
 
-   c = 1220;
+   c = d add 43;
 
    if( 920 lt d){
       if(100 lt 200){
@@ -19,10 +25,18 @@ static void main(){
       }
    }
 
+   c = 199;
+   
+   till( c lt 200){
+      c = 100;
+      int dex = 3222;
+      //comment single
+   }
+
    // aa
 
    c = 4333;
 
    discard d;
-
+   */
 }
