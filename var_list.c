@@ -6,11 +6,10 @@
 #include <stdbool.h>
 
 
-
 struct VARIABLE *head = NULL;
 struct VARIABLE *tail = NULL;
 
-struct VARIABLE* createNode(const char *name, double value) {
+struct VARIABLE* createNode(const char *name, char *type, double value) {
     struct VARIABLE *newNode = (struct VARIABLE*) malloc(sizeof(struct VARIABLE));
     if(!newNode) {
         printf("Memory allocation failed.\n");
@@ -19,13 +18,18 @@ struct VARIABLE* createNode(const char *name, double value) {
 
     strncpy(newNode->name, name, sizeof(newNode->name) - 1);
     newNode->value = value;
+    strncpy(newNode->type,type,sizeof(newNode->type)-1);
     newNode->prev = NULL;
     newNode->next = NULL;
     return newNode;
 }
 
-void insertVariable(char *name, double val) {
-    struct VARIABLE *var = createNode(name,val);
+void insertVariable(char *name, char *type, double val) {
+    struct VARIABLE *var = createNode(name,type,val);
+
+    if( strncmp("int",type,3) == 0 ){ // integer
+        val = (double)( (int)val ); // ignoring after decimal
+    }
     
     if(tail == NULL) {
         head = var;
@@ -39,10 +43,14 @@ void insertVariable(char *name, double val) {
 }
 
 void updateVariable(char *name, double val){
+
     struct VARIABLE *ptr;
     ptr = head;
     while(ptr != NULL){
         if( strcmp(ptr->name,name) == 0 ){
+
+            if( strncmp("int",ptr->type,3) == 0 ) val = (int)val;
+
             ptr->value = val;
             break;
         }
@@ -58,7 +66,7 @@ void deleteVariable(char *name){
             // first delete
             if(ptr == head){
                 //single node
-                if(ptr == tail) tail == NULL;
+                if(ptr == tail) tail = NULL;
                 head = ptr->next;
             }
             else if(ptr == tail){ // last delete
@@ -102,12 +110,18 @@ struct VARIABLE* getVariable(char* name){
 }
 
 void printAll(){
+    printf("\n--------------");
     if(head == NULL) return;
 
     struct VARIABLE *ptr;
     ptr = head;
     while(ptr != NULL){
-        printf("%s %lf -> ",ptr->name,ptr->value);
+        if ( strcmp(ptr->type,"int") == 0){
+            printf("%s(%s) %d -> ",ptr->name,ptr->type,(int)ptr->value);
+        }
+        else{
+            printf("%s(%s) %lf -> ",ptr->name,ptr->type,ptr->value);
+        }
         ptr = ptr->next;
     }
     printf("\n");
