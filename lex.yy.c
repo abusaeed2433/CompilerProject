@@ -1116,8 +1116,9 @@ char *yytext;
             
             val = var->value;
             res = (char *) malloc(20);
-            sprintf(res, "%.3f", val);
+            sprintf(res, "%.3f ", val);
         }
+        
         outBufferSize += strlen(res);
         outBuffer = (char *)realloc(outBuffer,outBufferSize);
 
@@ -1437,7 +1438,7 @@ char *yytext;
 
 #define OUT_SEC 10
 
-#line 1441 "lex.yy.c"
+#line 1442 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -1588,9 +1589,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 501 "code.l"
+#line 502 "code.l"
 
-#line 1594 "lex.yy.c"
+#line 1595 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -1675,37 +1676,37 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 502 "code.l"
+#line 503 "code.l"
 { BEGIN(pushState(HEADER)); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 504 "code.l"
+#line 505 "code.l"
 { runHeader(1); BEGIN( popState() ); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 506 "code.l"
+#line 507 "code.l"
 { runHeader(0); BEGIN(popState()); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 508 "code.l"
+#line 509 "code.l"
 { initSingleComment(); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 510 "code.l"
+#line 511 "code.l"
 { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 512 "code.l"
+#line 513 "code.l"
 { appendTextToBuffer("/*"); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 513 "code.l"
+#line 514 "code.l"
 { 
     appendTextToBuffer("*/"); checkForEnd(); 
     if(comment_depth == 0){
@@ -1715,22 +1716,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 520 "code.l"
+#line 521 "code.l"
 { appendToBuffer(yytext[0]); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 521 "code.l"
+#line 522 "code.l"
 { appendTextToBuffer("\n"); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 523 "code.l"
+#line 524 "code.l"
 { declareVariable(yytext,0); }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 524 "code.l"
+#line 525 "code.l"
 {
     declareVariable(yytext,0);
     BEGIN( popState() );
@@ -1738,7 +1739,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 528 "code.l"
+#line 529 "code.l"
 {
     //printf("\nassign from calc: %s\n",yytext);
     continueVariableCalc(yytext,true);
@@ -1746,7 +1747,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 532 "code.l"
+#line 533 "code.l"
 {
     //printf("\nassign from calc: %s\n",yytext);
     continueVariableCalc(yytext,true);
@@ -1755,12 +1756,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 537 "code.l"
+#line 538 "code.l"
 { processVariable(yytext); }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 538 "code.l"
+#line 539 "code.l"
 {
     //printf("\nvariable value last-%s-\n",yytext);
     processVariable(yytext);
@@ -1769,12 +1770,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 543 "code.l"
+#line 544 "code.l"
 {}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 544 "code.l"
+#line 545 "code.l"
 { 
     //printf("\nInvalid %s\n",yytext);
     stopProgram("Invalid character found");
@@ -1782,7 +1783,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 548 "code.l"
+#line 549 "code.l"
 { 
     initMultiComment();
     BEGIN( pushState(COMMENT) );    
@@ -1790,17 +1791,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 554 "code.l"
+#line 555 "code.l"
 { BEGIN( pushState(IF_SEC) ); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 556 "code.l"
+#line 557 "code.l"
 { processIfBody(yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 557 "code.l"
+#line 558 "code.l"
 { 
     blockBalancer++;
     popState(); // popping if section and taking to main section arki
@@ -1815,17 +1816,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 569 "code.l"
+#line 570 "code.l"
 {}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 570 "code.l"
+#line 571 "code.l"
 { blockBalancer++; bracketCounter++; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 571 "code.l"
+#line 572 "code.l"
 { 
     blockBalancer--;
     bracketCounter--;
@@ -1836,12 +1837,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 578 "code.l"
+#line 579 "code.l"
 {}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 580 "code.l"
+#line 581 "code.l"
 { 
     blockBalancer++;
     //printf("main start %s\n",yytext); 
@@ -1851,7 +1852,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 586 "code.l"
+#line 587 "code.l"
 {
     //printf("main data type %s\n",yytext);
     initVarSec(yytext); 
@@ -1860,7 +1861,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 591 "code.l"
+#line 592 "code.l"
 { 
     //printf("main assign %s\n",yytext);
     updateValue(yytext);
@@ -1868,7 +1869,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 595 "code.l"
+#line 596 "code.l"
 { 
     //printf("\nassign from var: %s\n",yytext);
     updateValue(yytext);
@@ -1876,7 +1877,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 600 "code.l"
+#line 601 "code.l"
 {
     //printf("\nassign from calc: %s\n",yytext);
     continueVariableCalc(yytext,false);
@@ -1884,27 +1885,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 605 "code.l"
+#line 606 "code.l"
 { initOutBuffer(); BEGIN( pushState(OUT_SEC) ); }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 607 "code.l"
+#line 608 "code.l"
 { continueOutBuffer(yytext); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 608 "code.l"
+#line 609 "code.l"
 { continueOutBuffer(yytext); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 609 "code.l"
+#line 610 "code.l"
 { BEGIN( popState() ); printAndClearOutBuffer(); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 611 "code.l"
+#line 612 "code.l"
 {
     blockBalancer--;
     //stopMain();
@@ -1915,7 +1916,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 618 "code.l"
+#line 619 "code.l"
 {
     //printf("main comment %s\n",yytext);
     initSingleComment();
@@ -1923,7 +1924,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 622 "code.l"
+#line 623 "code.l"
 {
     //printf("main multi %s\n",yytext);
     initMultiComment(); 
@@ -1932,12 +1933,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 627 "code.l"
+#line 628 "code.l"
 { }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 629 "code.l"
+#line 630 "code.l"
 {
     //printf("Discard section\n");
     BEGIN( pushState(DISCARD_SEC) );
@@ -1945,7 +1946,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 634 "code.l"
+#line 635 "code.l"
 {
     blockBalancer++;
     printf("\nloop start %s\n",yytext);
@@ -1954,17 +1955,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 643 "code.l"
+#line 644 "code.l"
 { printf("\nloop cond: %s\n",yytext); }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 644 "code.l"
+#line 645 "code.l"
 { printf("\nloop start {: %s\n",yytext); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 645 "code.l"
+#line 646 "code.l"
 {
     blockBalancer--;
     printf("\nloop end: %s\n",yytext);
@@ -1973,17 +1974,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 650 "code.l"
+#line 651 "code.l"
 {}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 651 "code.l"
+#line 652 "code.l"
 { printf("\nloop others: %s\n",yytext); }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 653 "code.l"
+#line 654 "code.l"
 {
     //printf("\nFrom discard only:-%s-\n",yytext);
     discardVariable(yytext);
@@ -1991,7 +1992,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 657 "code.l"
+#line 658 "code.l"
 {
     //printf("\nFrom discard last:-%s-\n",yytext);
     discardVariable(yytext);
@@ -2002,12 +2003,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 665 "code.l"
+#line 666 "code.l"
 { stopProgram("\nInvalid character while discarding\n"); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 666 "code.l"
+#line 667 "code.l"
 { 
     printf("invalid -%s-\n",yytext);
     stopProgram("Invalid char outside block");
@@ -2015,15 +2016,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 670 "code.l"
+#line 671 "code.l"
 { }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 672 "code.l"
+#line 673 "code.l"
 ECHO;
 	YY_BREAK
-#line 2027 "lex.yy.c"
+#line 2028 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(HEADER):
 case YY_STATE_EOF(COMMENT):
@@ -2919,7 +2920,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 672 "code.l"
+#line 673 "code.l"
 
 
 int yywrap(){

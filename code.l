@@ -130,8 +130,9 @@
             
             val = var->value;
             res = (char *) malloc(20);
-            sprintf(res, "%.3f", val);
+            sprintf(res, "%.3f ", val);
         }
+        
         outBufferSize += strlen(res);
         outBuffer = (char *)realloc(outBuffer,outBufferSize);
 
