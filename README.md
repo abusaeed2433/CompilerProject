@@ -1,16 +1,14 @@
-# CompilerProject
+# CompilerProject Structure
 
-## Structure
-
-### Header
+## Header
 - Using import,
 - Ex:
     ```
     import stdio.h;
     ```
 
-### Comment
-- #### Single line comment
+## Comment
+- ### Single line comment
     - Using `//`,
     - Ex:
         ```
@@ -19,7 +17,7 @@
 
         int b = 123; // also valid here
         ```
-- #### Multi-line comment
+- ### Multi-line comment
     - Using `/*  */`,
     - Support nested also,
     - Ex:
@@ -32,7 +30,7 @@
         ```
 
 
-### Starting point of execution
+## Starting point of execution
 - Defined as:
 - Ex:
     ```
@@ -42,10 +40,10 @@
     ```
 
 
-### Variable
-- #### Supporeted Data type
+## Variable
+- ### Supporeted Data type
     - `int`, `float`, `double`,
-- #### Declaration:
+- ### Declaration:
     - Using:
         ```
         data_type var1, var2;
@@ -57,7 +55,7 @@
         
         int c,d,e;
         ```
-- #### Initialization
+- ### Initialization
     - Using:
         ```
         data_type var1 = const_value, var2 = calc_value;
@@ -67,7 +65,7 @@
         int m = 102, n = m add 10;
         // m = 102, n = 112
         ```
-- #### Assignment
+- ### Assignment
     - Using
         ```
         var = const_value or calc_value;
@@ -82,9 +80,9 @@
     - Initialized to `0` by default,
     - Error if `duplicate variable` is declared,
     - Error if assign value to `undeclared variable`,
-    - All variables are become globaal once declared,
+    - All variables are become global once declared,
     - Variable remains gloabl until `discarded` explicitly,
-- #### Ex:
+- ### Ex:
     ```
     static void main(){
         // [] <---------------------------------
@@ -111,7 +109,7 @@
     }
     ```
 
-- ### Conditional operators
+- ## Conditional operators
     - less than `lt`,
     - greater than `gt`,
     - equal `eq`,
@@ -126,7 +124,7 @@
         }
         ```
 
-- ### `justInCase` structure:
+- ## `justInCase` structure:
     - Equivalent to `if`,
     - Structure:
         ```
@@ -144,7 +142,7 @@
         ```
     - vc = variable or constant
     - no else statment
-- ### Looping
+- ## Looping
     - Structure:
         ```
         till(vc @ vc){
@@ -159,7 +157,7 @@
         }
         ```
 
-- ### Output to console
+- ## Output to console
     - Using `println()`,
     - Structure:
         ```
@@ -181,7 +179,7 @@
 
         My height is: 25.000 km < - - - - - - - - - -
         ```
-- ### Overall example:
+- ## Overall example:
 ```
 import stdio.h;
 
