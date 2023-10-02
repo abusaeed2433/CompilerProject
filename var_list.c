@@ -43,6 +43,17 @@ void insertVariable(char *name, char *type, double val) {
     }
 }
 
+int getTotalVar(){
+    struct VARIABLE *ptr;
+    int count=0;
+    ptr = head;
+    while(ptr != NULL){
+        count++;
+        ptr = ptr->next;
+    }
+    return count;
+}
+
 void updateVariable(char *name, double val){
 
     struct VARIABLE *ptr;

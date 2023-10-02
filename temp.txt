@@ -134,3 +134,84 @@ static void entryPoint(){
     printf("out end -%s-\n",yytext);
     BEGIN( popState() );
 }
+
+
+
+import stdio.h;
+
+//starting point of program
+static void entryPoint(){
+
+
+   double height = 25;
+   println("My height is: ",height "km");
+   
+   //variable declaration
+   int a = 34;
+
+   println(a);
+
+   a = 255;
+
+   println(a);
+
+   discard a;
+   
+   double b = 102.44, c= 123;
+
+   println(b, c);
+
+   b = b sub 2.44;
+   println(b);
+
+   justInCase ( b gt 100){
+      println(b," is larger than 100");
+   }
+
+   justInCase( b lt 100){
+      println(b " is lees than 100")
+   }
+
+   justInCase(b eq 100){
+      println(b, " is exactly 100");
+   }
+
+   //single line comment
+
+   int x = 1000; // initializing
+
+   int y = x sub 999; 
+   /*
+   multi line comment
+   possible to have
+   /*
+   nested also
+   */
+   */
+
+   println(y);
+
+   float f1 = 243, /* also valid here */ f2=11;
+
+   println(f1,f2);
+
+   int sum = f1 add f2;
+
+   discard b,x,y,c,f1,f2;
+   println(sum);
+
+   int i=10;
+   till(i lt 100){
+      //body
+   }
+
+
+   int m = 102, n = m add 10;
+   println(m,n);
+
+   int z;
+   z = 100;
+   z = 10 add 20;
+   println(z);
+
+}

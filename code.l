@@ -7,6 +7,9 @@
     #include "constant.h"
     #include "var_list.h"
 
+    // header, single, multi, var, print, dis, calc_val, if, till
+    int tempCounter[10];
+
     int blockBalancer = 0;
     int stack[100];
     int stackSize = 0;
@@ -125,6 +128,7 @@
             vc = removeRedundant(vc);
             struct VARIABLE *var = getVariable(vc);
             if(var == NULL) {
+                printf("-%s-\n",vc);
                 stopProgram("Undeclared variable inside println");
             }
             
@@ -431,6 +435,10 @@
         //printf("extracted: %s %s %s\n",leftVar,operator,rightVal);
     }
 
+    void inc(int index){
+        tempCounter[index]++;
+    }
+
 
 %}
 
@@ -502,11 +510,11 @@ NEW_LINE_AND_TAB [\n\t]*
 %%
 {HEADER_START} { BEGIN(pushState(HEADER)); }
 
-<HEADER>{HEADER_END} { runHeader(1); BEGIN( popState() ); }
+<HEADER>{HEADER_END} { inc(0); runHeader(1); BEGIN( popState() ); }
 
 <HEADER>. { runHeader(0); BEGIN(popState()); }
 
-{SINGLE_LINE_COMMENT} { initSingleComment(); }
+{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 
 "/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 
@@ -514,6 +522,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <COMMENT>"*/" { 
     appendTextToBuffer("*/"); checkForEnd(); 
     if(comment_depth == 0){
+        inc(2);
         BEGIN( popState() );
     } 
 }
@@ -532,6 +541,7 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 <VAR_SEC>{VARIABLE_VALUE_ASSIGN_CALC_LAST} {
     //printf("\nassign from calc: %s\n",yytext);
+    inc(6);
     continueVariableCalc(yytext,true);
     BEGIN( popState() );
 }
@@ -552,9 +562,9 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 
 
-<MAIN>{IF} { BEGIN( pushState(IF_SEC) ); }
+<MAIN>{IF} { inc(7); BEGIN( pushState(IF_SEC) ); }
 
-<IF_SEC>{IF_COND} { processIfBody(yytext); }
+<IF_SEC>{IF_COND} { inc(9); processIfBody(yytext); }
 <IF_SEC>{IF_BODY_START} { 
     blockBalancer++;
     popState(); // popping if section and taking to main section arki
@@ -599,6 +609,7 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 
 <MAIN>{VARIABLE_VALUE_ASSIGN_CALC_LAST} {
+    inc(6);
     //printf("\nassign from calc: %s\n",yytext);
     continueVariableCalc(yytext,false);
 }
@@ -607,7 +618,7 @@ NEW_LINE_AND_TAB [\n\t]*
 
 <OUT_SEC>{OUT_BODY_CONST} { continueOutBuffer(yytext); }
 <OUT_SEC>{OUT_BODY_VAR} { continueOutBuffer(yytext); }
-<OUT_SEC>{OUT_END} { BEGIN( popState() ); printAndClearOutBuffer(); }
+<OUT_SEC>{OUT_END} { inc(4); BEGIN( popState() ); printAndClearOutBuffer(); }
 
 <MAIN>{MAIN_END} {
     blockBalancer--;
@@ -617,6 +628,7 @@ NEW_LINE_AND_TAB [\n\t]*
     BEGIN( popState() );
 }
 <MAIN>{SINGLE_LINE_COMMENT} {
+    inc(1);
     //printf("main comment %s\n",yytext);
     initSingleComment();
 }
@@ -629,19 +641,18 @@ NEW_LINE_AND_TAB [\n\t]*
 
 <MAIN>{DISCARD_START} {
     //printf("Discard section\n");
+    inc(5);
     BEGIN( pushState(DISCARD_SEC) );
 }
 
 <MAIN>{LOOP_START} {
+    inc(8);
     blockBalancer++;
     printf("\nloop start %s\n",yytext);
     BEGIN( pushState(LOOP_SEC) );
 }
 
-
-
-
-<LOOP_SEC>{LOOP_COND} { printf("\nloop cond: %s\n",yytext); }
+<LOOP_SEC>{LOOP_COND} { inc(9); printf("\nloop cond: %s\n",yytext); }
 <LOOP_SEC>{LOOP_START_BRACE} { printf("\nloop start {: %s\n",yytext); }
 <LOOP_SEC>{LOOP_END} {
     blockBalancer--;
@@ -686,6 +697,7 @@ int main(){
         stopProgram("\nBlock not completed");
     }
 
+    tempCounter[3] = getTotalVar();
     printAll();
 
     if( strlen(error) == 0 ){
@@ -695,5 +707,19 @@ int main(){
     else{
         printf("Error: %s\n",error);
     }
+
+    
+
+    printf("\n----------------- Summary ------------------\n\n");
+    printf("%-20s %d\n","Header:",tempCounter[0]);
+    printf("%-20s %d\n","Single line comment:",tempCounter[1]);
+    printf("%-20s %d\n","Multi line comment:",tempCounter[2]);
+    printf("%-20s %d\n","Variable:",tempCounter[3]);
+    printf("%-20s %d\n","println:",tempCounter[4]);
+    printf("%-20s %d\n","discard:",tempCounter[5]);
+    printf("%-20s %d\n","val_calculation:",tempCounter[6]);
+    printf("%-20s %d\n","justInCase:",tempCounter[7]);
+    printf("%-20s %d\n","till:",tempCounter[8]);
+    printf("%-20s %d\n","condition:",tempCounter[9]);
 
 }

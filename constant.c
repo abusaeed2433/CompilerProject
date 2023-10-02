@@ -130,5 +130,5 @@ void processStatement(const char *stmt, char *leftVar, char *varBeforeOp, char *
         }
     }
 
-    printf("leftVar:-%s-, varBeforeOp: -%s-, operator:-%s-, varAfterOp: -%s-\n", leftVar, varBeforeOp, operator, varAfterOp);
+    //printf("leftVar:-%s-, varBeforeOp: -%s-, operator:-%s-, varAfterOp: -%s-\n", leftVar, varBeforeOp, operator, varAfterOp);
 }
