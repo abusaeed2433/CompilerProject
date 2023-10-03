@@ -5,7 +5,14 @@
 #include "var_list.h"
 #include <stdbool.h>
 
-
+const int KEYS_SIZE = 25;
+char KEYS[25][25] = {
+    "int","double","float","justInCase",
+    "println","discard","till","import",
+    "static","void","entryPoint",
+    "lt","gt","eq","neq","le","ge",
+    "add", "sub", "mul", "div", "dif", "rem"
+};
 
 struct VARIABLE *head = NULL;
 struct VARIABLE *tail = NULL;
@@ -26,6 +33,14 @@ struct VARIABLE* createNode(const char *name, char *type, double value) {
 }
 
 void insertVariable(char *name, char *type, double val) {
+
+    for(int i=0; i<KEYS_SIZE; i++){
+        if(strcmp(KEYS[i],name) == 0){
+            printf("Keyword '%s' can't be variable\n",name);
+            exit(2);
+        }
+    }
+
     struct VARIABLE *var = createNode(name,type,val);
 
     if( strncmp("int",type,3) == 0 ){ // integer

@@ -182,6 +182,7 @@
 - ## Overall example:
 ```
 import stdio.h;
+import test.h;
 
 //starting point of program
 static void entryPoint(){
@@ -192,6 +193,7 @@ static void entryPoint(){
    
    //variable declaration
    int a = 34;
+   float as=5;
 
    println(a);
 
@@ -208,12 +210,12 @@ static void entryPoint(){
    b = b sub 2.44;
    println(b);
 
-   justInCase ( b gt 100){
+   justInCase( b gt 99){
       println(b," is larger than 100");
    }
 
-   justInCase( b lt 100){
-      println(b " is lees than 100")
+   justInCase( b lt 500){
+      println(b " is lees than 100");
    }
 
    justInCase(b eq 100){
@@ -246,7 +248,7 @@ static void entryPoint(){
 
    int i=10;
    till(i lt 100){
-      //body
+      
    }
 
 
@@ -258,9 +260,18 @@ static void entryPoint(){
    z = 10 add 20;
    println(z);
 
+   // header(0), single(1), multi(2), var(3), 
+   // print(4), dis(5), calc_val(6), if(7), 
+   // till(8), cond(9)
+   // int tempCounter[10];
+
 }
+
 ```
 
+## Output
+![Alt text](images/output_1.png)
+![Alt text](images/output_2.png)
 ## Run using
 ```
 flex code.l

@@ -1,4 +1,6 @@
 import stdio.h;
+import test.h;
+
 //starting point of program
 static void entryPoint(){
 
@@ -8,6 +10,7 @@ static void entryPoint(){
    
    //variable declaration
    int a = 34;
+   float as=5;
 
    println(a);
 

@@ -651,6 +651,10 @@ NEW_LINE_AND_TAB [\n\t]*
     printf("\nloop start %s\n",yytext);
     BEGIN( pushState(LOOP_SEC) );
 }
+<MAIN>[^ ] {
+    //printf("-%s-\n",yytext);
+    stopProgram("Invalid character found\n");
+}
 
 <LOOP_SEC>{LOOP_COND} { inc(9); printf("\nloop cond: %s\n",yytext); }
 <LOOP_SEC>{LOOP_START_BRACE} { printf("\nloop start {: %s\n",yytext); }
