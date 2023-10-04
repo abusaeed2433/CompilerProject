@@ -26,7 +26,6 @@
     char *outBuffer = NULL;
     int outBufferSize = 0;
 
-
     bool canDeclareHeader = true;
     bool isMainBlockFound = false;
     bool isCommingFromMain = false;
@@ -438,7 +437,6 @@
     void inc(int index){
         tempCounter[index]++;
     }
-
 
 %}
 

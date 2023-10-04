@@ -34,7 +34,7 @@
 - Defined as:
 - Ex:
     ```
-    static void entry(){
+    static void entryPoint(){
         // starts from here
     }
     ```
@@ -42,7 +42,7 @@
 
 ## Variable
 - ### Supporeted Data type
-    - `int`, `float`, `double`,
+    - `int`, `float`, `double`
 - ### Declaration:
     - Using:
         ```
@@ -109,13 +109,29 @@
     }
     ```
 
+- ## Arithmatic operators
+    - Addition`(add)`,
+    - Subtraction `(sub)`,
+    - Multiplication `(mul)`,
+    - Division `(div)`,
+    - Difference `(dif)`,
+    - Remainder `(rem)`
+    - Ex:
+        ```
+        float f1 = 243, f2=11;
+        int sum = f1 add f2;
+
+        double b = 102.44;
+        b = b sub 2.44;
+        ```
+
 - ## Conditional operators
-    - less than `lt`,
-    - greater than `gt`,
-    - equal `eq`,
-    - not equals `neq`
-    - less equal `le`,
-    - greater equal `ge`
+    - less than `(lt)`,
+    - greater than `(gt)`,
+    - equal `(eq)`,
+    - not equals `(neq)`
+    - less equal `(le)`,
+    - greater equal `(ge)`
     - Ex:
         ```
         if( 100 lt d){
