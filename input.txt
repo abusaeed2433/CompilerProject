@@ -4,9 +4,9 @@ import test.h;
 //starting point of program
 static void entryPoint(){
 
-
    double height = 25;
-   println("My height is: ",height "km");
+   float width = 0.0001;
+   println("My height is: ",height ,"km and " "width is " width "mm");
    
    //variable declaration
    int a = 34;
@@ -73,8 +73,8 @@ static void entryPoint(){
    println(m,n);
 
    int z;
-   z = 100;
-   z = 10 add 20;
+   z 100;
+   z = 10 add 20
    println(z);
 
    // header(0), single(1), multi(2), var(3), 

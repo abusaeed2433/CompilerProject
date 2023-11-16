@@ -1,0 +1,21 @@
+/* importing header */
+
+import Math;
+import dd;
+
+// heelo
+
+/*
+    Add proto-type
+
+    /* type name(type...); */
+
+*/
+
+
+
+static void entryPoint(){
+    // hello
+}
+
+//import hello.h;
