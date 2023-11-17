@@ -290,7 +290,8 @@ static void entryPoint(){
 ![Alt text](images/output_2.png)
 ## Run using
 ```
-flex code.l
-gcc lex.yy.c constant.c var_list.c -o app
+bison -d final.y
+flex final.l
+gcc final.tab.c prototype_list.c  lex.yy.c constant.c var_list.c -o app
 app
 ```
