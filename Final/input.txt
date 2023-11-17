@@ -5,6 +5,10 @@ import dd;
 
 // heelo
 
+void add(int,int, float);
+int scan();
+void add(int, float, float);
+
 /*
     Add proto-type
 
@@ -19,3 +23,4 @@ static void entryPoint(){
 }
 
 //import hello.h;
+

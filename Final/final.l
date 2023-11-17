@@ -137,6 +137,7 @@
 %x DISCARD_SEC
 %x LOOP_SEC
 %x OUT_SEC
+%x PROTO_SEC
 
 DQ \"
 NUMBER ([0-9]+(".")[0-9]+)|([0-9]+)|("."[0-9]+)
@@ -172,6 +173,7 @@ VARIABLE_VALUE_LAST [ ]*[a-zA-Z][a-zA-Z0-9]*[ ]*("=")[ ]*{NUMBER}(;)
 VAR_SPACE [ ]*
 
 DATA_TYPE ("int"|"float"|"double")[ ]
+FUNC_TYPE ("int"|"float"|"double"|"void")
 
 IF "justInCase"[ ]*
 IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
@@ -212,6 +214,28 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>"/*" { initMultiComment();  BEGIN( pushState(COMMENT) ); }
 
 {HEADER} { inc(0); processHeader();}
+
+{FUNC_TYPE} { 
+    //printf("m_type: -%s-\n",yytext);
+    BEGIN( pushState(PROTO_SEC) ); 
+    yylval.name =  strdup(yytext);
+    return FUNC_TYPE;
+}
+
+<PROTO_SEC>{FUNC_TYPE} { 
+    //printf("type: -%s-\n",yytext); 
+    yylval.name = strdup(yytext);
+    return FUNC_TYPE; 
+}
+<PROTO_SEC>{VARIABLE} { 
+    //printf("name: -%s-\n",yytext); 
+    yylval.name = strdup(yytext);
+    return FUNC_NAME; 
+}
+
+<PROTO_SEC>"," { return *yytext; }
+<PROTO_SEC>"(" { return *yytext; }
+<PROTO_SEC>");" { BEGIN( popState() ); return *yytext; }
 
 {MAIN_START} { 
     blockBalancer++;
