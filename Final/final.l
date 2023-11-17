@@ -294,6 +294,23 @@ NEW_LINE_AND_TAB [\n\t]*
     BEGIN( popState() );
     return *strdup(yytext);
 }
+<VAR_SEC>{VAR_SPACE} {}
+
+
+<MAIN>{DISCARD_START} {
+    //printf("Discard section\n");
+    inc(5);
+    BEGIN( pushState(DISCARD_SEC) );
+    return DISCARD;
+}
+
+<DISCARD_SEC>{VARIABLE} {
+    //printf("\nFrom discard only:-%s-\n",yytext);
+    yylval.name = strdup(yytext);
+    return VAR;
+}
+<DISCARD_SEC>"," { return *yytext; }
+<DISCARD_SEC>";" { BEGIN( popState() ); return *yytext; }
 
 <MAIN>{MAIN_END} {
     blockBalancer--;

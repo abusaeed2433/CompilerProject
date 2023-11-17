@@ -98,6 +98,15 @@
 
     }
 
+    void discardVariable(char *name){
+        if( !doesVariableExists(name) ){
+            printf("\nCan't discard %s since not found.\n",name);
+            return;
+        }
+        printf("\nDiscarded variable %s\n",name);
+        deleteVariable(name);
+    }
+
 %}
 
 %union{
@@ -107,12 +116,12 @@
 
 %error-verbose
 %token ENTRY_POINT END_POINT 
-%token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE
+%token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE DISCARD
 
 // defining token type
 //%type<TYPE> ID1 ID2
 
-%type<name> DATA_TYPE VAR FUNC_TYPE FUNC_NAME ARITH_OPE
+%type<name> DATA_TYPE VAR FUNC_TYPE FUNC_NAME ARITH_OPE DISCARD
 %type<num> NUMBER arith_exp
 
 %%
@@ -133,6 +142,7 @@ many_type:
 block: { printf("\nempty block\n"); }
     | var_declare block {}
     | var_assign block  {}
+    | DISCARD discard_var block
     ;
 
 var_declare: DATA_TYPE others';'
@@ -182,6 +192,13 @@ var_assign: VAR '=' NUMBER ';'{
     }
     ;
 
+discard_var: VAR ';'{
+        discardVariable($1);
+    }
+    | VAR ',' discard_var {
+        discardVariable($1);
+    }
+
 arith_exp: VAR ARITH_OPE VAR {
         double val1 = getValueOrDefault($1);
         double val2 = getValueOrDefault($3);
@@ -201,8 +218,6 @@ arith_exp: VAR ARITH_OPE VAR {
     ;
 
 %%
-
-
 
 
 void yyerror(char *s)
