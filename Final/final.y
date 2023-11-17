@@ -87,6 +87,17 @@
         }
     }
 
+    void assignIfPossible(char *name, double val){
+
+        if( !doesVariableExists(name) ){
+            printf("\nVariable %s doesn't exist\n",name);
+            return;
+        }
+
+        updateVariable(name,val);
+
+    }
+
 %}
 
 %union{
@@ -121,6 +132,7 @@ many_type:
 
 block: { printf("\nempty block\n"); }
     | var_declare block {}
+    | var_assign block  {}
     ;
 
 var_declare: DATA_TYPE others';'
@@ -150,6 +162,23 @@ others: VAR {
     }
     | VAR '=' arith_exp ',' others {
         declareVariable($1, lastDataType, $3);
+    }
+    ;
+
+var_assign: VAR '=' NUMBER ';'{
+        assignIfPossible($1,$3);
+    }
+    | VAR '=' VAR ';'{
+        if( !doesVariableExists($3) ){
+            printf("\nVariable %s doesn't exist\n",$3);
+        }
+        else{
+            double val = getValueOrDefault($3);
+            assignIfPossible($1, val);
+        }
+    }
+    | VAR '=' arith_exp ';'{
+        assignIfPossible($1, $3);
     }
     ;
 

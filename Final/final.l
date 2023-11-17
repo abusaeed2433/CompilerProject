@@ -270,6 +270,12 @@ NEW_LINE_AND_TAB [\n\t]*
     return DATA_TYPE;
 }
 
+<MAIN>{VARIABLE} {
+    yylval.name = strdup(yytext);
+    BEGIN( pushState(VAR_SEC) );
+    return VAR;
+}
+
 <VAR_SEC>{NUMBER} {
     sendNumber(yytext);
     return NUMBER;
