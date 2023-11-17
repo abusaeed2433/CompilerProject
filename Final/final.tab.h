@@ -41,9 +41,12 @@
    enum yytokentype {
      ENTRY_POINT = 258,
      END_POINT = 259,
-     TYPE = 260,
+     DATA_TYPE = 260,
      FUNC_TYPE = 261,
-     FUNC_NAME = 262
+     FUNC_NAME = 262,
+     VAR = 263,
+     NUMBER = 264,
+     ARITH_OPE = 265
    };
 #endif
 
@@ -54,7 +57,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 41 "final.y"
+#line 92 "final.y"
 
     double num;
     char *name;
@@ -62,7 +65,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 66 "final.tab.h"
+#line 69 "final.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

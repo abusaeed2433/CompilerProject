@@ -21,10 +21,16 @@ void add(int, float, float);
 
 static void entryPoint(){
     // hello
-    float cd;
+
+    float f;
     double e,f;
+    
+    int a = 24;
     int zz = 22, x = 22;
-    int a, b = 10, c, d = 10 add 10, e;
+    int a, b = 10, c, d = 10 mul 10, e;
+
+    int w = 10 add 20;
+    
     
 }
 

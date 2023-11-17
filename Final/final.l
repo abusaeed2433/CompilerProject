@@ -4,8 +4,6 @@
     #include <stdlib.h>
     #include <stdbool.h>
     #include <ctype.h>
-    #include "constant.h"
-    #include "var_list.h"
     #include "final.tab.h"
 
     // header, single, multi, var, print, dis, calc_val, if, till
@@ -36,6 +34,8 @@
     size_t buffer_length = 0;
 
     int bracketCounter=0;
+
+    char *removeRedundant(char*);
 
     // variable
     const int MAXIMUM_VARIABLE_LENGTH = 200;
@@ -90,7 +90,7 @@
 
     void process_comment() {
         commentCounter++;
-        printf("Captured comment: %s\n\n", comment_buffer);
+        printf("\nCaptured comment: %s\n\n", comment_buffer);
         //printf("Multi-line comment found\n");
     }
 
@@ -123,6 +123,19 @@
             return;
         }
         printf("header: -%s-\n",yytext); 
+    }
+
+    void initVarSec(char *temp){
+        char *type = removeRedundant(temp);
+        strcpy(lastDataType,type);
+        canDeclareHeader = false;
+    }
+
+    void sendNumber(char *text){
+        double num = 0;
+        sscanf(text, "%lf", &num);
+        yylval.num = num;
+        //printf("======%lf=====",num);
     }
 
 %}
@@ -218,13 +231,15 @@ NEW_LINE_AND_TAB [\n\t]*
 {FUNC_TYPE} { 
     //printf("m_type: -%s-\n",yytext);
     BEGIN( pushState(PROTO_SEC) ); 
-    yylval.name =  strdup(yytext);
+    char *type = removeRedundant(yytext);
+    yylval.name =  strdup( type );
     return FUNC_TYPE;
 }
 
 <PROTO_SEC>{FUNC_TYPE} { 
     //printf("type: -%s-\n",yytext); 
-    yylval.name = strdup(yytext);
+    char *type = removeRedundant(yytext);
+    yylval.name =  strdup( type );
     return FUNC_TYPE; 
 }
 <PROTO_SEC>{VARIABLE} { 
@@ -243,6 +258,35 @@ NEW_LINE_AND_TAB [\n\t]*
     initMain(); 
     BEGIN( pushState(MAIN) );
     return ENTRY_POINT;
+}
+
+
+<MAIN>{DATA_TYPE} {
+    //printf("main data type %s\n",yytext);
+    initVarSec(yytext); 
+    char *type = removeRedundant(yytext);
+    yylval.name =  strdup( type );
+    BEGIN( pushState(VAR_SEC) );
+    return DATA_TYPE;
+}
+
+<VAR_SEC>{NUMBER} {
+    sendNumber(yytext);
+    return NUMBER;
+}
+<VAR_SEC>{ARITH_OP} {
+    yylval.name = strdup(yytext);
+    return ARITH_OPE;
+}
+<VAR_SEC>{VARIABLE} {
+    yylval.name = strdup(yytext);
+    return VAR;
+}
+<VAR_SEC>"," { return *strdup(yytext); }
+<VAR_SEC>"=" { return *strdup(yytext); }
+<VAR_SEC>";" {
+    BEGIN( popState() );
+    return *strdup(yytext);
 }
 
 <MAIN>{MAIN_END} {

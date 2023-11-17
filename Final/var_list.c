@@ -136,6 +136,18 @@ struct VARIABLE* getVariable(char* name){
     return NULL;
 }
 
+double getValueOrDefault(char* name){
+    struct VARIABLE *ptr = head;
+    while (ptr != NULL)
+    {
+        if( strcmp(name,ptr->name) == 0 ){
+            return ptr->value;
+        }
+        ptr = ptr->next;
+    }
+    return 0;
+}
+
 void printAll(){
     printf("\n");
     if(head == NULL) return;
