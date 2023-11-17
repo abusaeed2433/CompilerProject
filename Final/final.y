@@ -45,16 +45,15 @@
 
 %error-verbose
 %token ENTRY_POINT END_POINT 
-%token TYPE FUNC_TYPE FUNC_NAME 
+%token DATA_TYPE FUNC_TYPE FUNC_NAME 
 
 // defining token type
 //%type<TYPE> ID1 ID2
-%type<name> TYPE FUNC_TYPE FUNC_NAME
+%type<name> DATA_TYPE VAR NUMBER FUNC_TYPE FUNC_NAME
 
 // grammar rules
 %%
-program: many_proto_type ENTRY_POINT END_POINT     { printf("program executed"); }
-    | block
+program: many_proto_type ENTRY_POINT block END_POINT     { printf("program executed"); }
     ;
 
 many_proto_type: 
@@ -69,10 +68,31 @@ many_type:
 
 
 block: { printf("empty block\n"); }
-    |stmt { printf("idk\n"); }
+    | var_declare stmt { printf("idk\n"); }
     ;
 
-stmt: TYPE { printf("hudai\n"); }
+var_declare: DATA_TYPE others';'
+    ;
+others: VAR
+    | VAR ',' others
+    | VAR '=' NUMBER
+    | VAR '=' VAR
+    | VAR '=' NUMBER ',' others
+    | VAR '=' VAR ',' others
+    | VAR '=' arith_exp
+    | VAR '=' arith_exp ',' others
+    ;
+
+arith_exp: VAR arith_op VAR
+    | VAR arith_op NUMBER
+    | NUMBER arith_op NUMBER
+    | NUMBER arith_op VAR
+    ;
+
+arith_op: 'add' | 'sub' | 'mul' | 'div' | 'dif' | 'rem'
+    ;
+
+stmt: DATA_TYPE { printf("hudai\n"); }
     ;
 %%
 

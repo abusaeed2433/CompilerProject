@@ -4,10 +4,11 @@ import Math;
 import dd;
 
 // heelo
-
+/*
 void add(int,int, float);
 int scan();
 void add(int, float, float);
+*/
 
 /*
     Add proto-type
@@ -20,6 +21,11 @@ void add(int, float, float);
 
 static void entryPoint(){
     // hello
+    float cd;
+    double e,f;
+    int zz = 22, x = 22;
+    int a, b = 10, c, d = 10 add 10, e;
+    
 }
 
 //import hello.h;
