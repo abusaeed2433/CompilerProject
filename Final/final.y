@@ -16,30 +16,10 @@
     struct PARAMETER *paramHead = NULL;
     struct PARAMETER *paramTail = NULL;
 
-    void initProto(char *paramType){
-        //printf("type found: %s\n",paramType);
-        insertParameter(&paramHead, &paramTail, paramType);
-    }
+    extern char *outBuffer;
+    extern int outBufferSize;
 
-    void processProto(char *funcType, char *funcName){
-        //printf("Inside\n");
 
-        struct PROTOTYPE* proto = createProto(funcType, funcName, paramHead,paramTail);
-        //printf("Inside-2\n");
-
-        paramHead = NULL; paramTail = NULL;
-
-        if( doesProtoExists(proto) ){
-            printf("\nDuplicate proto-type found\n");
-            return;
-        }
-
-        insertProto(proto);
-        printProto(proto);
-
-    }
-
-    
     char* removeRedundant(char *source){
         int len = strlen(source);
 
@@ -67,6 +47,71 @@
         return dest;
     }
 
+    void printAndClearOutBuffer(){
+        printf("\n%s < - - - - - - - - - -\n",outBuffer);
+        free(outBuffer);
+        outBufferSize = 0;
+    }
+    
+    void continueOutBuffer(char *vc){
+        int i=0, len = strlen(vc) - 1;
+        while( i <= len && vc[i] == ' ') i++; // leading space
+        while( len>=0 && vc[len] == ' ') len--; // trailing space after "
+        while( len>=0 && vc[len] == ',' || vc[len]=='\"') len--; // space
+
+        char *res;
+
+        if(vc[i] == '\"'){ // constant
+            i++; // trailing quotaion bad dilam
+
+            int size = len-i+1;
+            res = (char *)malloc(size+1);
+            strncpy(res, vc + i, size);
+            res[size] = '\0';
+        }
+        else{ // variable
+            vc = removeRedundant(vc);
+            struct VARIABLE *var = getVariable(vc);
+            
+            if( !doesVariableExists(vc)) {
+                printf("\nVariable %s doesn't exist\n",vc);
+            }
+            char* val = getFormattedValueOrDefault(vc);
+            res = (char *) malloc(20);
+            sprintf(res, "%s ", val);
+        }
+        
+        outBufferSize += strlen(res);
+        outBuffer = (char *)realloc(outBuffer,outBufferSize);
+
+        strcat(outBuffer,res);
+    }
+    
+
+    void initProto(char *paramType){
+        //printf("type found: %s\n",paramType);
+        insertParameter(&paramHead, &paramTail, paramType);
+    }
+
+    void processProto(char *funcType, char *funcName){
+        //printf("Inside\n");
+
+        struct PROTOTYPE* proto = createProto(funcType, funcName, paramHead,paramTail);
+        //printf("Inside-2\n");
+
+        paramHead = NULL; paramTail = NULL;
+
+        if( doesProtoExists(proto) ){
+            printf("\nDuplicate proto-type found\n");
+            return;
+        }
+
+        insertProto(proto);
+        printProto(proto);
+
+    }
+
+    
     double doArithOperation(double val1, double val2, char* op){
         //printf("%lf %lf %s ---------kuttar baccha-\n",val1,val2,op);
         return getValue(val1, val2, op);
@@ -116,12 +161,15 @@
 
 %error-verbose
 %token ENTRY_POINT END_POINT 
-%token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE DISCARD
+%token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE DISCARD 
+
+%token OUTPUT OUTPUT_VC OUTPUT_SEP OUTPUT_END
 
 // defining token type
 //%type<TYPE> ID1 ID2
 
 %type<name> DATA_TYPE VAR FUNC_TYPE FUNC_NAME ARITH_OPE DISCARD
+%type<name> OUTPUT_VC OUTPUT_SEP
 %type<num> NUMBER arith_exp
 
 %%
@@ -142,7 +190,8 @@ many_type:
 block: { printf("\nempty block\n"); }
     | var_declare block {}
     | var_assign block  {}
-    | DISCARD discard_var block
+    | DISCARD discard_var block {}
+    | OUTPUT out_sec block {}
     ;
 
 var_declare: DATA_TYPE others';'
@@ -198,6 +247,12 @@ discard_var: VAR ';'{
     | VAR ',' discard_var {
         discardVariable($1);
     }
+
+out_sec: out_vc OUTPUT_END { printAndClearOutBuffer(); }
+    ;
+out_vc: OUTPUT_VC { continueOutBuffer($1); }
+    | out_vc OUTPUT_SEP OUTPUT_VC { continueOutBuffer($3); }
+    ;
 
 arith_exp: VAR ARITH_OPE VAR {
         double val1 = getValueOrDefault($1);

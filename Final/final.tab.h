@@ -47,7 +47,11 @@
      VAR = 263,
      NUMBER = 264,
      ARITH_OPE = 265,
-     DISCARD = 266
+     DISCARD = 266,
+     OUTPUT = 267,
+     OUTPUT_VC = 268,
+     OUTPUT_SEP = 269,
+     OUTPUT_END = 270
    };
 #endif
 
@@ -58,7 +62,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 112 "final.y"
+#line 157 "final.y"
 
     double num;
     char *name;
@@ -66,7 +70,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 70 "final.tab.h"
+#line 74 "final.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

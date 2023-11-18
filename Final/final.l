@@ -16,15 +16,17 @@
     const int MAXIMUM_VAR_SIZE = 10;
 
     char error[200];
+
+    // extern
     char lastDataType[10];
+    char *outBuffer = NULL;
+    int outBufferSize = 0;
+    //extern
 
     int commentCounter = 0;
     int comment_depth = 0;
     char *comment_buffer = NULL;
     
-    char *outBuffer = NULL;
-    int outBufferSize = 0;
-
     bool canDeclareHeader = true;
     bool isMainBlockFound = false;
     bool isCommingFromMain = false;
@@ -138,6 +140,12 @@
         //printf("======%lf=====",num);
     }
 
+    void initOutBuffer(){
+        outBuffer = (char*) malloc(1);
+        memset(outBuffer, 0, 1);
+        outBufferSize = 1;
+    }
+
 %}
 
 %x HEADER
@@ -162,8 +170,9 @@ ARITH_OP ("add"|"sub"|"mul"|"div"|"dif"|"rem")
 HEADER "import "[a-zA-Z.]+";"
 
 OUT_START "println("[ ]*
-OUT_BODY_CONST [ ]*{DQ}[^\"]*{DQ}(,)?[ ]*
-OUT_BODY_VAR [ ]*{VAR_NUM}[ ]*(,)?
+OUT_BODY_CONST {DQ}[^\"]*{DQ}
+OUT_BODY_VAR {VAR_NUM}
+OUT_SEP [ ]*(","|" ")[ ]*
 OUT_END [ ]*")"[ ]*;[ ]*
 
 MAIN_START "static void entryPoint"[ ]*"("[ ]*")"[ ]*"{"[ ]*
@@ -311,6 +320,30 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 <DISCARD_SEC>"," { return *yytext; }
 <DISCARD_SEC>";" { BEGIN( popState() ); return *yytext; }
+
+
+<MAIN>{OUT_START} {  
+    initOutBuffer();
+    BEGIN( pushState(OUT_SEC) );
+    return OUTPUT;
+}
+<OUT_SEC>{OUT_BODY_CONST} { 
+    yylval.name = strdup(yytext);
+    return OUTPUT_VC;
+}
+<OUT_SEC>{OUT_BODY_VAR} { 
+    yylval.name = strdup(yytext);
+    return OUTPUT_VC;
+}
+<OUT_SEC>{OUT_SEP} {
+    return OUTPUT_SEP;
+}
+<OUT_SEC>{OUT_END} {
+    inc(4);
+    BEGIN( popState() );
+    return OUTPUT_END;
+ }
+
 
 <MAIN>{MAIN_END} {
     blockBalancer--;

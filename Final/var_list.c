@@ -148,6 +148,25 @@ double getValueOrDefault(char* name){
     return 0;
 }
 
+char* getFormattedValueOrDefault(char *name){
+    struct VARIABLE* var = getVariable(name);
+    if(var == NULL){
+        return "0";
+    }
+
+    char *arr = (char *) malloc(20);
+
+    if ( strcmp(var->type,"int") == 0){
+        int num = (int)(var->value);
+        sprintf(arr, "%d", num);
+        return arr;
+    }
+
+    double num = (var->value);
+    sprintf(arr, "%lf", num);
+    return arr;
+}
+
 void printAll(){
     printf("\n");
     if(head == NULL) return;

@@ -37,12 +37,20 @@ static void entryPoint(){
 
     s = s add 120;
 
-    s = w;
-
-    discard a,zz,w;
+    discard a,zz;
     discard a;
 
+    println(a,b,c,"F = ", f);
+
+    println("Value of s is: " s);
     s = w;
+
+    println("Value of s is: " s);
+
+    println(s);
+    discard s;
+
+    println(s);
 
 
 }
