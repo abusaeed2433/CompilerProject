@@ -3,6 +3,7 @@
     #include<math.h>
     #include<string.h>
     #include<stdlib.h>
+    #include <ctype.h>
     #include "prototype_list.h"
     #include "constant.h"
     #include "var_list.h"
@@ -18,6 +19,7 @@
 
     extern char *outBuffer;
     extern int outBufferSize;
+    extern bool isLastIfValid;
 
 
     char* removeRedundant(char *source){
@@ -152,11 +154,49 @@
         deleteVariable(name);
     }
 
+    bool isNumber(char* num){
+        bool count = 0;
+        for(int i=0; i<strlen(num); i++){
+            if( num[i] == '.' && count == 0 ) { count=1; continue; }
+            if( !isdigit(num[i]) ) return false;
+        }
+        return true;
+    }
+
+    bool evaluateCondition(char* leftChar, char* op, char *rightChar){
+
+        double left = 0, right = 0;
+        
+        if( isNumber(leftChar) ){ 
+            left = strtod(leftChar,NULL);
+        }
+        else{
+            if( !doesVariableExists(leftChar) ){
+                printf("\nVariable %s doesn't exist. Using default value(0)\n",leftChar);
+            }
+            left = getValueOrDefault(leftChar);
+        }
+
+        
+        if( isNumber(rightChar) ){
+            right = strtod(rightChar,NULL);
+        }
+        else{
+            if( !doesVariableExists(rightChar) ){
+                printf("\nVariable %s doesn't exist. Using default value(0)\n",rightChar);
+            }
+            right = getValueOrDefault(rightChar);
+        }
+
+        return isConditionValid(left, op, right);
+    }
+
 %}
 
 %union{
     double num;
     char *name;
+    bool myBool;
 }
 
 %error-verbose
@@ -164,13 +204,17 @@
 %token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE DISCARD 
 
 %token OUTPUT OUTPUT_VC OUTPUT_SEP OUTPUT_END
+%token JUST_IN_CASE COND_OPE OR AND VAR_CON
 
 // defining token type
 //%type<TYPE> ID1 ID2
 
 %type<name> DATA_TYPE VAR FUNC_TYPE FUNC_NAME ARITH_OPE DISCARD
 %type<name> OUTPUT_VC OUTPUT_SEP
+%type<name> VAR_CON COND_OPE
 %type<num> NUMBER arith_exp
+%type<myBool> many_logic_cond logic_cond
+
 
 %%
 program: many_proto_type ENTRY_POINT block END_POINT     { printf("program executed"); }
@@ -188,6 +232,7 @@ many_type:
 
 
 block: { printf("\nempty block\n"); }
+    | JUST_IN_CASE if_sec block {}
     | var_declare block {}
     | var_assign block  {}
     | DISCARD discard_var block {}
@@ -252,6 +297,20 @@ out_sec: out_vc OUTPUT_END { printAndClearOutBuffer(); }
     ;
 out_vc: OUTPUT_VC { continueOutBuffer($1); }
     | out_vc OUTPUT_SEP OUTPUT_VC { continueOutBuffer($3); }
+    ;
+
+if_sec: '(' many_logic_cond ')' '{' block END_POINT { printf("\nif processed\n"); }
+    ;
+
+many_logic_cond: logic_cond { $$ = $1; isLastIfValid=$$; }
+    | many_logic_cond OR logic_cond { $$ = $1 || $3; isLastIfValid=$$; }
+    | many_logic_cond AND logic_cond { $$ = $1 && $3; isLastIfValid=$$; }
+    ;
+
+logic_cond: VAR_CON COND_OPE VAR_CON {
+        $$ = evaluateCondition($1, $2, $3);
+        //printf("------%s %s %s %d\n",$1, $2, $3, $$);
+    }
     ;
 
 arith_exp: VAR ARITH_OPE VAR {

@@ -21,6 +21,7 @@
     char lastDataType[10];
     char *outBuffer = NULL;
     int outBufferSize = 0;
+    bool isLastIfValid = false;
     //extern
 
     int commentCounter = 0;
@@ -31,7 +32,6 @@
     bool isMainBlockFound = false;
     bool isCommingFromMain = false;
     bool isCommingFromVar = false;
-    bool isLastIfValid = false;
 
     size_t buffer_length = 0;
 
@@ -199,7 +199,7 @@ FUNC_TYPE ("int"|"float"|"double"|"void")
 
 IF "justInCase"[ ]*
 IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
-IF_BODY_START [ ]*"{"
+IF_BODY_START "{"
 IF_BODY_END [ ]*"}"
 IF_SPACE [ ]*
 
@@ -269,6 +269,11 @@ NEW_LINE_AND_TAB [\n\t]*
     return ENTRY_POINT;
 }
 
+<MAIN>{IF} {
+    inc(7);
+    BEGIN( pushState(IF_SEC) );
+    return JUST_IN_CASE;
+}
 
 <MAIN>{DATA_TYPE} {
     //printf("main data type %s\n",yytext);
@@ -342,8 +347,43 @@ NEW_LINE_AND_TAB [\n\t]*
     inc(4);
     BEGIN( popState() );
     return OUTPUT_END;
- }
+}
 
+
+<IF_SEC>("("|")") { return *yytext; }
+<IF_SEC>"}" { return END_POINT; }
+
+<IF_SEC>{COND_OP} { yylval.name = strdup(yytext); return COND_OPE; }
+<IF_SEC>"and" { return AND; }
+<IF_SEC>"or" { return OR; }
+
+<IF_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
+<IF_SEC>{IF_BODY_START} { 
+    //popState(); // popping if section and taking to main section arki
+    popState();
+
+    char *valid = isLastIfValid ? "True" : "False";
+    printf("\nIf condition is %s\n",valid);
+    if(!isLastIfValid){
+        bracketCounter=1;
+        BEGIN( pushState(IGNORE_SEC) );
+    }
+    else{
+        BEGIN(pushState(MAIN));
+    }
+    return *yytext;
+}
+<IF_SEC>{NEW_LINE_AND_TAB} {}
+
+<IGNORE_SEC>{IGNORE_LEFT_BRACE} { bracketCounter++; }
+<IGNORE_SEC>{IGNORE_RIGHT_BRACE} { 
+    bracketCounter--;
+    if(bracketCounter == 0){
+        BEGIN( popState() );
+        return END_POINT;
+    }
+}
+<IGNORE_SEC>[^}] {}
 
 <MAIN>{MAIN_END} {
     blockBalancer--;

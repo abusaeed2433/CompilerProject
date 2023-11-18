@@ -51,7 +51,12 @@
      OUTPUT = 267,
      OUTPUT_VC = 268,
      OUTPUT_SEP = 269,
-     OUTPUT_END = 270
+     OUTPUT_END = 270,
+     JUST_IN_CASE = 271,
+     COND_OPE = 272,
+     OR = 273,
+     AND = 274,
+     VAR_CON = 275
    };
 #endif
 
@@ -62,15 +67,16 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 157 "final.y"
+#line 196 "final.y"
 
     double num;
     char *name;
+    bool myBool;
 
 
 
 /* Line 1676 of yacc.c  */
-#line 74 "final.tab.h"
+#line 80 "final.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

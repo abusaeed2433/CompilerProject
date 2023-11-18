@@ -51,6 +51,19 @@ static void entryPoint(){
     discard s;
 
     println(s);
+    double s = 10;
+
+    justInCase(
+        s le 10 or
+        10 lt 9
+    ){
+        int age = 22;
+        println("My age is not: ", age);
+    }
+
+
+    float height = 5;
+    println("My height is: " height);
 
 
 }
