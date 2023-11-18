@@ -7,6 +7,7 @@
     #include "prototype_list.h"
     #include "constant.h"
     #include "var_list.h"
+    #include<windows.h>
 
 
     extern char lastDataType[10];
@@ -20,6 +21,12 @@
     extern char *outBuffer;
     extern int outBufferSize;
     extern bool isLastIfValid;
+
+    struct COND{ char *left, *op, *right; };
+    struct ASSIGN{ char *var, *left, *op, *right; };
+
+    struct COND lastCond;
+    struct ASSIGN lastAssign;
 
 
     char* removeRedundant(char *source){
@@ -165,6 +172,10 @@
 
     bool evaluateCondition(char* leftChar, char* op, char *rightChar){
 
+        lastCond.left = leftChar;
+        lastCond.op = op;
+        lastCond.right = rightChar;
+
         double left = 0, right = 0;
         
         if( isNumber(leftChar) ){ 
@@ -191,6 +202,57 @@
         return isConditionValid(left, op, right);
     }
 
+    void updateLast(char *left, char *op, char *right){
+        lastAssign.left = left;
+        lastAssign.op = op;
+        lastAssign.right = right;
+    }
+
+    char* dtoc(double val){
+        char* buf = malloc( sizeof(char) * 20 );
+        sprintf(buf, "%f", val);
+        return buf;
+    }
+
+    void startLoop(){
+        int counter = 0;
+        printf("\n");
+        while( evaluateCondition( lastCond.left, lastCond.op, lastCond.right ) ){
+            
+            printf("Iterating - %d",counter);
+
+            if( !isNumber(lastCond.left) ){
+                printf(", value: %s", getFormattedValueOrDefault(lastCond.left) );
+            }
+            printf("\n");
+
+            double val1 = 0, val2 = 0;
+            if( isNumber(lastAssign.left) ){
+                sscanf(lastAssign.left, "%lf", &val1);
+            }
+            else{
+                val1 = getValueOrDefault(lastAssign.left);
+            }
+
+            if( isNumber(lastAssign.right) ){
+                sscanf(lastAssign.right, "%lf", &val2);
+            }
+            else{
+                val2 = getValueOrDefault(lastAssign.right);
+            }
+
+            if( !doesVariableExists(lastAssign.var) ){
+                printf("\nVariable %s doesn't exists. Stopping...\n", lastAssign.var);
+                break;
+            }
+            double res = doArithOperation(val1, val2, lastAssign.op);
+
+            updateVariable( lastAssign.var, res );
+            counter++;
+            Sleep(200);
+        }
+    }
+
 %}
 
 %union{
@@ -204,7 +266,7 @@
 %token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE DISCARD 
 
 %token OUTPUT OUTPUT_VC OUTPUT_SEP OUTPUT_END
-%token JUST_IN_CASE COND_OPE OR AND VAR_CON
+%token JUST_IN_CASE COND_OPE OR AND VAR_CON TILL
 
 // defining token type
 //%type<TYPE> ID1 ID2
@@ -233,6 +295,7 @@ many_type:
 
 block: { printf("\nempty block\n"); }
     | JUST_IN_CASE if_sec block {}
+    | TILL loop_sec block {}
     | var_declare block {}
     | var_assign block  {}
     | DISCARD discard_var block {}
@@ -302,6 +365,19 @@ out_vc: OUTPUT_VC { continueOutBuffer($1); }
 if_sec: '(' many_logic_cond ')' '{' block END_POINT { printf("\nif processed\n"); }
     ;
 
+loop_sec: '(' logic_cond ')' '{' loop_updater END_POINT {
+        printf("\nLoop matched\n");
+        startLoop();
+    }
+    ;
+
+loop_updater: VAR '=' arith_exp ';'{ 
+        lastAssign.var = $1;
+        //printf("=== %s %s %s ===",lastCond.left,lastCond.op,lastCond.right);
+        //printf("=== %s %s %s %s ===", lastAssign.var,lastAssign.left,lastAssign.op,lastAssign.right);
+    }
+    ;
+
 many_logic_cond: logic_cond { $$ = $1; isLastIfValid=$$; }
     | many_logic_cond OR logic_cond { $$ = $1 || $3; isLastIfValid=$$; }
     | many_logic_cond AND logic_cond { $$ = $1 && $3; isLastIfValid=$$; }
@@ -316,17 +392,24 @@ logic_cond: VAR_CON COND_OPE VAR_CON {
 arith_exp: VAR ARITH_OPE VAR {
         double val1 = getValueOrDefault($1);
         double val2 = getValueOrDefault($3);
+        updateLast($1, $2, $3);
         $$ = doArithOperation(val1, val2, $2);
     }
     | VAR ARITH_OPE NUMBER {
         double val1 = getValueOrDefault($1);
+        
+        updateLast($1, $2, dtoc($3) );
         $$ = doArithOperation(val1, $3, $2);
+
     }
     | NUMBER ARITH_OPE VAR { 
         double val2 = getValueOrDefault($3);
+        
+        updateLast( dtoc($1), $2, $3);
         $$ = doArithOperation($1, val2, $2);
     }
-    | NUMBER ARITH_OPE NUMBER { 
+    | NUMBER ARITH_OPE NUMBER {
+        updateLast( dtoc($1), $2, dtoc($3) );
         $$ = doArithOperation($1, $3, $2);
     }
     ;

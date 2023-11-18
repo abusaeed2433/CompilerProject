@@ -65,6 +65,13 @@ static void entryPoint(){
     float height = 5;
     println("My height is: " height);
 
+    int i = 10;
+    int inc = 5;
+    int j = 50;
+    till(i le j){
+        i = i add inc;
+    }
+
 
 }
 

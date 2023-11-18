@@ -157,6 +157,7 @@
 %x IGNORE_SEC
 %x DISCARD_SEC
 %x LOOP_SEC
+%x LOOP_BODY_SEC
 %x OUT_SEC
 %x PROTO_SEC
 
@@ -275,6 +276,12 @@ NEW_LINE_AND_TAB [\n\t]*
     return JUST_IN_CASE;
 }
 
+<MAIN>{LOOP_START} {
+    inc(8);
+    BEGIN( pushState(LOOP_SEC) );
+    return TILL;
+}
+
 <MAIN>{DATA_TYPE} {
     //printf("main data type %s\n",yytext);
     initVarSec(yytext); 
@@ -349,14 +356,12 @@ NEW_LINE_AND_TAB [\n\t]*
     return OUTPUT_END;
 }
 
-
 <IF_SEC>("("|")") { return *yytext; }
 <IF_SEC>"}" { return END_POINT; }
 
 <IF_SEC>{COND_OP} { yylval.name = strdup(yytext); return COND_OPE; }
 <IF_SEC>"and" { return AND; }
 <IF_SEC>"or" { return OR; }
-
 <IF_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
 <IF_SEC>{IF_BODY_START} { 
     //popState(); // popping if section and taking to main section arki
@@ -384,6 +389,28 @@ NEW_LINE_AND_TAB [\n\t]*
     }
 }
 <IGNORE_SEC>[^}] {}
+
+
+<LOOP_SEC>("("|")") { return *yytext; }
+<LOOP_SEC>"}" { return END_POINT; }
+<LOOP_SEC>{COND_OP} { yylval.name = strdup(yytext); return COND_OPE; }
+<LOOP_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
+
+<LOOP_SEC>{LOOP_START_BRACE} { BEGIN( pushState(LOOP_BODY_SEC) ); return *yytext; }
+
+<LOOP_BODY_SEC>{VARIABLE} {
+    yylval.name = strdup(yytext);
+    BEGIN( pushState(VAR_SEC) );
+    return VAR;
+}
+<LOOP_SEC>{NEW_LINE_AND_TAB} {}
+<LOOP_BODY_SEC>{LOOP_END} {
+    popState();
+    BEGIN( popState() );
+    return END_POINT;
+}
+
+<LOOP_BODY_SEC>{NEW_LINE_AND_TAB} {}
 
 <MAIN>{MAIN_END} {
     blockBalancer--;
