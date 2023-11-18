@@ -161,6 +161,7 @@
 %x OUT_SEC
 %x PROTO_SEC
 %x FUNC_SEC
+%x FUNC_SEC_VAR
 
 DQ \"
 NUMBER ([0-9]+(".")[0-9]+)|([0-9]+)|("."[0-9]+)
@@ -306,11 +307,24 @@ NEW_LINE_AND_TAB [\n\t]*
     yylval.name = strdup(yytext);
     return FUNC_NAME;
 }
+
+<VAR_SEC>{FUNC_START} {
+    //printf("----%s----",yytext);
+    BEGIN( pushState(FUNC_SEC_VAR) );
+    yylval.name = strdup(yytext);
+    return FUNC_NAME;
+}
+
+<FUNC_SEC_VAR>("("|",") { return *yytext; }
+<FUNC_SEC_VAR>(")") { BEGIN( popState() ); return *yytext; }
+<FUNC_SEC_VAR>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
+
+
+<FUNC_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
+
 <FUNC_SEC>("("|")"|",") {
     return *yytext;
 }
-
-<FUNC_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
 
 <FUNC_SEC>";" {
     BEGIN( popState() );

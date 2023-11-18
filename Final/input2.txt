@@ -1,0 +1,22 @@
+import dd;
+
+void add(int,int, float);
+int mul(int,int);
+
+static void entryPoint(){
+    int n;
+    float f;
+
+    @add(n,n,f);
+
+    int k = @add(n,n,f), w, h = @mul(n,n), x =444;
+
+    k = 24;
+
+    k = @mul(23,24);
+
+    println(res);
+}
+
+//import hello.h;
+

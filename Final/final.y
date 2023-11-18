@@ -31,6 +31,11 @@
     struct COND lastCond;
     struct ASSIGN lastAssign;
 
+    struct FUNC_RESULT { 
+        char type[10];
+        double res;
+    } lastFuncRes;
+
 
     char* removeRedundant(char *source){
         int len = strlen(source);
@@ -257,6 +262,8 @@
     }
 
     void addTypeToCall(char *name){
+        //printf("Type call %s\n",name);
+
         char *type = "none";
 
         if( isNumber(name) ){ type = "any"; }
@@ -286,14 +293,48 @@
 
         struct PROTOTYPE* temp = createProto("void",realName, callParamHead,NULL);
         
+        strcpy( lastFuncRes.type, "null" );
+        lastFuncRes.res = 0;
+
+        printf("\n function processed: ");
+        printProto( temp, false );
+
         if( !doesProtoExists(temp) ){
-            printf("\nInvalid function call\n");
+            printf("\nFunction not found\n");
         }
         else{
             printf("\nCalling function ");
-            printProto( getOriginalProto(temp) , true);
+            struct PROTOTYPE* orig = getOriginalProto(temp);
+            strcpy( lastFuncRes.type, orig->funcType);
+            printProto( orig , true);
         }
         callParamHead = NULL;
+        callParamTail = NULL;
+    }
+
+    void assignFromFunction(char* name, char *varType, bool update){
+        double val = 0;
+        if( strncmp("void",lastFuncRes.type,4) == 0 ){
+            printf("\nInvalid assignment from void to %s\n",lastDataType);
+            val = 0;
+        }
+        else if( strcmp(varType, lastFuncRes.type) == 0 ){
+            val = lastFuncRes.res;
+        }
+        else if( strncmp("int", lastDataType, 3) != 0 ){
+            val = lastFuncRes.res;
+        }
+        else{
+            printf("\nImcompatible assignment. Using default value...\n");
+        }
+        
+        if(update){
+            assignIfPossible(name,val);
+        }
+        else{
+            declareVariable(name, lastDataType, val);
+        }
+
     }
 
 %}
@@ -318,6 +359,7 @@
 %type<name> DATA_TYPE VAR FUNC_TYPE FUNC_NAME ARITH_OPE DISCARD
 %type<name> OUTPUT_VC OUTPUT_SEP
 %type<name> VAR_CON COND_OPE
+%type<name> func_call
 %type<num> NUMBER arith_exp
 %type<myBool> many_logic_cond logic_cond
 
@@ -340,14 +382,16 @@ many_type:
 block: { printf("\nempty block\n"); }
     | JUST_IN_CASE if_sec block {}
     | TILL loop_sec block {}
-    | func_call block {}
+    | func_call ';' block {}
     | var_declare block {}
     | var_assign block  {}
     | DISCARD discard_var block {}
     | OUTPUT out_sec block {}
     ;
 
-func_call: FUNC_NAME '(' many_var_con ')' ';' { processCall($1) }
+func_call: FUNC_NAME '(' many_var_con ')' { 
+        processCall($1); $$ = lastFuncRes.type;
+    }
 
 many_var_con: 
     | many_var_con VAR_CON { addTypeToCall($2); }
@@ -368,6 +412,12 @@ others: VAR {
     | VAR '=' VAR {
         double val = getValueOrDefault($3);
         declareVariable($1, lastDataType, val);
+    }
+    | VAR '=' func_call {
+        assignFromFunction($1,lastDataType,false);
+    }
+    | VAR '=' func_call ',' others {
+        assignFromFunction($1,lastDataType,false);
     }
     | VAR '=' NUMBER ',' others {
         declareVariable($1, lastDataType, $3);
@@ -395,6 +445,9 @@ var_assign: VAR '=' NUMBER ';'{
             double val = getValueOrDefault($3);
             assignIfPossible($1, val);
         }
+    }
+    | VAR '=' func_call ';' {
+        assignFromFunction($1,lastDataType,true);
     }
     | VAR '=' arith_exp ';'{
         assignIfPossible($1, $3);
@@ -478,7 +531,7 @@ void yyerror(char *s)
 
 int main(){
 
-	freopen("input.txt","r",stdin);
+	freopen("input2.txt","r",stdin);
 	//output = freopen("output.txt", "w", stdout); // output in file
 	yyparse();
     printAll();
