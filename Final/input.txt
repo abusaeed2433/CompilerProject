@@ -5,7 +5,7 @@ import dd;
 
 // heelo
 /*
-void add(int,int, float);
+int add(int,int, float);
 int scan();
 void add(int, float, float);
 */
@@ -59,19 +59,29 @@ static void entryPoint(){
     ){
         int age = 22;
         println("My age is not: ", age);
+
+        justInCase(5 lt 20){
+            println("kutttar baccha");
+        }
     }
 
 
     float height = 5;
     println("My height is: " height);
 
-    int i = 10;
-    int inc = 5;
-    int j = 50;
-    till(i le j){
-        i = i add inc;
+    int n = 12345;
+
+    till(n gt 0){
+        n = n div 10;
     }
 
+    @add(n,n,f);
+
+/*
+    for(int k=0; k lt 10; k = k add 1){
+
+    }
+*/
 
 }
 

@@ -18,6 +18,9 @@
     struct PARAMETER *paramHead = NULL;
     struct PARAMETER *paramTail = NULL;
 
+    struct PARAMETER *callParamHead = NULL;
+    struct PARAMETER *callParamTail = NULL;
+
     extern char *outBuffer;
     extern int outBufferSize;
     extern bool isLastIfValid;
@@ -253,6 +256,42 @@
         }
     }
 
+    void addTypeToCall(char *name){
+        
+        printf("---kuttar baccah, fut-fute sundor---");
+        char *type = "none";
+
+        if( isNumber(name) ){ type = "any"; }
+        else{
+
+            if( doesVariableExists(name) ){
+                struct VARIABLE* var = getVariable(name);
+                type = var->type;
+            }
+            else{
+                printf("\nVariable %s doesn't exists\n",name);
+            }
+
+        }
+
+        insertParameter(&callParamHead, &callParamTail, type);
+
+    }
+
+
+    void processCall(char *funcName){
+        printf("kuttar bacck");
+        //struct PARAMETER *ptr = callParamHead;
+
+        printf("%s(",funcName);
+        while(ptr != NULL){
+            printf("%s ",ptr->type);
+            ptr = ptr->next;
+        }
+        printf(")\n");
+
+    }
+
 %}
 
 %union{
@@ -263,7 +302,8 @@
 
 %error-verbose
 %token ENTRY_POINT END_POINT 
-%token DATA_TYPE FUNC_TYPE FUNC_NAME VAR NUMBER ARITH_OPE DISCARD 
+%token DATA_TYPE FUNC_TYPE VAR NUMBER ARITH_OPE DISCARD 
+%token FUNC_NAME
 
 %token OUTPUT OUTPUT_VC OUTPUT_SEP OUTPUT_END
 %token JUST_IN_CASE COND_OPE OR AND VAR_CON TILL
@@ -296,10 +336,18 @@ many_type:
 block: { printf("\nempty block\n"); }
     | JUST_IN_CASE if_sec block {}
     | TILL loop_sec block {}
+    | func_call block {}
     | var_declare block {}
     | var_assign block  {}
     | DISCARD discard_var block {}
     | OUTPUT out_sec block {}
+    ;
+
+func_call: FUNC_NAME '(' many_var_con ')' ';' { processCall($1) }
+
+many_var_con: 
+    | VAR_CON many_var_con { addTypeToCall($1); }
+    | VAR_CON ',' many_var_con { addTypeToCall($1); }
     ;
 
 var_declare: DATA_TYPE others';'
@@ -413,6 +461,8 @@ arith_exp: VAR ARITH_OPE VAR {
         $$ = doArithOperation($1, $3, $2);
     }
     ;
+
+
 
 %%
 

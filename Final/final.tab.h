@@ -43,11 +43,11 @@
      END_POINT = 259,
      DATA_TYPE = 260,
      FUNC_TYPE = 261,
-     FUNC_NAME = 262,
-     VAR = 263,
-     NUMBER = 264,
-     ARITH_OPE = 265,
-     DISCARD = 266,
+     VAR = 262,
+     NUMBER = 263,
+     ARITH_OPE = 264,
+     DISCARD = 265,
+     FUNC_NAME = 266,
      OUTPUT = 267,
      OUTPUT_VC = 268,
      OUTPUT_SEP = 269,
@@ -68,7 +68,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 258 "final.y"
+#line 297 "final.y"
 
     double num;
     char *name;

@@ -160,6 +160,7 @@
 %x LOOP_BODY_SEC
 %x OUT_SEC
 %x PROTO_SEC
+%x FUNC_SEC
 
 DQ \"
 NUMBER ([0-9]+(".")[0-9]+)|([0-9]+)|("."[0-9]+)
@@ -206,6 +207,8 @@ IF_SPACE [ ]*
 
 IGNORE_LEFT_BRACE "{"
 IGNORE_RIGHT_BRACE "}"
+
+FUNC_START "@"{VARIABLE}
 
 LOOP_START "till"
 LOOP_START_BRACE "{"
@@ -270,6 +273,21 @@ NEW_LINE_AND_TAB [\n\t]*
     return ENTRY_POINT;
 }
 
+<MAIN>{DATA_TYPE} {
+    //printf("main data type %s\n",yytext);
+    initVarSec(yytext); 
+    char *type = removeRedundant(yytext);
+    yylval.name =  strdup( type );
+    BEGIN( pushState(VAR_SEC) );
+    return DATA_TYPE;
+}
+
+<MAIN>{OUT_START} {  
+    initOutBuffer();
+    BEGIN( pushState(OUT_SEC) );
+    return OUTPUT;
+}
+
 <MAIN>{IF} {
     inc(7);
     BEGIN( pushState(IF_SEC) );
@@ -282,13 +300,21 @@ NEW_LINE_AND_TAB [\n\t]*
     return TILL;
 }
 
-<MAIN>{DATA_TYPE} {
-    //printf("main data type %s\n",yytext);
-    initVarSec(yytext); 
-    char *type = removeRedundant(yytext);
-    yylval.name =  strdup( type );
-    BEGIN( pushState(VAR_SEC) );
-    return DATA_TYPE;
+<MAIN>{FUNC_START} {
+    printf("----%s----",yytext);
+    BEGIN( pushState(FUNC_SEC) );
+    yylval.name = strdup(yytext);
+    return FUNC_NAME;
+}
+<FUNC_SEC>("("|")"|",") {
+    return *yytext;
+}
+
+<FUNC_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
+
+<FUNC_SEC>";" {
+    BEGIN( popState() );
+    return *yytext;
 }
 
 <MAIN>{VARIABLE} {
@@ -334,11 +360,6 @@ NEW_LINE_AND_TAB [\n\t]*
 <DISCARD_SEC>";" { BEGIN( popState() ); return *yytext; }
 
 
-<MAIN>{OUT_START} {  
-    initOutBuffer();
-    BEGIN( pushState(OUT_SEC) );
-    return OUTPUT;
-}
 <OUT_SEC>{OUT_BODY_CONST} { 
     yylval.name = strdup(yytext);
     return OUTPUT_VC;
