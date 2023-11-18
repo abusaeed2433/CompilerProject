@@ -68,7 +68,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 297 "final.y"
+#line 301 "final.y"
 
     double num;
     char *name;

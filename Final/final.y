@@ -119,7 +119,7 @@
         }
 
         insertProto(proto);
-        printProto(proto);
+        //printProto(proto);
 
     }
 
@@ -257,8 +257,6 @@
     }
 
     void addTypeToCall(char *name){
-        
-        printf("---kuttar baccah, fut-fute sundor---");
         char *type = "none";
 
         if( isNumber(name) ){ type = "any"; }
@@ -280,16 +278,22 @@
 
 
     void processCall(char *funcName){
-        printf("kuttar bacck");
-        //struct PARAMETER *ptr = callParamHead;
 
-        printf("%s(",funcName);
-        while(ptr != NULL){
-            printf("%s ",ptr->type);
-            ptr = ptr->next;
+        char realName[ strlen(funcName) ];
+
+        // Copy the string starting from the second character
+        strcpy(realName, funcName + 1);
+
+        struct PROTOTYPE* temp = createProto("void",realName, callParamHead,NULL);
+        
+        if( !doesProtoExists(temp) ){
+            printf("\nInvalid function call\n");
         }
-        printf(")\n");
-
+        else{
+            printf("\nCalling function ");
+            printProto( getOriginalProto(temp) , true);
+        }
+        callParamHead = NULL;
     }
 
 %}
@@ -346,8 +350,8 @@ block: { printf("\nempty block\n"); }
 func_call: FUNC_NAME '(' many_var_con ')' ';' { processCall($1) }
 
 many_var_con: 
-    | VAR_CON many_var_con { addTypeToCall($1); }
-    | VAR_CON ',' many_var_con { addTypeToCall($1); }
+    | many_var_con VAR_CON { addTypeToCall($2); }
+    | many_var_con ',' VAR_CON { addTypeToCall($3); }
     ;
 
 var_declare: DATA_TYPE others';'
@@ -478,5 +482,7 @@ int main(){
 	//output = freopen("output.txt", "w", stdout); // output in file
 	yyparse();
     printAll();
+    printf("\nPrinting all prototype\n");
+    printAllProto();
 	return 0;
 }

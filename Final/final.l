@@ -301,7 +301,7 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 
 <MAIN>{FUNC_START} {
-    printf("----%s----",yytext);
+    //printf("----%s----",yytext);
     BEGIN( pushState(FUNC_SEC) );
     yylval.name = strdup(yytext);
     return FUNC_NAME;

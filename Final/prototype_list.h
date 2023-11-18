@@ -27,6 +27,10 @@ void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *ty
 struct PROTOTYPE* createProto(char*, char*, struct PARAMETER*, struct PARAMETER* );
 void insertProto(struct PROTOTYPE* var);
 bool doesProtoExists(struct PROTOTYPE* proto);
-void printProto(struct PROTOTYPE *ptr);
+
+struct PROTOTYPE* getOriginalProto(struct PROTOTYPE*);
+
+void printAllProto();
+void printProto(struct PROTOTYPE*, bool);
 
 #endif

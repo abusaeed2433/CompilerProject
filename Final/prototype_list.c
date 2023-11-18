@@ -62,6 +62,10 @@ struct PROTOTYPE* createProto(char *type, char *name,
     newNode->next = NULL;
 
     //printf("Inside - 6\n");
+
+    // printf("inside create: ");
+    // printProto(newNode);
+
     return newNode;
 }
 
@@ -78,7 +82,8 @@ void insertProto(struct PROTOTYPE* var) {
     }
 }
 
-bool doesProtoExists(struct PROTOTYPE* proto){
+
+struct PROTOTYPE* getOriginalProto(struct PROTOTYPE* proto){
 
     struct PROTOTYPE *ptr = protoHead;
     while (ptr != NULL)
@@ -87,7 +92,7 @@ bool doesProtoExists(struct PROTOTYPE* proto){
 
         if(isNameSame){
 
-            struct PARAMETER *param1 = proto->paramsTail;
+            struct PARAMETER *param1 = proto->paramsHead;
             struct PARAMETER *param2 = ptr->paramsTail;
 
             while ( param1 != NULL && param2 != NULL )
@@ -96,31 +101,49 @@ bool doesProtoExists(struct PROTOTYPE* proto){
                     break;
                 }
 
-                param1 = param1->prev;
+                param1 = param1->next;
                 param2 = param2->prev;
             }
 
             if(param1 == NULL && param2 == NULL){
-                return true;
+                return ptr;
             }
 
         }
 
         ptr = ptr->next;
     }
-    return false;
+    return NULL;
 }
 
-void printProto(struct PROTOTYPE *ptr){
+bool doesProtoExists(struct PROTOTYPE* proto){
+    return getOriginalProto(proto) != NULL;
+}
 
-    printf("\nPrototype found: | %s %s( ",ptr->funcType, ptr->funcName);
 
-    struct PARAMETER* param = ptr->paramsTail;
+void printAllProto(){
+    struct PROTOTYPE *ptr = protoHead;
+
+    while (ptr != NULL)
+    {
+        printProto(ptr,true);
+        ptr = ptr->next;
+    }
+}
+
+void printProto(struct PROTOTYPE *ptr, bool reverse){
+
+    printf("%s %s(",ptr->funcType, ptr->funcName);
+
+    struct PARAMETER* param = reverse ? ptr->paramsTail : ptr->paramsHead;
 
     while(param != NULL){
-        printf("%s ",param->type);
-        param = param->prev;
+        printf("%s",param->type);
+
+        if( (reverse ? param->prev : param->next) != NULL){ printf(","); }
+
+        param = reverse ? param->prev : param->next;
     }
-    printf("); |\n");
+    printf(")\n");
 
 }

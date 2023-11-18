@@ -1185,7 +1185,7 @@ case 22:
 YY_RULE_SETUP
 #line 303 "final.l"
 {
-    printf("----%s----",yytext);
+    //printf("----%s----",yytext);
     BEGIN( pushState(FUNC_SEC) );
     yylval.name = strdup(yytext);
     return FUNC_NAME;
