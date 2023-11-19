@@ -13,12 +13,6 @@ struct PROTOTYPE *protoHead = NULL;
 struct PROTOTYPE *protoTail = NULL;
 
 
-double getLibrayFunctionResult(char* name, struct PARAMETER* params){
-    if( strcmp(name, "sqrt") == 0 ){
-        return sqrt(params->value);
-    }
-    return 0;
-}
 
 struct PARAMETER* createParameter(const char *type,double value) {
 
@@ -176,16 +170,68 @@ void printProto(struct PROTOTYPE *ptr, bool reverse){
 
 }
 
+double getLibrayFunctionResult(char* name, struct PARAMETER* params){
+    
+    if( strcmp(name, "max") == 0 ){
+        return fmax(params->value, params->next->value);
+    }
+    
+    if( strcmp(name, "sqrt") == 0 ){
+        return sqrt(params->value);
+    }
+
+    if( strcmp(name, "scanInt") == 0 ){
+        printf("\nTaking int input 0\n");
+        return 0;
+    }
+
+    if( strcmp(name, "scan") == 0 ){
+        printf("\nTaking input 0.0\n");
+        return 0;
+    }
+
+
+
+    return 0;
+}
 
 void initializeLibraryFunction(){
 
     struct PARAMETER *head = NULL, *tail = NULL;
 
+    // max
+    {
+    head = NULL; tail = NULL;
+    insertParameter(&head,&tail,"any",-1);
+    insertParameter(&head,&tail,"any",-1);
+
+    struct PROTOTYPE* max = createProto("float","max",head,tail);
+    insertLibraryProto(max);
+    }
+
+
     // sqrt
+    {
     head = NULL; tail = NULL;
     insertParameter(&head,&tail,"any",-1);
     struct PROTOTYPE* sqrt = createProto("void","sqrt",head,tail);
     insertLibraryProto(sqrt);
+    }
+
+    //scanInt
+    {
+    head = NULL; tail = NULL;
+    struct PROTOTYPE* scanInt = createProto("int","scanInt",head,tail);
+    insertLibraryProto(scanInt);
+    }
+    
+    //scan
+    {
+    head = NULL; tail = NULL;
+    struct PROTOTYPE* scan = createProto("float","scan",head,tail);
+    insertLibraryProto(scan);
+    }
+
 
     
 }

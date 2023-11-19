@@ -5,18 +5,16 @@ int mul(int,int);
 
 static void entryPoint(){
 
-    double k = @sqrt(19);
+    int i = @scanInt();
+    println(i);
 
-    int root = 5 add 20;
+    double d = @scan();
+    println(d);
 
-    root = @sqrt(19);
+    float mx = @max(10,20);
+    println(mx);
 
-    root = k;
 
-    println(root,k);
-
-    float ff = root;
-    println(ff);
 
 
 }
