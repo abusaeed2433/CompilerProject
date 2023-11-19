@@ -4,21 +4,20 @@ void add(int,int, float);
 int mul(int,int);
 
 static void entryPoint(){
-    int n;
-    float f;
 
-    @add(n,n,f);
+    double k = @sqrt(19);
 
-    int k = @add(n,n,f), w, h = @mul(n,n), x =444;
+    int root = 5 add 20;
 
-    k = 24;
+    root = @sqrt(19);
 
-    k = @mul(23,24);
+    root = k;
 
-    int k = @sqrt(9);
+    println(root,k);
 
-    println(res);
+    float ff = root;
+    println(ff);
+
+
 }
-
-//import hello.h;
 

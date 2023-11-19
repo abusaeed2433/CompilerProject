@@ -2,11 +2,23 @@
 #include <stddef.h>
 #include<string.h>
 #include<stdlib.h>
+#include<math.h>
 #include "prototype_list.h"
 #include <stdbool.h>
 
+struct PROTOTYPE *libraryProtoHead = NULL;
+struct PROTOTYPE *libraryProtoTail = NULL;
+
 struct PROTOTYPE *protoHead = NULL;
 struct PROTOTYPE *protoTail = NULL;
+
+
+double getLibrayFunctionResult(char* name, struct PARAMETER* params){
+    if( strcmp(name, "sqrt") == 0 ){
+        return sqrt(params->value);
+    }
+    return 0;
+}
 
 struct PARAMETER* createParameter(const char *type,double value) {
 
@@ -21,7 +33,6 @@ struct PARAMETER* createParameter(const char *type,double value) {
     node->next = NULL;
     return node;
 }
-
 
 
 void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val){
@@ -70,6 +81,19 @@ struct PROTOTYPE* createProto(char *type, char *name,
     return newNode;
 }
 
+void insertLibraryProto(struct PROTOTYPE* var) {
+    
+    if(libraryProtoTail == NULL) {
+        libraryProtoHead = var;
+        libraryProtoTail = var;
+    }
+    else {
+        var->prev = libraryProtoTail;
+        libraryProtoTail->next = var;
+        libraryProtoTail = var;
+    }
+}
+
 void insertProto(struct PROTOTYPE* var) {
     
     if(protoTail == NULL) {
@@ -84,9 +108,9 @@ void insertProto(struct PROTOTYPE* var) {
 }
 
 
-struct PROTOTYPE* getOriginalProto(struct PROTOTYPE* proto){
+struct PROTOTYPE* getOriginalProto(struct PROTOTYPE* proto, bool isLibrary){
 
-    struct PROTOTYPE *ptr = protoHead;
+    struct PROTOTYPE *ptr = isLibrary ? libraryProtoHead : protoHead;
     while (ptr != NULL)
     {
         bool isNameSame = strcmp( proto->funcName ,ptr->funcName) == 0 ? true : false;
@@ -117,8 +141,8 @@ struct PROTOTYPE* getOriginalProto(struct PROTOTYPE* proto){
     return NULL;
 }
 
-bool doesProtoExists(struct PROTOTYPE* proto){
-    return getOriginalProto(proto) != NULL;
+bool doesProtoExists(struct PROTOTYPE* proto, bool isLibrary){
+    return getOriginalProto(proto,isLibrary) != NULL;
 }
 
 
@@ -150,4 +174,18 @@ void printProto(struct PROTOTYPE *ptr, bool reverse){
     }
     printf(")\n");
 
+}
+
+
+void initializeLibraryFunction(){
+
+    struct PARAMETER *head = NULL, *tail = NULL;
+
+    // sqrt
+    head = NULL; tail = NULL;
+    insertParameter(&head,&tail,"any",-1);
+    struct PROTOTYPE* sqrt = createProto("void","sqrt",head,tail);
+    insertLibraryProto(sqrt);
+
+    
 }

@@ -119,7 +119,7 @@
 
         paramHead = NULL; paramTail = NULL;
 
-        if( doesProtoExists(proto) ){
+        if( doesProtoExists(proto,false) ){
             printf("\nDuplicate proto-type found\n");
             return;
         }
@@ -291,6 +291,14 @@
     }
 
 
+    double getOrDefaultResultFromFunction(
+        char* name, struct PARAMETER* head,
+        struct PROTOTYPE* funcToCall )
+    {
+
+        return getLibrayFunctionResult(name,head);
+    }
+
     void processCall(char *funcName){
 
         char realName[ strlen(funcName) ];
@@ -303,21 +311,34 @@
         strcpy( lastFuncRes.type, "null" );
         lastFuncRes.res = 0;
 
-        printf("\nFunction processed: ");
-        printProto( temp, false );
 
-        if( !doesProtoExists(temp) ){
-            printf("\nFunction not found\n");
+        if( !doesProtoExists(temp,false) ){
+
+            // check library function
+            if( doesProtoExists(temp,true) ){
+                printf("\nCalling function ");
+                // returns from library function
+                struct PROTOTYPE* orig = getOriginalProto(temp,true);
+                printProto( orig , true);
+                strcpy( lastFuncRes.type, orig->funcType );
+                lastFuncRes.res = getOrDefaultResultFromFunction(realName,callParamHead,orig);
+            }
+            else{
+                printf("\nFunction not found\n");
+            }
+
         }
         else{
             printf("\nCalling function ");
-            struct PROTOTYPE* orig = getOriginalProto(temp);
+            struct PROTOTYPE* orig = getOriginalProto(temp,false);
             strcpy( lastFuncRes.type, orig->funcType);
             printProto( orig , true);
         }
         callParamHead = NULL;
         callParamTail = NULL;
     }
+
+
 
     void assignFromFunction(char* name, char *varType, bool update){
         double val = 0;
@@ -331,6 +352,9 @@
         else if( strncmp("int", lastDataType, 3) != 0 ){
             val = lastFuncRes.res;
         }
+        else if( strncmp("int", lastDataType, 3) == 0 ){
+            val = (int)lastFuncRes.res;
+        }
         else{
             printf("\nImcompatible assignment. Using default value...\n");
         }
@@ -340,6 +364,18 @@
         }
         else{
             declareVariable(name, lastDataType, val);
+        }
+
+    }
+
+    void continueToAssignFromFunction(char *name, bool update){
+        
+        if(doesVariableExists(name)){
+            struct VARIABLE* var = getVariable(name);
+            assignFromFunction(name,var->type,update);
+        }
+        else{
+            printf("\nVariable %s doesn't exists");
         }
 
     }
@@ -454,7 +490,7 @@ var_assign: VAR '=' NUMBER ';'{
         }
     }
     | VAR '=' func_call ';' {
-        assignFromFunction($1,lastDataType,true);
+        continueToAssignFromFunction($1,true);
     }
     | VAR '=' arith_exp ';'{
         assignIfPossible($1, $3);
@@ -537,6 +573,8 @@ void yyerror(char *s)
 }
 
 int main(){
+    
+    initializeLibraryFunction();
 
 	freopen("input2.txt","r",stdin);
 	//output = freopen("output.txt", "w", stdout); // output in file

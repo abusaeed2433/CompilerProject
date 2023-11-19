@@ -21,6 +21,9 @@ struct PROTOTYPE{
     struct PROTOTYPE *next;
 };
 
+void initializeLibraryFunction();
+
+double getLibrayFunctionResult(char* name, struct PARAMETER* params);
 
 struct PARAMETER* createParameter(const char *type, double value);
 void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val);
@@ -28,9 +31,11 @@ void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *ty
 
 struct PROTOTYPE* createProto(char*, char*, struct PARAMETER*, struct PARAMETER* );
 void insertProto(struct PROTOTYPE* var);
-bool doesProtoExists(struct PROTOTYPE* proto);
+void insertLibraryProto(struct PROTOTYPE* var);
 
-struct PROTOTYPE* getOriginalProto(struct PROTOTYPE*);
+
+bool doesProtoExists(struct PROTOTYPE*, bool);
+struct PROTOTYPE* getOriginalProto(struct PROTOTYPE*, bool);
 
 void printAllProto();
 void printProto(struct PROTOTYPE*, bool);
