@@ -8,13 +8,14 @@
 struct PROTOTYPE *protoHead = NULL;
 struct PROTOTYPE *protoTail = NULL;
 
-struct PARAMETER* createParameter(const char *type) {
+struct PARAMETER* createParameter(const char *type,double value) {
 
     struct PARAMETER *node = (struct PARAMETER*) malloc(sizeof(struct PARAMETER));
 
     if(!node) { printf("Memory allocation failed.\n"); return NULL; }
 
     strncpy(node->type, type, sizeof(node->type) - 1);
+    node->value = value;
     
     node->prev = NULL;
     node->next = NULL;
@@ -23,9 +24,9 @@ struct PARAMETER* createParameter(const char *type) {
 
 
 
-void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type){
+void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val){
     
-    struct PARAMETER *var = createParameter(type);
+    struct PARAMETER *var = createParameter(type,val);
 
     if(*tail == NULL) {
         *head = var;
@@ -131,6 +132,7 @@ void printAllProto(){
     }
 }
 
+// prints data also if reverse is false
 void printProto(struct PROTOTYPE *ptr, bool reverse){
 
     printf("%s %s(",ptr->funcType, ptr->funcName);
@@ -139,6 +141,8 @@ void printProto(struct PROTOTYPE *ptr, bool reverse){
 
     while(param != NULL){
         printf("%s",param->type);
+
+        if(!reverse) printf("'%lf'",param->value);
 
         if( (reverse ? param->prev : param->next) != NULL){ printf(","); }
 

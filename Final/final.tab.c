@@ -178,7 +178,8 @@
 
     void initProto(char *paramType){
         //printf("type found: %s\n",paramType);
-        insertParameter(&paramHead, &paramTail, paramType);
+        // -1 default value, not needed for proto-type
+        insertParameter(&paramHead, &paramTail, paramType,-1);
     }
 
     void processProto(char *funcType, char *funcName){
@@ -337,12 +338,18 @@
 
         char *type = "none";
 
-        if( isNumber(name) ){ type = "any"; }
+        double val = 0;
+
+        if( isNumber(name) ){ 
+            type = "any";
+            val = strtod(name,NULL);
+        }
         else{
 
             if( doesVariableExists(name) ){
                 struct VARIABLE* var = getVariable(name);
                 type = var->type;
+                val = var->value;
             }
             else{
                 printf("\nVariable %s doesn't exists\n",name);
@@ -350,7 +357,7 @@
 
         }
 
-        insertParameter(&callParamHead, &callParamTail, type);
+        insertParameter(&callParamHead, &callParamTail, type,val);
 
     }
 
@@ -367,7 +374,7 @@
         strcpy( lastFuncRes.type, "null" );
         lastFuncRes.res = 0;
 
-        printf("\n function processed: ");
+        printf("\nFunction processed: ");
         printProto( temp, false );
 
         if( !doesProtoExists(temp) ){
@@ -411,7 +418,7 @@
 
 
 /* Line 189 of yacc.c  */
-#line 415 "final.tab.c"
+#line 422 "final.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -467,7 +474,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 342 "final.y"
+#line 349 "final.y"
 
     double num;
     char *name;
@@ -476,7 +483,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 480 "final.tab.c"
+#line 487 "final.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -488,7 +495,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 492 "final.tab.c"
+#line 499 "final.tab.c"
 
 #ifdef short
 # undef short
@@ -795,12 +802,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   368,   368,   371,   372,   376,   377,   378,   382,   383,
-     384,   385,   386,   387,   388,   389,   392,   396,   397,   398,
-     401,   403,   406,   409,   412,   416,   419,   422,   425,   429,
-     432,   437,   440,   449,   452,   457,   460,   464,   466,   467,
-     470,   473,   479,   486,   487,   488,   491,   497,   503,   510,
-     516
+       0,   375,   375,   378,   379,   383,   384,   385,   389,   390,
+     391,   392,   393,   394,   395,   396,   399,   403,   404,   405,
+     408,   410,   413,   416,   419,   423,   426,   429,   432,   436,
+     439,   444,   447,   456,   459,   464,   467,   471,   473,   474,
+     477,   480,   486,   493,   494,   495,   498,   504,   510,   517,
+     523
 };
 #endif
 
@@ -1771,14 +1778,14 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 368 "final.y"
+#line 375 "final.y"
     { printf("program executed"); ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 372 "final.y"
+#line 379 "final.y"
     { 
         processProto((yyvsp[(2) - (6)].name),(yyvsp[(3) - (6)].name));
     ;}
@@ -1787,77 +1794,77 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 377 "final.y"
+#line 384 "final.y"
     { initProto((yyvsp[(1) - (2)].name)); ;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 378 "final.y"
+#line 385 "final.y"
     { initProto((yyvsp[(1) - (3)].name)); ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 382 "final.y"
+#line 389 "final.y"
     { printf("\nempty block\n"); ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 383 "final.y"
+#line 390 "final.y"
     {;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 384 "final.y"
+#line 391 "final.y"
     {;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 385 "final.y"
+#line 392 "final.y"
     {;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 386 "final.y"
+#line 393 "final.y"
     {;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 387 "final.y"
+#line 394 "final.y"
     {;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 388 "final.y"
+#line 395 "final.y"
     {;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 389 "final.y"
+#line 396 "final.y"
     {;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 392 "final.y"
+#line 399 "final.y"
     { 
         processCall((yyvsp[(1) - (4)].name)); (yyval.name) = lastFuncRes.type;
     ;}
@@ -1866,21 +1873,21 @@ yyreduce:
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 397 "final.y"
+#line 404 "final.y"
     { addTypeToCall((yyvsp[(2) - (2)].name)); ;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 398 "final.y"
+#line 405 "final.y"
     { addTypeToCall((yyvsp[(3) - (3)].name)); ;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 403 "final.y"
+#line 410 "final.y"
     {
         declareVariable((yyvsp[(1) - (1)].name), lastDataType, 0);
     ;}
@@ -1889,7 +1896,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 406 "final.y"
+#line 413 "final.y"
     {
         declareVariable((yyvsp[(1) - (3)].name), lastDataType, 0);
     ;}
@@ -1898,7 +1905,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 409 "final.y"
+#line 416 "final.y"
     {
         declareVariable((yyvsp[(1) - (3)].name), lastDataType, (yyvsp[(3) - (3)].num));
     ;}
@@ -1907,7 +1914,7 @@ yyreduce:
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 412 "final.y"
+#line 419 "final.y"
     {
         double val = getValueOrDefault((yyvsp[(3) - (3)].name));
         declareVariable((yyvsp[(1) - (3)].name), lastDataType, val);
@@ -1917,7 +1924,7 @@ yyreduce:
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 416 "final.y"
+#line 423 "final.y"
     {
         assignFromFunction((yyvsp[(1) - (3)].name),lastDataType,false);
     ;}
@@ -1926,7 +1933,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 419 "final.y"
+#line 426 "final.y"
     {
         assignFromFunction((yyvsp[(1) - (5)].name),lastDataType,false);
     ;}
@@ -1935,7 +1942,7 @@ yyreduce:
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 422 "final.y"
+#line 429 "final.y"
     {
         declareVariable((yyvsp[(1) - (5)].name), lastDataType, (yyvsp[(3) - (5)].num));
     ;}
@@ -1944,7 +1951,7 @@ yyreduce:
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 425 "final.y"
+#line 432 "final.y"
     {
         double val = getValueOrDefault((yyvsp[(3) - (5)].name));
         declareVariable((yyvsp[(1) - (5)].name), lastDataType, val);
@@ -1954,7 +1961,7 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 429 "final.y"
+#line 436 "final.y"
     {
         declareVariable((yyvsp[(1) - (3)].name), lastDataType, (yyvsp[(3) - (3)].num));
     ;}
@@ -1963,7 +1970,7 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 432 "final.y"
+#line 439 "final.y"
     {
         declareVariable((yyvsp[(1) - (5)].name), lastDataType, (yyvsp[(3) - (5)].num));
     ;}
@@ -1972,7 +1979,7 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 437 "final.y"
+#line 444 "final.y"
     {
         assignIfPossible((yyvsp[(1) - (4)].name),(yyvsp[(3) - (4)].num));
     ;}
@@ -1981,7 +1988,7 @@ yyreduce:
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 440 "final.y"
+#line 447 "final.y"
     {
         if( !doesVariableExists((yyvsp[(3) - (4)].name)) ){
             printf("\nVariable %s doesn't exist\n",(yyvsp[(3) - (4)].name));
@@ -1996,7 +2003,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 449 "final.y"
+#line 456 "final.y"
     {
         assignFromFunction((yyvsp[(1) - (4)].name),lastDataType,true);
     ;}
@@ -2005,7 +2012,7 @@ yyreduce:
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 452 "final.y"
+#line 459 "final.y"
     {
         assignIfPossible((yyvsp[(1) - (4)].name), (yyvsp[(3) - (4)].num));
     ;}
@@ -2014,7 +2021,7 @@ yyreduce:
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 457 "final.y"
+#line 464 "final.y"
     {
         discardVariable((yyvsp[(1) - (2)].name));
     ;}
@@ -2023,7 +2030,7 @@ yyreduce:
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 460 "final.y"
+#line 467 "final.y"
     {
         discardVariable((yyvsp[(1) - (3)].name));
     ;}
@@ -2032,35 +2039,35 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 464 "final.y"
+#line 471 "final.y"
     { printAndClearOutBuffer(); ;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 466 "final.y"
+#line 473 "final.y"
     { continueOutBuffer((yyvsp[(1) - (1)].name)); ;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 467 "final.y"
+#line 474 "final.y"
     { continueOutBuffer((yyvsp[(3) - (3)].name)); ;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 470 "final.y"
+#line 477 "final.y"
     { printf("\nif processed\n"); ;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 473 "final.y"
+#line 480 "final.y"
     {
         printf("\nLoop matched\n");
         startLoop();
@@ -2070,7 +2077,7 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 479 "final.y"
+#line 486 "final.y"
     { 
         lastAssign.var = (yyvsp[(1) - (4)].name);
         //printf("=== %s %s %s ===",lastCond.left,lastCond.op,lastCond.right);
@@ -2081,28 +2088,28 @@ yyreduce:
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 486 "final.y"
+#line 493 "final.y"
     { (yyval.myBool) = (yyvsp[(1) - (1)].myBool); isLastIfValid=(yyval.myBool); ;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 487 "final.y"
+#line 494 "final.y"
     { (yyval.myBool) = (yyvsp[(1) - (3)].myBool) || (yyvsp[(3) - (3)].myBool); isLastIfValid=(yyval.myBool); ;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 488 "final.y"
+#line 495 "final.y"
     { (yyval.myBool) = (yyvsp[(1) - (3)].myBool) && (yyvsp[(3) - (3)].myBool); isLastIfValid=(yyval.myBool); ;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 491 "final.y"
+#line 498 "final.y"
     {
         (yyval.myBool) = evaluateCondition((yyvsp[(1) - (3)].name), (yyvsp[(2) - (3)].name), (yyvsp[(3) - (3)].name));
         //printf("------%s %s %s %d\n",$1, $2, $3, $$);
@@ -2112,7 +2119,7 @@ yyreduce:
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 497 "final.y"
+#line 504 "final.y"
     {
         double val1 = getValueOrDefault((yyvsp[(1) - (3)].name));
         double val2 = getValueOrDefault((yyvsp[(3) - (3)].name));
@@ -2124,7 +2131,7 @@ yyreduce:
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 503 "final.y"
+#line 510 "final.y"
     {
         double val1 = getValueOrDefault((yyvsp[(1) - (3)].name));
         
@@ -2137,7 +2144,7 @@ yyreduce:
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 510 "final.y"
+#line 517 "final.y"
     { 
         double val2 = getValueOrDefault((yyvsp[(3) - (3)].name));
         
@@ -2149,7 +2156,7 @@ yyreduce:
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 516 "final.y"
+#line 523 "final.y"
     {
         updateLast( dtoc((yyvsp[(1) - (3)].num)), (yyvsp[(2) - (3)].name), dtoc((yyvsp[(3) - (3)].num)) );
         (yyval.num) = doArithOperation((yyvsp[(1) - (3)].num), (yyvsp[(3) - (3)].num), (yyvsp[(2) - (3)].name));
@@ -2159,7 +2166,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 2163 "final.tab.c"
+#line 2170 "final.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2371,7 +2378,7 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 524 "final.y"
+#line 531 "final.y"
 
 
 

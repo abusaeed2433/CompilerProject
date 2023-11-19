@@ -5,8 +5,10 @@
 
 struct PARAMETER{
     char type[10];
+    double value;
     struct PARAMETER *next;
     struct PARAMETER *prev;
+
 };
 
 struct PROTOTYPE{
@@ -20,8 +22,8 @@ struct PROTOTYPE{
 };
 
 
-struct PARAMETER* createParameter(const char *type);
-void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type);
+struct PARAMETER* createParameter(const char *type, double value);
+void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val);
 
 
 struct PROTOTYPE* createProto(char*, char*, struct PARAMETER*, struct PARAMETER* );

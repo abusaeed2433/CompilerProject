@@ -107,7 +107,8 @@
 
     void initProto(char *paramType){
         //printf("type found: %s\n",paramType);
-        insertParameter(&paramHead, &paramTail, paramType);
+        // -1 default value, not needed for proto-type
+        insertParameter(&paramHead, &paramTail, paramType,-1);
     }
 
     void processProto(char *funcType, char *funcName){
@@ -266,12 +267,18 @@
 
         char *type = "none";
 
-        if( isNumber(name) ){ type = "any"; }
+        double val = 0;
+
+        if( isNumber(name) ){ 
+            type = "any";
+            val = strtod(name,NULL);
+        }
         else{
 
             if( doesVariableExists(name) ){
                 struct VARIABLE* var = getVariable(name);
                 type = var->type;
+                val = var->value;
             }
             else{
                 printf("\nVariable %s doesn't exists\n",name);
@@ -279,7 +286,7 @@
 
         }
 
-        insertParameter(&callParamHead, &callParamTail, type);
+        insertParameter(&callParamHead, &callParamTail, type,val);
 
     }
 
@@ -296,7 +303,7 @@
         strcpy( lastFuncRes.type, "null" );
         lastFuncRes.res = 0;
 
-        printf("\n function processed: ");
+        printf("\nFunction processed: ");
         printProto( temp, false );
 
         if( !doesProtoExists(temp) ){
