@@ -37,7 +37,7 @@ void insertVariable(char *name, char *type, double val) {
     for(int i=0; i<KEYS_SIZE; i++){
         if(strcmp(KEYS[i],name) == 0){
             printf("Keyword '%s' can't be variable\n",name);
-            exit(2);
+            return;
         }
     }
 
@@ -134,6 +134,37 @@ struct VARIABLE* getVariable(char* name){
         ptr = ptr->next;
     }
     return NULL;
+}
+
+double getValueOrDefault(char* name){
+    struct VARIABLE *ptr = head;
+    while (ptr != NULL)
+    {
+        if( strcmp(name,ptr->name) == 0 ){
+            return ptr->value;
+        }
+        ptr = ptr->next;
+    }
+    return 0;
+}
+
+char* getFormattedValueOrDefault(char *name){
+    struct VARIABLE* var = getVariable(name);
+    if(var == NULL){
+        return "0";
+    }
+
+    char *arr = (char *) malloc(20);
+
+    if ( strcmp(var->type,"int") == 0){
+        int num = (int)(var->value);
+        sprintf(arr, "%d", num);
+        return arr;
+    }
+
+    double num = (var->value);
+    sprintf(arr, "%lf", num);
+    return arr;
 }
 
 void printAll(){

@@ -1,85 +1,93 @@
-import stdio.h;
-import test.h;
+/* importing header */
 
-//starting point of program
+import Math;
+import dd;
+
+// heelo
+
+
+int add(int,int, float);
+/*
+int scan();
+void add(int, float, float);
+*/
+
+
+/*
+    Add proto-type
+
+    /* type name(type...); */
+
+*/
+
+
+
 static void entryPoint(){
+    // hello
 
-   double height = 25;
-   float width = 0.0001;
-   println("My height is: ",height ,"km and " "width is " width "mm");
-   
-   //variable declaration
-   int a = 34;
-   float as=5;
+    float f;
+    double e,f;
+    
+    int a = 24;
+    int zz = 22, x = 22;
+    int a, b= 10, c, d = zz mul 10, e;
 
-   println(a);
+    int w = 10 add 20;
+    
+    int s;
 
-   a = 255;
+    s = 10 mul 12;
 
-   println(a);
+    s = s add 120;
 
-   discard a;
-   
-   double b = 102.44, c= 123;
+    discard a,zz;
+    discard a;
 
-   println(b, c);
+    println(a,b,c,"F = ", f);
 
-   b = b sub 2.44;
-   println(b);
+    println("Value of s is: " s);
+    s = w;
 
-   justInCase( b gt 99){
-      println(b," is larger than 100");
-   }
+    println("Value of s is: " s);
 
-   justInCase( b lt 500){
-      println(b " is lees than 100");
-   }
+    println(s);
+    discard s;
 
-   justInCase(b eq 100){
-      println(b, " is exactly 100");
-   }
+    println(s);
+    double s = 10;
 
-   //single line comment
+    justInCase(
+        s le 10 or
+        10 lt 9
+    ){
+        int age = 22;
+        println("My age is not: ", age);
 
-   int x = 1000; // initializing
-
-   int y = x sub 999; 
-   /*
-   multi line comment
-   possible to have
-   /*
-   nested also
-   */
-   */
-
-   println(y);
-
-   float f1 = 243, /* also valid here */ f2=11;
-
-   println(f1,f2);
-
-   int sum = f1 add f2;
-
-   discard b,x,y,c,f1,f2;
-   println(sum);
-
-   int i=10;
-   till(i lt 100){
-      
-   }
+        justInCase(5 lt 20){
+            println("inside if");
+        }
+    }
 
 
-   int m = 102, n = m add 10;
-   println(m,n);
+    float height = 5;
+    println("My height is: " height);
 
-   int z;
-   z 100;
-   z = 10 add 20
-   println(z);
+    int n = 12345;
 
-   // header(0), single(1), multi(2), var(3), 
-   // print(4), dis(5), calc_val(6), if(7), 
-   // till(8), cond(9)
-   // int tempCounter[10];
+    till(n gt 0){
+        n = n div 10;
+    }
+
+    @add(n,n,f);
+//    @sub();
+
+/*
+    for(int k=0; k lt 10; k = k add 1){
+
+    }
+*/
 
 }
+
+//import hello.h;
+

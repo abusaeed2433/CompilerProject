@@ -46,14 +46,14 @@ bool isConditionValid(double left, char* op, double right){
 double getValue(double left, double right, char *op){
     // "add", "sub"
     if( strncmp(op,ARITHMATIC_OPERATORS[0],3) == 0 ) {
-        //printf("\nadd %lf %lf\n",left,right);
+        printf("\nadd %lf %lf\n",left,right);
         return left+right;
     }
     if( strncmp(op,ARITHMATIC_OPERATORS[1],3) == 0 ) return left-right;
 
     // "mul", "div"
     if( strncmp(op,ARITHMATIC_OPERATORS[2],3) == 0 ) return left*right;
-    if( strncmp(op,ARITHMATIC_OPERATORS[3],3) == 0 ) return left/( right == 0 ? 1 : right) ;
+    if( strncmp(op,ARITHMATIC_OPERATORS[3],3) == 0 ) return left/right;
 
     // "dif", "rem"
     if( strncmp(op,ARITHMATIC_OPERATORS[4],3) == 0 ) return left>=right ? left-right : right-left;

@@ -32,6 +32,10 @@ bool doesVariableExists(char *name);
 // return variable struct of given name or NULL if not found
 struct VARIABLE* getVariable(char* name);
 
+double getValueOrDefault(char* name);
+
+char* getFormattedValueOrDefault(char *name);
+
 // print all variable available when called
 void printAll();
 
