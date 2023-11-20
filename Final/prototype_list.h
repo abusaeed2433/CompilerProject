@@ -21,6 +21,11 @@ struct PROTOTYPE{
     struct PROTOTYPE *next;
 };
 
+
+void insertImport(char *imp);
+bool isImportImported(char *imp);
+void printAllImports();
+
 void initializeLibraryFunction();
 
 double getLibrayFunctionResult(char* name, struct PARAMETER* params);

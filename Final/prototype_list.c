@@ -13,6 +13,38 @@ struct PROTOTYPE *protoHead = NULL;
 struct PROTOTYPE *protoTail = NULL;
 
 
+char **imports = 0;
+int totalImport = 0;
+
+
+void insertImport(char *imp){
+
+    if( isImportImported(imp) ){
+        printf("\nImport already exists\n");
+        return;
+    }
+
+    totalImport++;
+    imports = (char **) realloc( imports, totalImport * 20 * sizeof(char) );
+    imports[totalImport-1] = calloc(20, sizeof(char));
+    
+    strcpy(imports[totalImport-1],imp);
+    printf("\nImported %s\n",imp);
+}
+
+bool isImportImported(char *imp){
+    for(int i=0; i<totalImport; i++){
+        if( strcmp(imports[i], imp)  == 0) return true;
+    }
+    return false;
+}
+
+void printAllImports(){
+    printf("\nPrinting all imports:\n");
+    for(int i=0; i<totalImport; i++){
+        printf("%s\n",imports[i]);
+    }
+}
 
 struct PARAMETER* createParameter(const char *type,double value) {
 

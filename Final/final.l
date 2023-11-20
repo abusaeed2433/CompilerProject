@@ -39,6 +39,8 @@
 
     char *removeRedundant(char*);
 
+    void insertImport(char*);
+
     // variable
     const int MAXIMUM_VARIABLE_LENGTH = 200;
 
@@ -124,7 +126,7 @@
             stopProgram("Header must be at top");
             return;
         }
-        printf("header: -%s-\n",yytext); 
+        
     }
 
     void initVarSec(char *temp){
@@ -170,7 +172,7 @@ VAR_NUM ({NUMBER}|{VARIABLE})
 COND_OP ("lt"|"gt"|"eq"|"neq"|"le"|"ge")
 ARITH_OP ("add"|"sub"|"mul"|"div"|"dif"|"rem")
 
-HEADER "import "[a-zA-Z.]+";"
+HEADER "import "[a-zA-Z]+";"
 
 OUT_START "println("[ ]*
 OUT_BODY_CONST {DQ}[^\"]*{DQ}
@@ -240,7 +242,7 @@ NEW_LINE_AND_TAB [\n\t]*
 
 <MAIN>"/*" { initMultiComment();  BEGIN( pushState(COMMENT) ); }
 
-{HEADER} { inc(0); processHeader();}
+{HEADER} { insertImport(yytext); inc(0); processHeader();}
 
 {FUNC_TYPE} { 
     //printf("m_type: -%s-\n",yytext);
@@ -424,6 +426,8 @@ NEW_LINE_AND_TAB [\n\t]*
     }
 }
 <IGNORE_SEC>[^}] {}
+
+<MAIN>"{" { return *yytext; } // todo alert
 
 
 <LOOP_SEC>("("|")") { return *yytext; }

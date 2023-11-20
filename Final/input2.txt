@@ -1,10 +1,23 @@
 import dd;
+import ddd;
+import ddd;
+import hkk;
 
 void add(int,int, float);
 int mul(int,int);
 
 static void entryPoint(){
 
+
+    int k = 20;
+    justInCase(k lt 100 and k gt 110){
+        
+        {
+            println("------------>" k);
+        }
+
+    }
+/*
     int i = @scanInt();
     println(i);
 
@@ -13,6 +26,7 @@ static void entryPoint(){
 
     float mx = @max(10,20);
     println(mx);
+    */
 
 
 

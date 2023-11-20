@@ -2433,6 +2433,7 @@ int main(){
     printAll();
     printf("\nPrinting all prototype\n");
     printAllProto();
+    printAllImports();
 	return 0;
 }
 
