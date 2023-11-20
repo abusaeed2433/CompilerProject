@@ -23,6 +23,7 @@
 
     extern char *outBuffer;
     extern int outBufferSize;
+    extern bool *validityList;
     extern bool isLastIfValid;
 
     struct COND{ char *left, *op, *right; };
@@ -401,7 +402,7 @@
 %token FUNC_NAME
 
 %token OUTPUT OUTPUT_VC OUTPUT_SEP OUTPUT_END
-%token JUST_IN_CASE COND_OPE OR AND VAR_CON TILL
+%token JUST_IN_CASE COND_OPE OR AND VAR_CON TILL ELSE
 
 // defining token type
 //%type<TYPE> ID1 ID2
@@ -517,7 +518,14 @@ out_vc: OUTPUT_VC { continueOutBuffer($1); }
     | out_vc OUTPUT_SEP OUTPUT_VC { continueOutBuffer($3); }
     ;
 
-if_sec: '(' many_logic_cond ')' '{' block END_POINT { printf("\nif processed\n"); }
+if_sec: '(' if_condition '{' block END_POINT else_block { printf("\nif processed\n"); }
+    ;
+
+if_condition: many_logic_cond ')' { printf("idk-%d-",$1); pushValidity($1); }
+    ;
+
+else_block: ELSE '{' block END_POINT { popValidity(); }
+    | { printf("else-block\n"); popValidity(); }
     ;
 
 loop_sec: '(' logic_cond ')' '{' loop_updater END_POINT {
@@ -533,7 +541,7 @@ loop_updater: VAR '=' arith_exp ';'{
     }
     ;
 
-many_logic_cond: logic_cond { $$ = $1; isLastIfValid=$$; }
+many_logic_cond: logic_cond { $$ = $1; printf("%d--",$$); isLastIfValid=$$; }
     | many_logic_cond OR logic_cond { $$ = $1 || $3; isLastIfValid=$$; }
     | many_logic_cond AND logic_cond { $$ = $1 && $3; isLastIfValid=$$; }
     ;
@@ -583,8 +591,9 @@ int main(){
     
     initializeLibraryFunction();
 
-	freopen("input.txt","r",stdin);
-	freopen("output.txt", "w", stdout); // output in file
+	//freopen("input.txt","r",stdin);
+    freopen("input2.txt","r",stdin);
+	//freopen("output.txt", "w", stdout); // output in file
 	yyparse();
     printAll();
     printf("\nPrinting all prototype\n");

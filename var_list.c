@@ -187,3 +187,24 @@ void printAll(){
     }
     printf("\n\n");
 }
+
+
+bool *validityList = NULL;
+int validIndex = 0;
+
+void pushValidity(bool val){
+    validIndex++;
+    validityList = (bool*) realloc(validityList,validIndex);
+    validityList[validIndex-1] = val;
+}
+
+bool getCurrentValidity(){
+    if(validIndex <= 0) return true;
+    return validityList[validIndex-1];
+}
+
+bool popValidity(){
+    bool val = validityList[validIndex];
+    validIndex--;
+    return val;
+}

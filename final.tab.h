@@ -57,7 +57,8 @@
      OR = 273,
      AND = 274,
      VAR_CON = 275,
-     TILL = 276
+     TILL = 276,
+     ELSE = 277
    };
 #endif
 
@@ -68,7 +69,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 392 "final.y"
+#line 393 "final.y"
 
     double num;
     char *name;
@@ -77,7 +78,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 81 "final.tab.h"
+#line 82 "final.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

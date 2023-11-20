@@ -6,8 +6,8 @@
     #include <ctype.h>
     #include "final.tab.h"
 
-    // header, single, multi, var, print, dis, calc_val, if, till
-    int tempCounter[10];
+    // header, single, multi, var, print, dis, calc_val, if, till else
+    int tempCounter[11];
 
     int blockBalancer = 0;
     int stack[100];
@@ -38,7 +38,7 @@
     int bracketCounter=0;
 
     char *removeRedundant(char*);
-
+    bool getCurrentValidity();
     void insertImport(char*);
 
     // variable
@@ -161,6 +161,7 @@
 %x MAIN
 %x VAR_SEC
 %x IF_SEC
+%x ELSE_SEC
 %x IGNORE_SEC
 %x DISCARD_SEC
 %x LOOP_SEC
@@ -208,6 +209,7 @@ DATA_TYPE ("int"|"float"|"double")[ ]
 FUNC_TYPE ("int"|"float"|"double"|"void")
 
 IF "justInCase"[ ]*
+ELSE "otherwise"
 IF_BODY_START "{"
 IF_BODY_END [ ]*"}"
 IF_SPACE [ ]*
@@ -318,6 +320,11 @@ NEW_LINE_AND_TAB [\n\t]*
     BEGIN( pushState(IF_SEC) );
     return JUST_IN_CASE;
 }
+<MAIN>{ELSE} {
+    inc(10);
+    BEGIN( pushState(ELSE_SEC) );
+    return ELSE;
+}
 
 <MAIN>{LOOP_START} {
     inc(8);
@@ -415,6 +422,27 @@ NEW_LINE_AND_TAB [\n\t]*
     return OUTPUT_END;
 }
 
+<ELSE_SEC>("("|")") { return *yytext; }
+<ELSE_SEC>"}" { return END_POINT; }
+<ELSE_SEC>{IF_BODY_START} { 
+    //popState(); // popping else section and taking to main section arki
+    popState();
+
+    bool isLastIfValid = getCurrentValidity();
+
+    char *valid = isLastIfValid ? "True" : "False";
+    printf("\nElse condition is %s\n",!valid);
+    if(isLastIfValid){
+        bracketCounter=1;
+        BEGIN( pushState(IGNORE_SEC) );
+    }
+    else{
+        BEGIN(pushState(MAIN));
+    }
+    return *yytext;
+}
+
+
 <IF_SEC>("("|")") { return *yytext; }
 <IF_SEC>"}" { return END_POINT; }
 
@@ -426,13 +454,18 @@ NEW_LINE_AND_TAB [\n\t]*
     //popState(); // popping if section and taking to main section arki
     popState();
 
-    char *valid = isLastIfValid ? "True" : "False";
-    printf("\nIf condition is %s\n",valid);
-    if(!isLastIfValid){
+    bool test = getCurrentValidity();
+    char *valid = test ? "True" : "False";
+    printf("\nIff condition is %s\n",valid);
+
+    printf("\n%d---\n",test);
+    if(!test){
+        printf("\ngoing to ignore\n");
         bracketCounter=1;
         BEGIN( pushState(IGNORE_SEC) );
     }
     else{
+        printf("\ngoing to main\n");
         BEGIN(pushState(MAIN));
     }
     return *yytext;
@@ -474,6 +507,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>{MAIN_END} {
     blockBalancer--;
     BEGIN( popState() );
+    printf("--main end--");
     return END_POINT;
 }
 

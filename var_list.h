@@ -39,4 +39,10 @@ char* getFormattedValueOrDefault(char *name);
 // print all variable available when called
 void printAll();
 
+void pushValidity(bool val);
+
+bool getCurrentValidity();
+
+bool popValidity();
+
 #endif
