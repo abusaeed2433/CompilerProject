@@ -14,6 +14,7 @@ struct PARAMETER{
 struct PROTOTYPE{
     char funcType[10];
     char funcName[30];
+    char libraryName[30];
 
     struct PARAMETER *paramsHead;
     struct PARAMETER *paramsTail;

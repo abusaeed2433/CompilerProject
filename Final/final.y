@@ -306,7 +306,7 @@
         // Copy the string starting from the second character
         strcpy(realName, funcName + 1);
 
-        struct PROTOTYPE* temp = createProto("void",realName, NULL, callParamHead,NULL);
+        struct PROTOTYPE* temp = createProto("void",realName, "NULL", callParamHead,NULL);
         
         strcpy( lastFuncRes.type, "null" );
         lastFuncRes.res = 0;
@@ -316,10 +316,16 @@
 
             // check library function
             if( doesProtoExists(temp,true) ){
-                printf("\nCalling function ");
                 // returns from library function
                 struct PROTOTYPE* orig = getOriginalProto(temp,true);
+
+                printf("\nCalling function ");
                 printProto( orig , true);
+
+                if( !isImportImported(orig->libraryName) ){
+                    printf("Warning - library %s is not imported\n",orig->libraryName);
+                }
+
                 strcpy( lastFuncRes.type, orig->funcType );
                 lastFuncRes.res = getOrDefaultResultFromFunction(realName,callParamHead,orig);
             }

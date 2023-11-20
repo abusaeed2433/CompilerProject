@@ -18,7 +18,7 @@ int totalImport = 0;
 
 
 void insertImport(char fulImp[20]){
-    char imp[14];
+    char *imp = malloc(14*sizeof(char));
 
     strncpy(imp,fulImp+7, strlen(fulImp) - 8 );
 
@@ -33,6 +33,7 @@ void insertImport(char fulImp[20]){
     
     strcpy(imports[totalImport-1],imp);
     printf("\nImported %s\n",imp);
+    free(imp);
 }
 
 bool isImportImported(char *imp){
@@ -94,6 +95,8 @@ struct PROTOTYPE* createProto(char *type, char *name, char *libraryName,
     
     //printf("Inside-4\n");
     strncpy(newNode->funcName, name ,sizeof(newNode->funcName)-1);
+
+    strncpy(newNode->libraryName, libraryName ,sizeof(newNode->libraryName)-1);
     
     //printf("Inside-5\n");
     newNode->paramsHead = paramsHead;

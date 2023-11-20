@@ -1,7 +1,5 @@
-import dd;
-import ddd;
-import ddd;
-import hkk;
+import stdio;
+import math;
 
 void add(int,int, float);
 int mul(int,int);
@@ -9,16 +7,8 @@ int mul(int,int);
 static void entryPoint(){
 
 
-    int k = 20;
-    justInCase(k lt 100 and k gt 110){
-        
-        {
-            println("------------>" k);
-        }
 
-    }
-
-/*
+    int k = 12;
     till(k lt 40){
         k = k add 5;
     }
@@ -32,9 +22,6 @@ static void entryPoint(){
 
     float mx = @max(10,20);
     println(mx);
-    */
-
-
 
 
 }
