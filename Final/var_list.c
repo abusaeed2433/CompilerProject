@@ -6,8 +6,8 @@
 #include <stdbool.h>
 
 const int KEYS_SIZE = 25;
-char KEYS[25][25] = {
-    "int","double","float","justInCase",
+char KEYS[50][25] = {
+    "void", "int","double","float","justInCase",
     "println","discard","till","import",
     "static","void","entryPoint",
     "lt","gt","eq","neq","le","ge",
@@ -37,7 +37,7 @@ void insertVariable(char *name, char *type, double val) {
     for(int i=0; i<KEYS_SIZE; i++){
         if(strcmp(KEYS[i],name) == 0){
             printf("Keyword '%s' can't be variable\n",name);
-            exit(2);
+            return;
         }
     }
 

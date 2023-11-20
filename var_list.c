@@ -6,8 +6,8 @@
 #include <stdbool.h>
 
 const int KEYS_SIZE = 25;
-char KEYS[25][25] = {
-    "int","double","float","justInCase",
+char KEYS[50][25] = {
+    "void", "int","double","float","justInCase",
     "println","discard","till","import",
     "static","void","entryPoint",
     "lt","gt","eq","neq","le","ge",

@@ -344,8 +344,6 @@
         callParamTail = NULL;
     }
 
-
-
     void assignFromFunction(char* name, char *varType, bool update){
         double val = 0;
         if( strncmp("void",lastFuncRes.type,4) == 0 ){
@@ -588,6 +586,7 @@ int main(){
     printAll();
     printf("\nPrinting all prototype\n");
     printAllProto();
+    printAllLibraryFunction();
     printAllImports();
 	return 0;
 }

@@ -27,6 +27,7 @@ void insertImport(char *imp);
 bool isImportImported(char *imp);
 void printAllImports();
 
+void printAllLibraryFunction();
 void initializeLibraryFunction();
 
 double getLibrayFunctionResult(char* name, struct PARAMETER* params);

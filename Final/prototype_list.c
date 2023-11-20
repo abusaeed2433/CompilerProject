@@ -126,6 +126,16 @@ void insertLibraryProto(struct PROTOTYPE* var) {
     }
 }
 
+void printAllLibraryFunction(){
+    printf("\nAll library functions are:\n");
+    struct PROTOTYPE *ptr = libraryProtoHead;
+
+    while( ptr != NULL ){
+        printProto(ptr, false);
+        ptr = ptr->next;
+    }
+}
+
 void insertProto(struct PROTOTYPE* var) {
     
     if(protoTail == NULL) {
@@ -154,7 +164,8 @@ struct PROTOTYPE* getOriginalProto(struct PROTOTYPE* proto, bool isLibrary){
 
             while ( param1 != NULL && param2 != NULL )
             {
-                if( strcmp(param1->type, param2->type)  != 0){
+                if( strcmp(param2->type, "any") == 0) {}
+                else if( strcmp(param1->type, param2->type)  != 0){
                     break;
                 }
 
@@ -229,6 +240,19 @@ double getLibrayFunctionResult(char* name, struct PARAMETER* params){
     }
 
 
+    if( strcmp(name, "toInt") == 0 ){
+        return (int)(params->value);
+    }
+
+    if( strcmp(name, "toFloat") == 0 ){
+        return (float)(params->value);
+    }
+
+    if( strcmp(name, "toDouble") == 0 ){
+        return (double)(params->value);
+    }
+
+
 
     return 0;
 }
@@ -237,7 +261,22 @@ void initializeLibraryFunction(){
 
     struct PARAMETER *head = NULL, *tail = NULL;
 
-    // max
+
+    //scanInt stdio
+    {
+    head = NULL; tail = NULL;
+    struct PROTOTYPE* scanInt = createProto("int","scanInt","stdio",head,tail);
+    insertLibraryProto(scanInt);
+    }
+    
+    //scan stdio
+    {
+    head = NULL; tail = NULL;
+    struct PROTOTYPE* scan = createProto("float","scan","stdio",head,tail);
+    insertLibraryProto(scan);
+    }
+
+    // max math
     {
     head = NULL; tail = NULL;
     insertParameter(&head,&tail,"any",-1);
@@ -248,28 +287,36 @@ void initializeLibraryFunction(){
     }
 
 
-    // sqrt
+    // sqrt math
     {
     head = NULL; tail = NULL;
     insertParameter(&head,&tail,"any",-1);
-    struct PROTOTYPE* sqrt = createProto("void","sqrt","math",head,tail);
+    struct PROTOTYPE* sqrt = createProto("double","sqrt","math",head,tail);
     insertLibraryProto(sqrt);
     }
 
-    //scanInt
+    //toInt converter
     {
     head = NULL; tail = NULL;
-    struct PROTOTYPE* scanInt = createProto("int","scanInt","stdio",head,tail);
-    insertLibraryProto(scanInt);
+    insertParameter(&head,&tail,"any",-1);
+    struct PROTOTYPE* toInt = createProto("int","toInt","converter",head,tail);
+    insertLibraryProto(toInt);
     }
-    
-    //scan
+
+    //toFloat converter
     {
     head = NULL; tail = NULL;
-    struct PROTOTYPE* scan = createProto("float","scan","stdio",head,tail);
-    insertLibraryProto(scan);
+    insertParameter(&head,&tail,"any",-1);
+    struct PROTOTYPE* toFloat = createProto("float","toFloat","converter",head,tail);
+    insertLibraryProto(toFloat);
     }
 
-
+    //toDouble converter
+    {
+    head = NULL; tail = NULL;
+    insertParameter(&head,&tail,"any",-1);
+    struct PROTOTYPE* toDouble = createProto("double","toDouble","converter",head,tail);
+    insertLibraryProto(toDouble);
+    }
     
 }

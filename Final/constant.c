@@ -53,7 +53,7 @@ double getValue(double left, double right, char *op){
 
     // "mul", "div"
     if( strncmp(op,ARITHMATIC_OPERATORS[2],3) == 0 ) return left*right;
-    if( strncmp(op,ARITHMATIC_OPERATORS[3],3) == 0 ) return left/right;
+    if( strncmp(op,ARITHMATIC_OPERATORS[3],3) == 0 ) return left/( right == 0 ? 1 : right) ;
 
     // "dif", "rem"
     if( strncmp(op,ARITHMATIC_OPERATORS[4],3) == 0 ) return left>=right ? left-right : right-left;

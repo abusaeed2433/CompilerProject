@@ -150,11 +150,9 @@
 
 %}
 
-%x HEADER
 %x COMMENT
 %x MAIN
 %x VAR_SEC
-%x VAR_CALC_SEC
 %x IF_SEC
 %x IGNORE_SEC
 %x DISCARD_SEC
@@ -169,8 +167,8 @@ DQ \"
 NUMBER ([0-9]+(".")[0-9]+)|([0-9]+)|("."[0-9]+)
 VARIABLE [a-zA-Z][a-zA-Z0-9]*
 VAR_NUM ({NUMBER}|{VARIABLE})
-COND_OP ("lt"|"gt"|"eq"|"neq"|"le"|"ge")
-ARITH_OP ("add"|"sub"|"mul"|"div"|"dif"|"rem")
+COND_OP ("<lt>"|"<gt>"|"<eq>"|"<neq>"|"<le>"|"<ge>")
+ARITH_OP ("<add>"|"<sub>"|"<mul>"|"<div>"|"<dif>"|"<rem>")
 
 HEADER "import "[a-zA-Z]+";"
 
@@ -222,8 +220,35 @@ LOOP_END {IF_BODY_END}
 NEW_LINE_AND_TAB [\n\t]*
 
 %%
+
 {SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 "/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+
+
+<COMMENT>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<MAIN>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<VAR_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<IF_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<IGNORE_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<DISCARD_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<LOOP_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<LOOP_BODY_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<OUT_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<PROTO_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<FUNC_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<FUNC_SEC_VAR>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+
+<MAIN>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<VAR_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<IF_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<IGNORE_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<DISCARD_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<LOOP_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<LOOP_BODY_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<OUT_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<PROTO_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<FUNC_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<FUNC_SEC_VAR>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 
 <COMMENT>"/*" { appendTextToBuffer("/*"); }
 
@@ -231,16 +256,8 @@ NEW_LINE_AND_TAB [\n\t]*
     appendTextToBuffer("*/"); checkForEnd(); 
     if(comment_depth == 0){ inc(2); BEGIN( popState() ); }
 }
-
 <COMMENT>{NEW_LINE_AND_TAB}* { appendTextToBuffer("|"); }
-
 <COMMENT>. { appendToBuffer(yytext[0]); }
-
-<VAR_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
-
-<MAIN>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
-
-<MAIN>"/*" { initMultiComment();  BEGIN( pushState(COMMENT) ); }
 
 {HEADER} { insertImport(yytext); inc(0); processHeader();}
 

@@ -6,10 +6,39 @@ int mul(int,int);
 
 static void entryPoint(){
 
+    float f1 = 20;
+    double d1 = 30.6;
+
+    int d = @toDouble(d1);
+    println("After converion " d);
+
+    /*
+    int rem = f <rem> 10;
 
 
+    int d 
+
+    println(rem);
+
+    
+    int a = 10;
+    float b = 21, c = 30;
+
+
+    float rm = b <rem> a;
+
+    println("rem " rm);
+
+    int f = a div b;
+
+    println("Value of f is: ",f );
+
+    float ff = 10 div ff;
+    println(ff);
+
+    /*
     int k = 12;
-    till(k lt 40){
+    till(k lt /*aaa*/ 40){
         k = k add 5;
     }
     
@@ -22,6 +51,8 @@ static void entryPoint(){
 
     float mx = @max(10,20);
     println(mx);
+    */
+    */
 
 
 }
