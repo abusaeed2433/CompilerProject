@@ -77,7 +77,7 @@ void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *ty
 }
 
 
-struct PROTOTYPE* createProto(char *type, char *name, 
+struct PROTOTYPE* createProto(char *type, char *name, char *libraryName,
         struct PARAMETER *paramsHead, struct PARAMETER *paramsTail ) {
 
     struct PROTOTYPE *newNode = (struct PROTOTYPE*) malloc(sizeof(struct PROTOTYPE));
@@ -237,7 +237,7 @@ void initializeLibraryFunction(){
     insertParameter(&head,&tail,"any",-1);
     insertParameter(&head,&tail,"any",-1);
 
-    struct PROTOTYPE* max = createProto("float","max",head,tail);
+    struct PROTOTYPE* max = createProto("float","max","math",head,tail);
     insertLibraryProto(max);
     }
 
@@ -246,21 +246,21 @@ void initializeLibraryFunction(){
     {
     head = NULL; tail = NULL;
     insertParameter(&head,&tail,"any",-1);
-    struct PROTOTYPE* sqrt = createProto("void","sqrt",head,tail);
+    struct PROTOTYPE* sqrt = createProto("void","sqrt","math",head,tail);
     insertLibraryProto(sqrt);
     }
 
     //scanInt
     {
     head = NULL; tail = NULL;
-    struct PROTOTYPE* scanInt = createProto("int","scanInt",head,tail);
+    struct PROTOTYPE* scanInt = createProto("int","scanInt","stdio",head,tail);
     insertLibraryProto(scanInt);
     }
     
     //scan
     {
     head = NULL; tail = NULL;
-    struct PROTOTYPE* scan = createProto("float","scan",head,tail);
+    struct PROTOTYPE* scan = createProto("float","scan","stdio",head,tail);
     insertLibraryProto(scan);
     }
 

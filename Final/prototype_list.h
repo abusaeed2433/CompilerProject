@@ -34,7 +34,7 @@ struct PARAMETER* createParameter(const char *type, double value);
 void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val);
 
 
-struct PROTOTYPE* createProto(char*, char*, struct PARAMETER*, struct PARAMETER* );
+struct PROTOTYPE* createProto(char* type, char* name,char* libraryName, struct PARAMETER*, struct PARAMETER* );
 void insertProto(struct PROTOTYPE* var);
 void insertLibraryProto(struct PROTOTYPE* var);
 

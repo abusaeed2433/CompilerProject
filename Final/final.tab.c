@@ -185,7 +185,7 @@
     void processProto(char *funcType, char *funcName){
         //printf("Inside\n");
 
-        struct PROTOTYPE* proto = createProto(funcType, funcName, paramHead,paramTail);
+        struct PROTOTYPE* proto = createProto(funcType, funcName, "user_defined", paramHead,paramTail);
         //printf("Inside-2\n");
 
         paramHead = NULL; paramTail = NULL;
@@ -377,7 +377,7 @@
         // Copy the string starting from the second character
         strcpy(realName, funcName + 1);
 
-        struct PROTOTYPE* temp = createProto("void",realName, callParamHead,NULL);
+        struct PROTOTYPE* temp = createProto("void",realName, NULL, callParamHead,NULL);
         
         strcpy( lastFuncRes.type, "null" );
         lastFuncRes.res = 0;

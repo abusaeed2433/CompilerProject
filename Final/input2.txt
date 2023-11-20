@@ -17,7 +17,13 @@ static void entryPoint(){
         }
 
     }
+
 /*
+    till(k lt 40){
+        k = k add 5;
+    }
+    
+
     int i = @scanInt();
     println(i);
 
