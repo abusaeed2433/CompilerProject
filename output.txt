@@ -1,0 +1,186 @@
+
+Captured comment: /* importing header */
+
+
+Imported math
+
+Imported stdio
+
+Import already exists
+
+Single line comment: // declaring function prototype
+
+  
+Prototype inserted: int add(int,int,float)
+ 
+Prototype inserted: int scan()
+   
+Prototype inserted: void add(int,float,double)
+
+Captured comment: /*|    multi-line comment|    /* support nested also */|*/
+
+    
+Single line comment: // variable declaration
+
+                
+0 0.000000 0.000000  < - - - - - - - - - -
+    
+Single line comment: // deleting variables
+
+    
+Discarded variable c
+
+Discarded variable b
+
+Discarded variable a
+    
+Captured comment: /* variable initialization */
+
+            
+10 0 10 0  < - - - - - - - - - -
+    
+Calling function float max(any,any)
+    
+3.000000 0.000000  < - - - - - - - - - -
+     
+Captured comment: /* valid comment */
+
+ 
+Discarded variable f
+
+Discarded variable e
+
+Discarded variable d
+
+Discarded variable c
+    
+Single line comment: // variable assignment
+
+        
+a: 100  < - - - - - - - - - -
+        
+b: 1  < - - - - - - - - - -
+    
+Calling function float max(any,any)
+    
+b: 101  < - - - - - - - - - -
+    
+Discarded variable b
+
+Discarded variable a
+    
+Captured comment: /* condition */
+
+                  
+If condition is True
+        
+Actually executed since 10.000000 < 100.000000  < - - - - - - - - - -
+                  
+If condition is True
+            
+Also executed < - - - - - - - - - -
+        
+if processed
+          
+If condition is False
+
+if processed
+            
+if processed
+    
+------------- separator ----------------- < - - - - - - - - - -
+               
+If condition is True
+        
+5 < 10 and 10.000000  < 15  < - - - - - - - - - -
+    
+if processed
+               
+If condition is False
+
+if processed
+                       
+Loop matched
+
+Iterating - 0, value: 0
+Iterating - 1, value: 15
+Iterating - 2, value: 30
+Iterating - 3, value: 45
+Iterating - 4, value: 60
+Iterating - 5, value: 75
+Iterating - 6, value: 90
+    
+Captured comment: /* function */
+
+            
+Calling function void show(any)
+From show function: 24.000000 
+        
+Calling function void show(any)
+From show function: 2.000000 
+
+Invalid assignment from void to int
+    
+Calling function void show(any)
+From show function: 0.000000 
+
+Invalid assignment from void to double
+    
+Can't discard sum since not found.
+
+Discarded variable result
+
+Discarded variable num
+
+Discarded variable f
+
+Discarded variable n
+
+Discarded variable m
+
+Discarded variable i
+
+Discarded variable c
+
+Discarded variable b
+
+Discarded variable a
+    
+Variable m doesn't exists
+
+Variable m doesn't exists
+
+Variable f doesn't exists
+
+Function not found
+    
+0  < - - - - - - - - - -
+    
+Variable m doesn't exists
+
+Variable f doesn't exists
+
+Function not found
+program executed
+----------Printing all variables----------
+res(double) 0.000000 -> sum(int) 0 -> 
+
+
+Printing all prototype
+int add(int,int,float)
+int scan()
+void add(int,float,double)
+
+All library functions are:
+int scanInt()
+float scan()
+void show(any)
+float max(any,any)
+double sqrt(any)
+int toInt(any)
+float toFloat(any)
+double toDouble(any)
+
+Printing all imports:
+math
+stdio

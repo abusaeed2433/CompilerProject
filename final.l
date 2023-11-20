@@ -148,6 +148,13 @@
         outBufferSize = 1;
     }
 
+    char* removeLpRp(char *val){
+        char *op = malloc(14*sizeof(char));
+        char *temp = strdup(val);
+        strncpy(op,temp+1, strlen(temp) - 2 );
+        return op;
+    }
+
 %}
 
 %x COMMENT
@@ -201,7 +208,6 @@ DATA_TYPE ("int"|"float"|"double")[ ]
 FUNC_TYPE ("int"|"float"|"double"|"void")
 
 IF "justInCase"[ ]*
-IF_COND ("(")[ ]*{VAR_NUM}[ ]*{COND_OP}[ ]*{VAR_NUM}[ ]*(")")[ ]*
 IF_BODY_START "{"
 IF_BODY_END [ ]*"}"
 IF_SPACE [ ]*
@@ -213,7 +219,6 @@ FUNC_START "@"{VARIABLE}
 
 LOOP_START "till"
 LOOP_START_BRACE "{"
-LOOP_COND {IF_COND}
 LOOP_OTHERS [^{}\n]*\n
 LOOP_END {IF_BODY_END}
 
@@ -361,7 +366,7 @@ NEW_LINE_AND_TAB [\n\t]*
     return NUMBER;
 }
 <VAR_SEC>{ARITH_OP} {
-    yylval.name = strdup(yytext);
+    yylval.name = removeLpRp(yytext);
     return ARITH_OPE;
 }
 <VAR_SEC>{VARIABLE} {
@@ -413,7 +418,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <IF_SEC>("("|")") { return *yytext; }
 <IF_SEC>"}" { return END_POINT; }
 
-<IF_SEC>{COND_OP} { yylval.name = strdup(yytext); return COND_OPE; }
+<IF_SEC>{COND_OP} { yylval.name = removeLpRp(yytext); return COND_OPE; }
 <IF_SEC>"and" { return AND; }
 <IF_SEC>"or" { return OR; }
 <IF_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
@@ -444,12 +449,10 @@ NEW_LINE_AND_TAB [\n\t]*
 }
 <IGNORE_SEC>[^}] {}
 
-<MAIN>"{" { return *yytext; } // todo alert
-
 
 <LOOP_SEC>("("|")") { return *yytext; }
 <LOOP_SEC>"}" { return END_POINT; }
-<LOOP_SEC>{COND_OP} { yylval.name = strdup(yytext); return COND_OPE; }
+<LOOP_SEC>{COND_OP} { yylval.name = removeLpRp(yytext); return COND_OPE; }
 <LOOP_SEC>{VAR_NUM} { yylval.name = strdup(yytext); return VAR_CON; }
 
 <LOOP_SEC>{LOOP_START_BRACE} { BEGIN( pushState(LOOP_BODY_SEC) ); return *yytext; }

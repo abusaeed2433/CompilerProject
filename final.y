@@ -125,7 +125,8 @@
         }
 
         insertProto(proto);
-        //printProto(proto);
+        printf("\nPrototype inserted: ");
+        printProto(proto,true);
 
     }
 
@@ -219,7 +220,7 @@
 
     char* dtoc(double val){
         char* buf = malloc( sizeof(char) * 20 );
-        sprintf(buf, "%f", val);
+        sprintf(buf, "%lf", val);
         return buf;
     }
 
@@ -265,12 +266,12 @@
     void addTypeToCall(char *name){
         //printf("Type call %s\n",name);
 
-        char *type = "none";
+        char *type = "double";
 
         double val = 0;
 
         if( isNumber(name) ){ 
-            type = "any";
+            type = "double";
             val = strtod(name,NULL);
         }
         else{
@@ -426,7 +427,7 @@ many_type:
     ;
 
 
-block: { printf("\nempty block\n"); }
+block: {}
     | JUST_IN_CASE if_sec block {}
     | TILL loop_sec block {}
     | func_call ';' block {}
@@ -580,8 +581,8 @@ int main(){
     
     initializeLibraryFunction();
 
-	freopen("input2.txt","r",stdin);
-	//output = freopen("output.txt", "w", stdout); // output in file
+	freopen("input.txt","r",stdin);
+	freopen("output.txt", "w", stdout); // output in file
 	yyparse();
     printAll();
     printf("\nPrinting all prototype\n");

@@ -1,93 +1,99 @@
 /* importing header */
-
-import Math;
-import dd;
-
-// heelo
+import math;
+import stdio;
+import math;
 
 
+// declaring function prototype
 int add(int,int, float);
-/*
 int scan();
-void add(int, float, float);
-*/
-
+void add(int, float, double);
 
 /*
-    Add proto-type
-
-    /* type name(type...); */
-
+    multi-line comment
+    /* support nested also */
 */
-
 
 
 static void entryPoint(){
-    // hello
 
-    float f;
-    double e,f;
+    // variable declaration
+    int a;
+    float b,c;
     
-    int a = 24;
-    int zz = 22, x = 22;
-    int a, b= 10, c, d = zz mul 10, e;
+    println(a b c);
+    // deleting variables
+    discard a,b,c;
 
-    int w = 10 add 20;
+    /* variable initialization */
+    int a = 10, b;
+    int c = a <add> b, d = 10 <sub> a;
+    println(a,b,c,d);
+
+    double e = @max(2,3), f;
+    println(e,f);
+
+    discard c,d,e, /* valid comment */ f;
+
+    // variable assignment
+    a = 100;
+    println("a: " a);
+
+    b = a <rem> 11;
+    println("b: " b);
+
+    b = @max(a,101);
+    println("b: " b);
+    discard a,b;
+
+    /* condition */
+    float a = 10;
+    float b = 100;
     
-    int s;
-
-    s = 10 mul 12;
-
-    s = s add 120;
-
-    discard a,zz;
-    discard a;
-
-    println(a,b,c,"F = ", f);
-
-    println("Value of s is: " s);
-    s = w;
-
-    println("Value of s is: " s);
-
-    println(s);
-    discard s;
-
-    println(s);
-    double s = 10;
-
-    justInCase(
-        s le 10 or
-        10 lt 9
-    ){
-        int age = 22;
-        println("My age is not: ", age);
-
-        justInCase(5 lt 20){
-            println("inside if");
+    justInCase(a <lt> b){
+        println("Actually executed since " a "< " b);
+        
+        justInCase(10 <lt> 100){
+            println("Also executed");
         }
+
+        justInCase(10 <gt> b){
+            println("Not executed since false");
+        }
+        
     }
 
+    println("------------- separator -----------------");
 
-    float height = 5;
-    println("My height is: " height);
-
-    int n = 12345;
-
-    till(n gt 0){
-        n = n div 10;
+    a = 10; int c = 15;
+    justInCase(5 <lt> 10 and a <lt> c){
+        println("5 < 10 and " a " < " c);
     }
 
-    @add(n,n,f);
-//    @sub();
-
-/*
-    for(int k=0; k lt 10; k = k add 1){
-
+    justInCase(5 <lt> 10 and a <lt> b and 10 <gt> 10 ){
+        println("Condition is false");
     }
-*/
+    
+    int i = 0;
+    till( i <lt> 100){
+        i = i <add> 15;
+    }
 
+    /* function */
+
+    int m = 6, n = 4;
+    int result = m <mul> n;
+    @show(result);
+
+    float f = 3;
+
+    int num = @show(2);
+    double res = @show(num);
+
+    discard a,b,c,i,m,n,f,num,result,sum;
+
+    int sum = @add(m,m,f);
+    println(sum);
+
+    sum = @add(m,f,100);
 }
-
-//import hello.h;
-

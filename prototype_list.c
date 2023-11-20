@@ -209,7 +209,7 @@ void printProto(struct PROTOTYPE *ptr, bool reverse){
     while(param != NULL){
         printf("%s",param->type);
 
-        if(!reverse) printf("'%lf'",param->value);
+        //if(!reverse) printf("'%lf'",param->value);
 
         if( (reverse ? param->prev : param->next) != NULL){ printf(","); }
 
@@ -252,7 +252,10 @@ double getLibrayFunctionResult(char* name, struct PARAMETER* params){
         return (double)(params->value);
     }
 
-
+    if( strcmp(name, "show") == 0 ){
+        printf("From show function: %lf \n",params->value);
+        return 0;
+    }
 
     return 0;
 }
@@ -274,6 +277,14 @@ void initializeLibraryFunction(){
     head = NULL; tail = NULL;
     struct PROTOTYPE* scan = createProto("float","scan","stdio",head,tail);
     insertLibraryProto(scan);
+    }
+
+    // show stdio
+    {
+    head = NULL; tail = NULL;
+    insertParameter(&head,&tail,"any",-1);
+    struct PROTOTYPE* show = createProto("void","show","stdio",head,tail);
+    insertLibraryProto(show);
     }
 
     // max math
