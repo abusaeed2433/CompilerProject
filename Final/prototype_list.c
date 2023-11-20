@@ -17,7 +17,10 @@ char **imports = 0;
 int totalImport = 0;
 
 
-void insertImport(char *imp){
+void insertImport(char fulImp[20]){
+    char imp[14];
+
+    strncpy(imp,fulImp+7, strlen(fulImp) - 8 );
 
     if( isImportImported(imp) ){
         printf("\nImport already exists\n");
