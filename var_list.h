@@ -17,14 +17,14 @@ struct VARIABLE* createNode(const char *name, char *type, double value);
 // insert variable into linked-list
 void insertVariable(char *name, char *type, double val);
 
+// return total number of variables
+int getTotalVar();
+
 // update variable with given val
 void updateVariable(char *name, double val);
 
 // delete variable from linked-list
 void deleteVariable(char *name);
-
-// return total number of variables
-int getTotalVar();
 
 // return true if varible exists with passed name
 bool doesVariableExists(char *name);

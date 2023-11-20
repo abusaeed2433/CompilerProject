@@ -22,29 +22,35 @@ struct PROTOTYPE{
     struct PROTOTYPE *next;
 };
 
+void insertImport(char fulImp[20]);
 
-void insertImport(char *imp);
 bool isImportImported(char *imp);
+
 void printAllImports();
 
+struct PARAMETER* createParameter(const char *type,double value);
+
+void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val);
+
+struct PROTOTYPE* createProto(char *type, char *name, char *libraryName, struct PARAMETER *paramsHead, struct PARAMETER *paramsTail );
+
+void insertLibraryProto(struct PROTOTYPE* var);
+
 void printAllLibraryFunction();
-void initializeLibraryFunction();
+
+void insertProto(struct PROTOTYPE* var);
+
+struct PROTOTYPE* getOriginalProto(struct PROTOTYPE* proto, bool isLibrary);
+
+bool doesProtoExists(struct PROTOTYPE* proto, bool isLibrary);
+
+void printAllProto();
+
+// prints data also if reverse is false
+void printProto(struct PROTOTYPE *ptr, bool reverse);
 
 double getLibrayFunctionResult(char* name, struct PARAMETER* params);
 
-struct PARAMETER* createParameter(const char *type, double value);
-void insertParameter( struct PARAMETER **head, struct PARAMETER **tail, char *type, double val);
-
-
-struct PROTOTYPE* createProto(char* type, char* name,char* libraryName, struct PARAMETER*, struct PARAMETER* );
-void insertProto(struct PROTOTYPE* var);
-void insertLibraryProto(struct PROTOTYPE* var);
-
-
-bool doesProtoExists(struct PROTOTYPE*, bool);
-struct PROTOTYPE* getOriginalProto(struct PROTOTYPE*, bool);
-
-void printAllProto();
-void printProto(struct PROTOTYPE*, bool);
+void initializeLibraryFunction();
 
 #endif
