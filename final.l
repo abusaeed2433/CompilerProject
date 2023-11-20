@@ -171,7 +171,7 @@
 %x FUNC_SEC_VAR
 
 DQ \"
-NUMBER ([0-9]+(".")[0-9]+)|([0-9]+)|("."[0-9]+)
+NUMBER [-]?([0-9]+(".")[0-9]+)|[-]?([0-9]+)|("."[0-9]+)
 VARIABLE [a-zA-Z][a-zA-Z0-9]*
 VAR_NUM ({NUMBER}|{VARIABLE})
 COND_OP ("<lt>"|"<gt>"|"<eq>"|"<neq>"|"<le>"|"<ge>")

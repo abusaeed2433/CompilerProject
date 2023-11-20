@@ -79,21 +79,50 @@ static void entryPoint(){
         i = i <add> 15;
     }
 
-    /* function */
+    /* library function */
+
+    int n = @scanInt();
+    println(n);
+
+    float f = @scan();
+    println("Value after scan is: " f);
+
+    discard n,f;
 
     int m = 6, n = 4;
     int result = m <mul> n;
     @show(result);
 
-    float f = 3;
+    double mx = @max(2.5,5);
+    @show(mx);
 
-    int num = @show(2);
-    double res = @show(num);
+    float rootf = @sqrt(42);
+    println("Square root of 42 is :" rootf "(float)");
 
-    discard a,b,c,i,m,n,f,num,result,sum;
+    int toFind = -42;
+    n = @sqrt(-42);
+    println("Square root of " toFind " is :" n "(int)");
 
-    int sum = @add(m,m,f);
-    println(sum);
+    n = @toInt(rootf);
+    println(rootf " becomes " n " after toInt" );
 
-    sum = @add(m,f,100);
+    rootf = @toFloat(n);
+    println(n " becomes " rootf " after toFloat" );
+
+    rootf = @toDouble(rootf);
+    println(rootf " becomes " rootf " after toDouble" );
+
+    // user defined function
+    int n1, n2;
+    float f1;
+
+    int addRes = @add(n1,n1,f1);
+    println(addRes);
+
+    @add(m,f1,100);
+
+    int dum = @add(m,f1,100);
+
+    @test();
+
 }

@@ -226,6 +226,10 @@ double getLibrayFunctionResult(char* name, struct PARAMETER* params){
     }
     
     if( strcmp(name, "sqrt") == 0 ){
+        if(params->value < 0){
+            printf("\nStay in real world\n");
+            return 0;
+        }
         return sqrt(params->value);
     }
 

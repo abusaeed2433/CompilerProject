@@ -110,60 +110,73 @@ Iterating - 4, value: 60
 Iterating - 5, value: 75
 Iterating - 6, value: 90
     
-Captured comment: /* function */
+Captured comment: /* library function */
 
-            
-Calling function void show(any)
-From show function: 24.000000 
-        
-Calling function void show(any)
-From show function: 2.000000 
-
-Invalid assignment from void to int
     
-Calling function void show(any)
-From show function: 0.000000 
+Calling function int scanInt()
 
-Invalid assignment from void to double
-    
-Can't discard sum since not found.
-
-Discarded variable result
-
-Discarded variable num
-
-Discarded variable f
-
-Discarded variable n
-
-Discarded variable m
-
-Discarded variable i
-
-Discarded variable c
-
-Discarded variable b
-
-Discarded variable a
-    
-Variable m doesn't exists
-
-Variable m doesn't exists
-
-Variable f doesn't exists
-
-Function not found
+Taking int input 0
     
 0  < - - - - - - - - - -
     
-Variable m doesn't exists
+Calling function int scan()
+    
+Value after scan is: 0.000000  < - - - - - - - - - -
+    
+Discarded variable f
 
-Variable f doesn't exists
+Discarded variable n
+            
+Calling function void show(any)
+From show function: 24.000000 
+    
+Calling function float max(any,any)
+    
+Calling function void show(any)
+From show function: 5.000000 
+    
+Calling function double sqrt(any)
+    
+Square root of 42 is :6.480741 (float) < - - - - - - - - - -
+        
+Calling function double sqrt(any)
 
+Stay in real world
+    
+Square root of -42  is :0 (int) < - - - - - - - - - -
+    
+Calling function int toInt(any)
+Warning - library converter is not imported
+    
+6.480741  becomes 6  after toInt < - - - - - - - - - -
+    
+Calling function float toFloat(any)
+Warning - library converter is not imported
+    
+6  becomes 6.000000  after toFloat < - - - - - - - - - -
+    
+Calling function double toDouble(any)
+Warning - library converter is not imported
+    
+6.000000  becomes 6.000000  after toDouble < - - - - - - - - - -
+    
+Single line comment: // user defined function
+
+            
+Calling function int add(int,int,float)
+    
+0  < - - - - - - - - - -
+    
+Calling function void add(int,float,double)
+    
+Calling function void add(int,float,double)
+
+Invalid assignment from void to int
+    
 Function not found
 program executed
 ----------Printing all variables----------
-res(double) 0.000000 -> sum(int) 0 -> 
+a(float) 10.000000 -> b(float) 100.000000 -> c(int) 15 -> i(int) 105 -> n(int) 6 -> m(int) 6 -> result(int) 24 -> mx(double) 5.000000 -> rootf(float) 6.000000 -> toFind(int) -42 -> n2(int) 0 -> n1(int) 0 -> f1(float) 0.000000 -> addRes(int) 0 -> dum(int) 0 -> 
 
 
 Printing all prototype

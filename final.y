@@ -173,7 +173,9 @@
 
     bool isNumber(char* num){
         bool count = 0;
-        for(int i=0; i<strlen(num); i++){
+        int i = num[0] == '-' ? 1 : 0;
+
+        for(; i<strlen(num); i++){
             if( num[i] == '.' && count == 0 ) { count=1; continue; }
             if( !isdigit(num[i]) ) return false;
         }
