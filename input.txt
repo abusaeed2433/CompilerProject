@@ -60,7 +60,6 @@ static void entryPoint(){
         justInCase(10 <gt> b){
             println("Not executed since false");
         }
-        
     }
 
     println("------------- separator -----------------");
@@ -124,5 +123,4 @@ static void entryPoint(){
     int dum = @add(m,f1,100);
 
     @test();
-
 }

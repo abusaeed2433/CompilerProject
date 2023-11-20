@@ -3,6 +3,7 @@
 #ifndef CONSTANT_H
 #define CONSTANT_H
 
+//returns true if ch is an arithmatic operator
 bool isArithOp(char *ch);
 
 // true if op is a valid conditional operator

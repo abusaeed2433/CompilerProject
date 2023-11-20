@@ -2,5 +2,6 @@
     "files.associations": {
         "var_list.h": "c",
         "prototype_list.h": "c"
-    }
+    },
+    "hackmud-color.enabled": false
 }
