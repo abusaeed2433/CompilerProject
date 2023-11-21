@@ -236,6 +236,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 <VAR_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 <IF_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
+<ELSE_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 <IGNORE_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 <DISCARD_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
 <LOOP_SEC>{SINGLE_LINE_COMMENT} { inc(1); initSingleComment(); }
@@ -248,6 +249,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 <VAR_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 <IF_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
+<ELSE_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 <IGNORE_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 <DISCARD_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
 <LOOP_SEC>"/*" { initMultiComment(); BEGIN( pushState(COMMENT) ); }
