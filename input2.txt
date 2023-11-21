@@ -19,14 +19,12 @@ static void entryPoint(){
             int i = 0;
 
             till( i <lt> 100){
-                i = i <add> 10;
+                i = i <add> 25;
             }
 
         }
     }
     
-
-
 
 }
 

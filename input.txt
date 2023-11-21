@@ -60,6 +60,9 @@ static void entryPoint(){
         justInCase(10 <gt> b){
             println("Not executed since false");
         }
+        otherwise{
+            println("Inside else. Since 10" " is < than " b);
+        }
     }
 
     println("------------- separator -----------------");
@@ -71,6 +74,9 @@ static void entryPoint(){
 
     justInCase(5 <lt> 10 and a <lt> b and 10 <gt> 10 ){
         println("Condition is false");
+    }
+    otherwise{
+        println("Executed else block");
     }
     
     int i = 0;
@@ -111,9 +117,12 @@ static void entryPoint(){
     rootf = @toDouble(rootf);
     println(rootf " becomes " rootf " after toDouble" );
 
+    int mn = @show(n);
+
     // user defined function
     int n1, n2;
     float f1;
+
 
     int addRes = @add(n1,n1,f1);
     println(addRes);

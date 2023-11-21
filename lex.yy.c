@@ -1578,8 +1578,8 @@ YY_RULE_SETUP
 
     bool isLastIfValid = getCurrentValidity();
 
-    char *valid = isLastIfValid ? "True" : "False";
-    printf("\nElse condition is %s\n",!valid);
+    char *valid = !isLastIfValid ? "True" : "False";
+    printf("\nElse condition is %s\n",valid);
     if(isLastIfValid){
         bracketCounter=1;
         BEGIN( pushState(IGNORE_SEC) );
@@ -1629,16 +1629,13 @@ YY_RULE_SETUP
 
     bool test = getCurrentValidity();
     char *valid = test ? "True" : "False";
-    printf("\nIff condition is %s\n",valid);
+    printf("\nIf condition is %s\n",valid);
 
-    printf("\n%d---\n",test);
     if(!test){
-        printf("\ngoing to ignore\n");
         bracketCounter=1;
         BEGIN( pushState(IGNORE_SEC) );
     }
     else{
-        printf("\ngoing to main\n");
         BEGIN(pushState(MAIN));
     }
     return *yytext;
@@ -1646,17 +1643,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 473 "final.l"
+#line 470 "final.l"
 {}
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 475 "final.l"
+#line 472 "final.l"
 { bracketCounter++; }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 476 "final.l"
+#line 473 "final.l"
 { 
     bracketCounter--;
     if(bracketCounter == 0){
@@ -1667,37 +1664,37 @@ YY_RULE_SETUP
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 483 "final.l"
+#line 480 "final.l"
 {}
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 486 "final.l"
+#line 483 "final.l"
 { return *yytext; }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 487 "final.l"
+#line 484 "final.l"
 { return END_POINT; }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 488 "final.l"
+#line 485 "final.l"
 { yylval.name = removeLpRp(yytext); return COND_OPE; }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 489 "final.l"
+#line 486 "final.l"
 { yylval.name = strdup(yytext); return VAR_CON; }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 491 "final.l"
+#line 488 "final.l"
 { BEGIN( pushState(LOOP_BODY_SEC) ); return *yytext; }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 493 "final.l"
+#line 490 "final.l"
 {
     yylval.name = strdup(yytext);
     BEGIN( pushState(VAR_SEC) );
@@ -1706,12 +1703,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 498 "final.l"
+#line 495 "final.l"
 {}
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 499 "final.l"
+#line 496 "final.l"
 {
     popState();
     BEGIN( popState() );
@@ -1720,35 +1717,35 @@ YY_RULE_SETUP
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 505 "final.l"
+#line 502 "final.l"
 {}
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 507 "final.l"
+#line 504 "final.l"
 {
     blockBalancer--;
     BEGIN( popState() );
-    printf("--main end--");
+    //printf("\n------main end--\n");
     return END_POINT;
 }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 514 "final.l"
+#line 511 "final.l"
 { }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 515 "final.l"
+#line 512 "final.l"
 { }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 517 "final.l"
+#line 514 "final.l"
 ECHO;
 	YY_BREAK
-#line 1752 "lex.yy.c"
+#line 1749 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 case YY_STATE_EOF(MAIN):
@@ -2647,7 +2644,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 517 "final.l"
+#line 514 "final.l"
 
 
 int yywrap(){

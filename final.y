@@ -518,14 +518,14 @@ out_vc: OUTPUT_VC { continueOutBuffer($1); }
     | out_vc OUTPUT_SEP OUTPUT_VC { continueOutBuffer($3); }
     ;
 
-if_sec: '(' if_condition '{' block END_POINT else_block { printf("\nif processed\n"); }
+if_sec: if_condition '{' block END_POINT else_block { printf("\nIf-else processed\n"); }
     ;
 
-if_condition: many_logic_cond ')' { printf("idk-%d-",$1); pushValidity($1); }
+if_condition: '(' many_logic_cond ')' { pushValidity($2); }
     ;
 
 else_block: ELSE '{' block END_POINT { popValidity(); }
-    | { printf("else-block\n"); popValidity(); }
+    | { popValidity(); }
     ;
 
 loop_sec: '(' logic_cond ')' '{' loop_updater END_POINT {
@@ -541,7 +541,7 @@ loop_updater: VAR '=' arith_exp ';'{
     }
     ;
 
-many_logic_cond: logic_cond { $$ = $1; printf("%d--",$$); isLastIfValid=$$; }
+many_logic_cond: logic_cond { $$ = $1; isLastIfValid=$$; }
     | many_logic_cond OR logic_cond { $$ = $1 || $3; isLastIfValid=$$; }
     | many_logic_cond AND logic_cond { $$ = $1 && $3; isLastIfValid=$$; }
     ;
@@ -591,9 +591,9 @@ int main(){
     
     initializeLibraryFunction();
 
-	//freopen("input.txt","r",stdin);
-    freopen("input2.txt","r",stdin);
-	//freopen("output.txt", "w", stdout); // output in file
+	freopen("input.txt","r",stdin);
+    //freopen("input2.txt","r",stdin);
+	freopen("output.txt", "w", stdout); // output in file
 	yyparse();
     printAll();
     printf("\nPrinting all prototype\n");

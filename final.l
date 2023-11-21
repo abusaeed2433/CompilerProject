@@ -430,8 +430,8 @@ NEW_LINE_AND_TAB [\n\t]*
 
     bool isLastIfValid = getCurrentValidity();
 
-    char *valid = isLastIfValid ? "True" : "False";
-    printf("\nElse condition is %s\n",!valid);
+    char *valid = !isLastIfValid ? "True" : "False";
+    printf("\nElse condition is %s\n",valid);
     if(isLastIfValid){
         bracketCounter=1;
         BEGIN( pushState(IGNORE_SEC) );
@@ -456,16 +456,13 @@ NEW_LINE_AND_TAB [\n\t]*
 
     bool test = getCurrentValidity();
     char *valid = test ? "True" : "False";
-    printf("\nIff condition is %s\n",valid);
+    printf("\nIf condition is %s\n",valid);
 
-    printf("\n%d---\n",test);
     if(!test){
-        printf("\ngoing to ignore\n");
         bracketCounter=1;
         BEGIN( pushState(IGNORE_SEC) );
     }
     else{
-        printf("\ngoing to main\n");
         BEGIN(pushState(MAIN));
     }
     return *yytext;
@@ -507,7 +504,7 @@ NEW_LINE_AND_TAB [\n\t]*
 <MAIN>{MAIN_END} {
     blockBalancer--;
     BEGIN( popState() );
-    printf("--main end--");
+    //printf("\n------main end--\n");
     return END_POINT;
 }
 
