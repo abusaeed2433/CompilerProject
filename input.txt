@@ -70,6 +70,12 @@ static void entryPoint(){
     a = 10; int c = 15;
     justInCase(5 <lt> 10 and a <lt> c){
         println("5 < 10 and " a " < " c);
+
+        int j = 55;
+        till(j <gt> 0){
+            j = j <sub> 5;
+        }
+        
     }
 
     justInCase(5 <lt> 10 and a <lt> b and 10 <gt> 10 ){

@@ -4,7 +4,7 @@
 - Using import,
 - Ex:
     ```
-    import stdio.h;
+    import stdio;
     ```
 
 ## Comment
