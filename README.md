@@ -5,6 +5,7 @@
 - Ex:
     ```
     import stdio;
+    import math;
     ```
 
 ## Comment
@@ -27,8 +28,21 @@
                 possible to have
                 /* nested also */
             */
+
+            discard c,d,e, /* valid comment */ f;
         ```
 
+## Prototype declaration
+- Format:
+    ```
+    FUNC_TYPE FUNC_NAME (DATA_TYPE1, DATA_TYPE_2...);
+    ```
+- Example:
+    ```
+    int add(int,int, float);
+    int scan();
+    void add(int, float, double);
+    ```
 
 ## Starting point of execution
 - Defined as:
@@ -46,7 +60,7 @@
 - ### Declaration:
     - Using:
         ```
-        data_type var1, var2;
+        DATA_TYPE VAR1, VAR2;
         ```
     - Ex:
         ```
@@ -58,7 +72,7 @@
 - ### Initialization
     - Using:
         ```
-        data_type var1 = const_value, var2 = calc_value;
+        DATA_TYPE VAR1 = const_value, VAR2 = calc_value, VAR3 = func_call;
         ```
     - Ex:
         ```
@@ -68,14 +82,37 @@
 - ### Assignment
     - Using
         ```
-        var = const_value or calc_value;
+        VAR = const_value or calc_value or func_call;
         ```
     - Ex:
         ```
             int z;
             z = 100; // constant
             z = 10 add 20; // calculated value
+            b = @max(a,101); // function call
         ```
+- ### Loop
+    - Using
+        ```
+        till( VAR_CON <COND_OP> VAR_CON ){
+            VAR_CON = VAR_CON <ARITH_OP> VAR_CON;
+        }
+        ```
+    - Example:
+        ```
+        int j = 55;
+        till(j <gt> 0){
+            j = j <sub> 15;
+        }
+        ```
+    - Output:
+        ```
+        Iterating - 0, value: 55
+        Iterating - 1, value: 40
+        Iterating - 2, value: 25
+        Iterating - 3, value: 10
+        ```
+
 - ### Extra:
     - Initialized to `0` by default,
     - Error if `duplicate variable` is declared,

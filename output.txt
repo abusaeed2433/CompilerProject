@@ -97,20 +97,13 @@ If-else processed
 If condition is True
         
 5 < 10 and 10.000000  < 15  < - - - - - - - - - -
-                                      
+                              
 Loop matched
 
 Iterating - 0, value: 55
-Iterating - 1, value: 50
-Iterating - 2, value: 45
-Iterating - 3, value: 40
-Iterating - 4, value: 35
-Iterating - 5, value: 30
-Iterating - 6, value: 25
-Iterating - 7, value: 20
-Iterating - 8, value: 15
-Iterating - 9, value: 10
-Iterating - 10, value: 5
+Iterating - 1, value: 40
+Iterating - 2, value: 25
+Iterating - 3, value: 10
                 
 If-else processed
            
@@ -203,7 +196,7 @@ Invalid assignment from void to int
 Function not found
 program executed
 ----------Printing all variables----------
-a(float) 10.000000 -> b(float) 100.000000 -> c(int) 15 -> j(int) 0 -> i(int) 105 -> n(int) 6 -> m(int) 6 -> result(int) 24 -> mx(double) 5.000000 -> rootf(float) 6.000000 -> toFind(int) -42 -> mn(int) 0 -> n2(int) 0 -> n1(int) 0 -> f1(float) 0.000000 -> addRes(int) 0 -> dum(int) 0 -> 
+a(float) 10.000000 -> b(float) 100.000000 -> c(int) 15 -> j(int) -5 -> i(int) 105 -> n(int) 6 -> m(int) 6 -> result(int) 24 -> mx(double) 5.000000 -> rootf(float) 6.000000 -> toFind(int) -42 -> mn(int) 0 -> n2(int) 0 -> n1(int) 0 -> f1(float) 0.000000 -> addRes(int) 0 -> dum(int) 0 -> 
 
 
 Printing all prototype
