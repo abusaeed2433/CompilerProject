@@ -2463,9 +2463,9 @@ int main(){
     
     initializeLibraryFunction();
 
-	freopen("input.txt","r",stdin);
-    //freopen("input2.txt","r",stdin);
-	freopen("output.txt", "w", stdout); // output in file
+	//freopen("input.txt","r",stdin);
+    freopen("input2.txt","r",stdin);
+	//freopen("output.txt", "w", stdout); // output in file
 	yyparse();
     printAll();
     printf("\nPrinting all prototype\n");

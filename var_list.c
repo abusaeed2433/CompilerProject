@@ -41,11 +41,11 @@ void insertVariable(char *name, char *type, double val) {
         }
     }
 
-    struct VARIABLE *var = createNode(name,type,val);
-
     if( strncmp("int",type,3) == 0 ){ // integer
         val = (double)( (int)val ); // ignoring after decimal
     }
+
+    struct VARIABLE *var = createNode(name,type,val);
     
     if(tail == NULL) {
         head = var;
