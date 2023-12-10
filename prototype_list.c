@@ -209,10 +209,7 @@ void printProto(struct PROTOTYPE *ptr, bool reverse){
     while(param != NULL){
         printf("%s",param->type);
 
-        //if(!reverse) printf("'%lf'",param->value);
-
         if( (reverse ? param->prev : param->next) != NULL){ printf(","); }
-
         param = reverse ? param->prev : param->next;
     }
     printf(")\n");
