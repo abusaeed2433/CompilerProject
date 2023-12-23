@@ -1,5 +1,7 @@
 # CompilerProject Structure
 
+### Overall input & output :  <a href="https://github.com/abusaeed2433/CompilerProject/blob/master/INPUT_OUTPUT.md">see here </a>
+
 ## Header
 - Using import,
 - Ex:
@@ -97,7 +99,7 @@
 - ### `discard` variable
     - Using
         ```
-        discard VAR
+        discard VAR,VAR...VAR;
         ```
     - Ex:
         ```
@@ -203,7 +205,6 @@
 
         My height is: 25.000 km < - - - - - - - - - -
         ```
-- ## Overall example:  <a href="https://github.com/abusaeed2433/CompilerProject/blob/master/INPUT_OUTPUT.md">see here </a>
 
 
 ## Run using
