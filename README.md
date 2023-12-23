@@ -134,8 +134,8 @@
     - less equal `(<le>)`,
     - greater equal `(<ge>)`
 
-- ## `justInCase` structure:
-    - Equivalent to `if`,
+- ## `justInCase` - `otherwise` structure:
+    - Equivalent to `if - else`,
     - Structure:
         ```
         justInCase(VAR_CON @ VAR_CON){
@@ -144,22 +144,17 @@
         ```
     - Ex:
         ```
-        justInCase(a <lt> b){
-            println("Actually executed since " a "< " b);
+        a = 10; int c = 15;
+        justInCase(5 <lt> 10 and a <lt> b and 10 <gt> 10 ){
+            println("Condition is false");
         }
-        
-        justInCase(a <eq> b){
-            println("Not executed");
+        otherwise{
+            println("Executed else block");
         }
         ```
     - Output:
         ```
-        If condition is True
-        Actually executed since 10.000000 < 100.000000  < - - - - - - - - - -
-        If-else processed
-
-        If condition is False
-        If-else processed
+        Executed else block < - - - - - - - - - -
         ```
 
     
